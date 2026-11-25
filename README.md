@@ -4,7 +4,7 @@ FastAPI 入門のハンズオン教材です。スライドを見ながら、`sa
 
 ## スライド
 
-`slides/fastapi-intro.html` をブラウザで開いてください（28枚・1ファイル完結）。
+`slides/fastapi-intro.html` をブラウザで開いてください（28枚・1ファイル完結）。PowerPoint 版は `slides/fastapi-intro.pptx`（内容は同じ、すべて編集可能）。
 
 - `←` `→` / `Space` / マウスホイール / スワイプでページ送り、`Home` `End` で最初・最後へ
 - URL の `#13` のように番号を付けると、そのスライドから開く
