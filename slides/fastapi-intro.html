@@ -424,7 +424,7 @@ body.editing [contenteditable="true"]:focus { outline: 3px solid #e0533d; }
       <div class="reveal d1"><span>01—02</span>Web API の<br>しくみ</div>
       <div class="reveal d2"><span>03—04</span>準備と<br>はじめてのコード</div>
       <div class="reveal d3"><span>05—06</span>HTTPメソッドと<br>データの受け渡し</div>
-      <div class="reveal d4"><span>07—08</span>データベースと<br>画面をつなぐ</div>
+      <div class="reveal d4"><span>07—08</span>画面と<br>データベースをつなぐ</div>
     </div>
   </div>
 </section>
@@ -442,8 +442,8 @@ body.editing [contenteditable="true"]:focus { outline: 3px solid #e0533d; }
       <div class="cell chapcard pink reveal d4"><span class="no">04</span><h4>書いてみる</h4><p>最小のコードを動かして、ブラウザで確かめる</p></div>
       <div class="cell chapcard pink reveal d5"><span class="no">05</span><h4>HTTP メソッド</h4><p>GET・POST・PUT・DELETE を具体例で</p></div>
       <div class="cell chapcard green reveal d6"><span class="no">06</span><h4>データを受け取る</h4><p>Pydantic とメモリ版 ToDo API</p></div>
-      <div class="cell chapcard green reveal d7"><span class="no">07</span><h4>SQLite につなぐ</h4><p>再起動しても消えないデータ</p></div>
-      <div class="cell chapcard green reveal d8"><span class="no">08</span><h4>画面をつなぐ</h4><p>fetch で API を呼んで ToDo アプリ完成</p></div>
+      <div class="cell chapcard green reveal d7"><span class="no">07</span><h4>画面をつなぐ</h4><p>fetch で API を呼んで ToDo アプリを動かす</p></div>
+      <div class="cell chapcard green reveal d8"><span class="no">08</span><h4>SQLite につなぐ</h4><p>再起動しても消えないデータで完成</p></div>
     </div>
   </div>
 </section>
@@ -573,7 +573,7 @@ content-type: application/json
             <span class="label pink">CLIENT</span>
             <h3 style="margin: 14px 0 8px;">クライアント</h3>
             <ul class="arrow"><li class="small">ブラウザ（HTML + JavaScript）</li><li class="small">スマホアプリ</li><li class="small">ほかのプログラム</li></ul>
-            <p class="xs muted" style="margin-top: 14px;">この講座では → 8章</p>
+            <p class="xs muted" style="margin-top: 14px;">この講座では → 7章</p>
           </div>
           <div class="conn" style="width: 150px;"><small>HTTP</small><i>→</i><i>←</i><small>JSON</small></div>
           <div class="box green reveal d2" style="flex: 1.15;">
@@ -587,7 +587,7 @@ content-type: application/json
             <span class="label pink">DATABASE</span>
             <h3 style="margin: 14px 0 8px;">データベース</h3>
             <ul class="arrow"><li class="small">SQLite（ファイル1つ）</li><li class="small">表（テーブル）で保存</li><li class="small">SQL という言葉で操作</li></ul>
-            <p class="xs muted" style="margin-top: 14px;">この講座では → 7章</p>
+            <p class="xs muted" style="margin-top: 14px;">この講座では → 8章</p>
           </div>
         </div>
       </div>
@@ -704,7 +704,7 @@ content-type: application/json
       <div class="cell flex green reveal d1"><span class="label">fastapi</span><h4>店のルールブック</h4><p class="small">「どの URL に、どのメソッドで来たら、どの関数を動かすか」を書くための道具。</p><p class="xs muted" style="margin-top: auto;">pip install が必要</p></div>
       <div class="cell flex pink reveal d2"><span class="label">uvicorn</span><h4>お店の入口・開店係</h4><p class="small">ネットから届いたリクエストを受け取り FastAPI に渡す<strong>サーバー</strong>。これがないと誰も来られない。</p><p class="xs muted" style="margin-top: auto;">pip install が必要</p></div>
       <div class="cell flex reveal d3"><span class="label">pydantic</span><h4>検品係</h4><p class="small">届いたデータが決めた形（型）どおりかチェック。間違っていれば自動で 422 を返す。</p><p class="xs muted" style="margin-top: auto;">fastapi と一緒に自動で入る</p></div>
-      <div class="cell flex gray reveal d4"><span class="label">sqlite3</span><h4>倉庫</h4><p class="small">SQLite データベースを使うための道具。7章で使う。</p><p class="xs muted" style="margin-top: auto;">Python に最初から入っている</p></div>
+      <div class="cell flex gray reveal d4"><span class="label">sqlite3</span><h4>倉庫</h4><p class="small">SQLite データベースを使うための道具。8章で使う。</p><p class="xs muted" style="margin-top: auto;">Python に最初から入っている</p></div>
       <div class="cell center" style="grid-column: 1 / 5;">
         <div class="flow reveal d5">
           <div class="box"><h4>ブラウザ</h4></div>
@@ -781,7 +781,7 @@ content-type: application/json
             <tr><td><code>FastAPI</code></td><td>クラス</td><td>アプリ本体を作る。<code>app = FastAPI()</code></td><td>4章</td></tr>
             <tr><td><code>HTTPException</code></td><td>クラス</td><td>「見つからない（404）」などのエラーを返す</td><td>6章</td></tr>
             <tr><td><code>BaseModel</code></td><td>クラス</td><td>受け取るデータの形（型）を決める</td><td>6章</td></tr>
-            <tr><td><code>sqlite3</code></td><td>モジュール</td><td>SQLite データベースを読み書きする</td><td>7章</td></tr>
+            <tr><td><code>sqlite3</code></td><td>モジュール</td><td>SQLite データベースを読み書きする</td><td>8章</td></tr>
             <tr><td><code>uvicorn</code></td><td>コマンド</td><td><strong>コードでは import しない！</strong> ターミナルから起動に使う</td><td>4章</td></tr>
           </tbody>
         </table>
@@ -1224,211 +1224,18 @@ todos = {}<span class="n">1</span>
         <div class="note reveal d5"><span class="n">4</span><div><h4>わざと間違える</h4><p>title を消して POST → 422 と理由が返ってくる。</p></div></div>
       </div>
       <div class="cell pink center tight reveal d6" style="grid-column: 1 / 3;">
-        <p style="font-size: 30px;"><strong>でも…サーバーを Ctrl+C で止めて起動し直すと、ToDo が全部消える。</strong><br><span class="small">データが Python の変数（メモリ）にしかないから。→ 次の章でデータベースに保存する。</span></p>
+        <p style="font-size: 30px;"><strong>/docs で全部動いたら、次は自分で作った画面から呼び出してみよう。</strong><br><span class="small">→ 7章：HTML + JavaScript の画面を作り、このメモリ版 API にそのままつなぐ。</span></p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- =====================================================
-     CH.07 — SQLite につなぐ
+     CH.07 — 画面をつなぐ（メモリ版 API のまま）
      ===================================================== -->
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><b>CH.07</b><span>DB</span></div><h2>なぜデータベース？ そして SQLite とは</h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: 1fr 1fr;">
-      <div class="cell flex">
-        <span class="label">メモリ（変数）の弱点</span>
-        <div class="flow reveal d1">
-          <div class="box green"><h4>起動中</h4><p class="xs mono">todos = {1: ..., 2: ...}</p></div>
-          <div class="conn" style="width: 120px;"><small>再起動</small><i>→</i></div>
-          <div class="box pink"><h4>再起動後</h4><p class="xs mono">todos = {}　← 空っぽ</p></div>
-        </div>
-        <p class="small reveal d2">プログラムが終わると変数は消える。<br>だから<strong>ファイルに書き残す</strong>仕組み＝データベースが必要。</p>
-        <span class="label" style="margin-top: 14px;">データベースは「表（テーブル）」でしまう</span>
-        <table class="t reveal d3">
-          <thead><tr><th style="width: 140px;">id</th><th>title</th><th style="width: 150px;">done</th></tr></thead>
-          <tbody>
-            <tr><td class="mono">1</td><td>牛乳を買う</td><td class="mono">0</td></tr>
-            <tr><td class="mono">2</td><td>レポート提出</td><td class="mono">1</td></tr>
-          </tbody>
-        </table>
-        <p class="xs muted reveal d3">1行 ＝ ToDo 1件。列（id・title・done）は Pydantic モデルの項目と対応。</p>
-      </div>
-      <div class="cell flex green">
-        <span class="label">SQLite（エスキューライト）</span>
-        <div class="box reveal d4" style="display: flex; gap: 28px; align-items: center;">
-          <div style="width: 120px; height: 140px; border: 3px solid var(--black); background: var(--white); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 14px; box-shadow: var(--shadow-sm); flex: none;"><span class="mono" style="font: 800 22px var(--mono);">todo.db</span></div>
-          <p class="small"><strong>データベースがファイル1つ。</strong><br>サーバーを別に立てる必要がなく、コピーすれば持ち運べる。</p>
-        </div>
-        <ul class="check reveal d5">
-          <li class="small">Python に最初から入っている（<code class="i">import sqlite3</code>）</li>
-          <li class="small">インストールも設定もいらない</li>
-          <li class="small">スマホアプリやブラウザの中でも使われている実績</li>
-          <li class="small">練習〜小さなアプリなら十分な性能</li>
-        </ul>
-        <p class="xs muted reveal d6">本格的なサービスでは PostgreSQL や MySQL を使うことが多いが、SQL の書き方はほぼ同じ。</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="slide">
-  <div class="frame">
-    <div class="head"><div class="chap"><b>CH.07</b><span>DB</span></div><h2>SQL の4つの命令は、HTTP メソッドと対応する</h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-rows: 1fr 230px;">
-      <div class="cell center">
-        <table class="t reveal d1">
-          <thead><tr><th style="width: 200px;">HTTP</th><th style="width: 190px;">SQL</th><th style="width: 190px;">意味</th><th>SQL の例</th></tr></thead>
-          <tbody>
-            <tr><td><span class="m get">GET</span></td><td class="mono"><b>SELECT</b></td><td>取り出す</td><td><code>SELECT * FROM todos</code></td></tr>
-            <tr><td><span class="m post">POST</span></td><td class="mono"><b>INSERT</b></td><td>追加する</td><td><code>INSERT INTO todos (title, done) VALUES (?, ?)</code></td></tr>
-            <tr><td><span class="m put">PUT</span></td><td class="mono"><b>UPDATE</b></td><td>書き換える</td><td><code>UPDATE todos SET title = ?, done = ? WHERE id = ?</code></td></tr>
-            <tr><td><span class="m del">DELETE</span></td><td class="mono"><b>DELETE</b></td><td>削除する</td><td><code>DELETE FROM todos WHERE id = ?</code></td></tr>
-          </tbody>
-        </table>
-        <p class="small reveal d2" style="margin-top: 22px;"><code class="i">*</code> は「全部の列」、<code class="i">WHERE id = ?</code> は「id が〇〇の行だけ」という条件。WHERE を忘れると<strong>全行</strong>が対象になるので注意。</p>
-      </div>
-      <div class="body" style="grid-template-columns: 1fr 1fr; gap: 3px;">
-        <div class="cell pink reveal d3">
-          <h4><code class="i">?</code> はプレースホルダ（値の差し込み口）</h4>
-          <p class="small">値は <code class="i">?</code> の位置に、あとからタプルで渡す。<code class="i">execute(sql, (title, done))</code></p>
-        </div>
-        <div class="cell black reveal d4">
-          <h4>文字列をつなげて SQL を作らない！</h4>
-          <p class="small"><code class="i" style="color: var(--black);">f"... WHERE id = {todo_id}"</code> は SQL インジェクション（乗っ取り）の原因。必ず <code class="i" style="color: var(--black);">?</code> を使う。</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="slide">
-  <div class="frame">
-    <div class="head"><div class="chap"><b>CH.07</b><span>DB</span></div><h2>DB 版（1/3）：データベースの準備</h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: 1.45fr 1fr;">
-      <div class="cell black">
-        <pre class="code reveal d1" style="font-size: 20px; line-height: 1.42;"><span class="k">import</span> sqlite3
-<span class="k">from</span> fastapi <span class="k">import</span> FastAPI, HTTPException
-<span class="k">from</span> fastapi.staticfiles <span class="k">import</span> StaticFiles
-<span class="k">from</span> pydantic <span class="k">import</span> BaseModel
-
-DB_PATH = <span class="s">"todo.db"</span>
-app = FastAPI()
-
-<span class="k">def</span> <span class="f">get_conn</span>():<span class="n">1</span>
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    <span class="k">return</span> conn
-
-<span class="k">with</span> get_conn() <span class="k">as</span> conn:<span class="n">2</span>
-    conn.execute(<span class="s">"""
-        CREATE TABLE IF NOT EXISTS todos (
-            id    INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT    NOT NULL,
-            done  INTEGER NOT NULL DEFAULT 0
-        )"""</span>)
-
-<span class="k">def</span> <span class="f">to_dict</span>(row):<span class="n">3</span>
-    <span class="k">return</span> {
-        <span class="s">"id"</span>: row[<span class="s">"id"</span>],
-        <span class="s">"title"</span>: row[<span class="s">"title"</span>],
-        <span class="s">"done"</span>: <span class="t">bool</span>(row[<span class="s">"done"</span>]),
-    }</pre>
-      </div>
-      <div class="cell notes" style="justify-content: center;">
-        <span class="label">examples/04_todo_sqlite/main.py</span>
-        <div class="note reveal d2"><span class="n">1</span><div><h4>DB につなぐ関数</h4><p>ファイルがなければ自動で作られる。<code class="i">row_factory</code> を設定すると <code class="i">row["title"]</code> のように列名で取り出せる。</p></div></div>
-        <div class="note reveal d3"><span class="n">2</span><div><h4>起動時にテーブルを作る</h4><p><code class="i">IF NOT EXISTS</code> で「なければ作る」。id は自動で 1, 2, 3… と振られる。<code class="i">with</code> を抜けると変更が保存（commit）される。</p></div></div>
-        <div class="note reveal d4"><span class="n">3</span><div><h4>行 → 辞書 に変換</h4><p>SQLite には真偽値の型がないので done は 0/1 で保存。返すときに <code class="i">bool()</code> で true/false に戻す。</p></div></div>
-        <div class="box green reveal d5"><p class="small">モデル <code class="i">TodoIn</code> はメモリ版と同じものを使う。</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="slide">
-  <div class="frame">
-    <div class="head"><div class="chap"><b>CH.07</b><span>DB</span></div><h2>DB 版（2/3）：GET と POST を SQL で書く</h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: 1.45fr 1fr;">
-      <div class="cell black">
-        <pre class="code reveal d1" style="font-size: 25px;"><span class="d">@app.get</span>(<span class="s">"/todos"</span>)
-<span class="k">def</span> <span class="f">list_todos</span>():
-    <span class="k">with</span> get_conn() <span class="k">as</span> conn:
-        rows = conn.execute(<span class="s">"SELECT * FROM todos"</span>).fetchall()<span class="n">1</span>
-    <span class="k">return</span> [to_dict(r) <span class="k">for</span> r <span class="k">in</span> rows]<span class="n">2</span>
-
-<span class="d">@app.post</span>(<span class="s">"/todos"</span>, status_code=<span class="s">201</span>)
-<span class="k">def</span> <span class="f">create_todo</span>(todo: TodoIn):
-    <span class="k">with</span> get_conn() <span class="k">as</span> conn:
-        cur = conn.execute(
-            <span class="s">"INSERT INTO todos (title, done) VALUES (?, ?)"</span>,
-            (todo.title, todo.done),<span class="n">3</span>
-        )
-    <span class="k">return</span> {<span class="s">"id"</span>: cur.lastrowid, **todo.model_dump()}<span class="n">4</span></pre>
-      </div>
-      <div class="cell notes" style="justify-content: center;">
-        <div class="note reveal d2"><span class="n">1</span><div><h4>SELECT して全行を取る</h4><p><code class="i">fetchall()</code> で結果をリストで受け取る。</p></div></div>
-        <div class="note reveal d3"><span class="n">2</span><div><h4>1行ずつ辞書に変換して返す</h4><p>リスト内包表記。<code class="i">for</code> ループで append するのと同じ意味。</p></div></div>
-        <div class="note reveal d4"><span class="n">3</span><div><h4>値は ? にタプルで渡す</h4><p>Pydantic でチェック済みの <code class="i">todo.title</code> などをそのまま使える。</p></div></div>
-        <div class="note reveal d5"><span class="n">4</span><div><h4>振られた id を返す</h4><p><code class="i">cur.lastrowid</code> に、いま INSERT した行の id が入っている。</p></div></div>
-        <div class="box pink reveal d6"><p class="small">関数の「形」（デコレータ・引数・return）はメモリ版と同じ。<strong>中身だけ SQL に変わった。</strong></p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="slide">
-  <div class="frame">
-    <div class="head"><div class="chap"><b>CH.07</b><span>DB</span></div><h2>DB 版（3/3）：PUT・DELETE と再起動テスト</h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: 1.45fr 1fr;">
-      <div class="cell black">
-        <pre class="code reveal d1" style="font-size: 22px; line-height: 1.5;"><span class="d">@app.put</span>(<span class="s">"/todos/{todo_id}"</span>)
-<span class="k">def</span> <span class="f">update_todo</span>(todo_id: <span class="t">int</span>, todo: TodoIn):
-    <span class="k">with</span> get_conn() <span class="k">as</span> conn:
-        cur = conn.execute(
-            <span class="s">"UPDATE todos SET title = ?, done = ? WHERE id = ?"</span>,
-            (todo.title, todo.done, todo_id),
-        )
-    <span class="k">if</span> cur.rowcount == <span class="s">0</span>:<span class="n">1</span>
-        <span class="k">raise</span> HTTPException(status_code=<span class="s">404</span>, detail=<span class="s">"Todo not found"</span>)
-    <span class="k">return</span> {<span class="s">"id"</span>: todo_id, **todo.model_dump()}
-
-<span class="d">@app.delete</span>(<span class="s">"/todos/{todo_id}"</span>)
-<span class="k">def</span> <span class="f">delete_todo</span>(todo_id: <span class="t">int</span>):
-    <span class="k">with</span> get_conn() <span class="k">as</span> conn:
-        cur = conn.execute(
-            <span class="s">"DELETE FROM todos WHERE id = ?"</span>, (todo_id,)<span class="n">2</span>
-        )
-    <span class="k">if</span> cur.rowcount == <span class="s">0</span>:
-        <span class="k">raise</span> HTTPException(status_code=<span class="s">404</span>, detail=<span class="s">"Todo not found"</span>)
-    <span class="k">return</span> {<span class="s">"ok"</span>: <span class="k">True</span>}</pre>
-      </div>
-      <div class="cell flex">
-        <div class="notes">
-          <div class="note reveal d2"><span class="n">1</span><div><h4>何行変わった？ で 404 判定</h4><p><code class="i">rowcount</code> が 0 ＝ その id の行がなかった。</p></div></div>
-          <div class="note reveal d3"><span class="n">2</span><div><h4>値が1つでもタプルにする</h4><p><code class="i">(todo_id,)</code> のカンマを忘れずに。</p></div></div>
-        </div>
-        <div class="box green reveal d4" style="margin-top: 10px;">
-          <h4>再起動テスト</h4>
-          <ul class="arrow" style="margin-top: 8px;">
-            <li class="small">/docs で ToDo を2件 POST</li>
-            <li class="small">Ctrl+C で止めて、もう一度起動</li>
-            <li class="small">GET /todos → <strong>消えずに残っている！</strong></li>
-            <li class="small">フォルダに <code class="i">todo.db</code> ができている</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- =====================================================
-     CH.08 — 画面をつなぐ
-     ===================================================== -->
-<section class="slide">
-  <div class="frame">
-    <div class="head"><div class="chap"><b>CH.08</b><span>画面</span></div><h2>画面から API を呼ぶ：JavaScript の <code>fetch</code></h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><b>CH.07</b><span>画面</span></div><h2>画面から API を呼ぶ：JavaScript の <code>fetch</code></h2><div class="pg"></div></div>
     <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 320px;">
       <div class="cell black flex">
         <span class="label">GET：一覧をもらう</span>
@@ -1454,9 +1261,10 @@ app = FastAPI()
       </div>
       <div class="cell green flex tight">
         <span class="label">画面ファイルも FastAPI から配る</span>
-        <pre class="mono reveal d4" style="font: 700 21px/1.5 var(--mono); background: var(--white); border: 3px solid var(--black); padding: 12px 16px;"><span style="color: var(--darkgray);"># main.py のいちばん最後に</span>
-app.mount("/", StaticFiles(directory="static", html=True))</pre>
-        <p class="xs reveal d5"><code class="i">static/index.html</code> が <code class="i">http://127.0.0.1:8000/</code> で開ける。API の定義より<strong>後ろ</strong>に書くこと。</p>
+        <pre class="mono reveal d4" style="font: 700 19px/1.45 var(--mono); background: var(--white); border: 3px solid var(--black); padding: 10px 14px;"><span style="color: var(--darkgray);"># 6章の main.py に2行追加</span>
+from fastapi.staticfiles import StaticFiles   <span style="color: var(--darkgray);"># 先頭</span>
+app.mount("/", StaticFiles(directory="static", html=True))   <span style="color: var(--darkgray);"># 最後</span></pre>
+        <p class="xs reveal d5"><code class="i">static/index.html</code> が <code class="i">http://127.0.0.1:8000/</code> で開ける。mount は API より<strong>後ろ</strong>に。</p>
       </div>
       <div class="cell pink flex tight">
         <span class="label">コラム：CORS（コース）</span>
@@ -1468,7 +1276,7 @@ app.mount("/", StaticFiles(directory="static", html=True))</pre>
 
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><b>CH.08</b><span>画面</span></div><h2>画面のコード：<code>static/index.html</code></h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><b>CH.07</b><span>画面</span></div><h2>画面のコード：<code>static/index.html</code></h2><div class="pg"></div></div>
     <div class="body" style="grid-template-columns: 1fr 1.08fr;">
       <div class="cell black tight">
         <pre class="code xs reveal d1"><span class="c">&lt;!-- 入力フォームと、一覧を入れる場所 --&gt;</span>
@@ -1529,7 +1337,239 @@ load();
 
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><b>CH.08</b><span>画面</span></div><h2>完成！「追加」を押したとき、裏で起きていること</h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><b>CH.07</b><span>画面</span></div><h2>動かしてみる：画面の操作 ＝ HTTP リクエスト</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 200px;">
+      <div class="cell gray flex">
+        <span class="label">http://127.0.0.1:8000/ を開いて操作する</span>
+        <div class="browser reveal d1">
+          <div class="bar"><i></i><i></i><div class="url">http://127.0.0.1:8000/</div></div>
+          <div class="view" style="display: flex; flex-direction: column; gap: 14px;">
+            <p style="font-weight: 900; font-size: 40px;">ToDo</p>
+            <div style="display: flex; gap: 12px;"><span class="box" style="box-shadow: none; padding: 6px 16px; flex: 1;"><span class="small muted">歯医者を予約</span></span><span class="box pink" style="box-shadow: none; padding: 6px 20px;"><b class="small">追加</b></span></div>
+            <p class="small">☐ 牛乳を買う <span class="xs" style="border: 2px solid; padding: 0 8px;">削除</span><br>☑ レポート提出 <span class="xs" style="border: 2px solid; padding: 0 8px;">削除</span></p>
+          </div>
+        </div>
+        <div class="flow reveal d2" style="margin-top: 6px; gap: 12px; flex-wrap: wrap;">
+          <span class="small">「追加」→ <span class="m post" style="min-width: 0;">POST</span></span>
+          <span class="small">チェック → <span class="m put" style="min-width: 0;">PUT</span></span>
+          <span class="small">「削除」→ <span class="m del" style="min-width: 0;">DELETE</span></span>
+        </div>
+      </div>
+      <div class="cell flex">
+        <span class="label">そのときターミナルには…</span>
+        <div class="term reveal d3" style="--tfs: 21px;"><div class="bar">uvicorn のログ（1行 ＝ 1リクエスト）</div><pre>INFO: 127.0.0.1 - "<span class="ok">GET</span> / HTTP/1.1" 200 OK
+INFO: 127.0.0.1 - "<span class="ok">GET</span> /todos HTTP/1.1" 200 OK
+INFO: 127.0.0.1 - "<span class="ok">POST</span> /todos HTTP/1.1" 201 Created
+INFO: 127.0.0.1 - "<span class="ok">GET</span> /todos HTTP/1.1" 200 OK
+INFO: 127.0.0.1 - "<span class="ok">PUT</span> /todos/1 HTTP/1.1" 200 OK
+INFO: 127.0.0.1 - "<span class="ok">DELETE</span> /todos/2 HTTP/1.1" 200 OK</pre></div>
+        <p class="small reveal d4">ボタンを押すたびに、5章で見たリクエストが本当に飛んでいる。ブラウザの開発者ツール（F12）→「ネットワーク」タブでも見られる。</p>
+        <div class="term reveal d5" style="--tfs: 21px;"><pre><span class="prompt">$ </span>cd examples/04_todo_frontend
+<span class="prompt">$ </span>uvicorn main:app --reload</pre></div>
+      </div>
+      <div class="cell pink center reveal d6" style="grid-column: 1 / 3;">
+        <p style="font-size: 30px;"><strong>でも…サーバーを Ctrl+C で止めて起動し直すと、ToDo が全部消える。</strong><br><span class="small">データが Python の変数（メモリ）にしかないから。→ 次の章で、画面はそのままに保存先をデータベースへ変える。</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     CH.08 — SQLite につなぐ（画面はそのまま、保存先だけ変える）
+     ===================================================== -->
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.08</b><span>DB</span></div><h2>なぜデータベース？ そして SQLite とは</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr;">
+      <div class="cell flex">
+        <span class="label">メモリ（変数）の弱点</span>
+        <div class="flow reveal d1">
+          <div class="box green"><h4>起動中</h4><p class="xs mono">todos = {1: ..., 2: ...}</p></div>
+          <div class="conn" style="width: 120px;"><small>再起動</small><i>→</i></div>
+          <div class="box pink"><h4>再起動後</h4><p class="xs mono">todos = {}　← 空っぽ</p></div>
+        </div>
+        <p class="small reveal d2">プログラムが終わると変数は消える。<br>だから<strong>ファイルに書き残す</strong>仕組み＝データベースが必要。</p>
+        <span class="label" style="margin-top: 14px;">データベースは「表（テーブル）」でしまう</span>
+        <table class="t reveal d3">
+          <thead><tr><th style="width: 140px;">id</th><th>title</th><th style="width: 150px;">done</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">1</td><td>牛乳を買う</td><td class="mono">0</td></tr>
+            <tr><td class="mono">2</td><td>レポート提出</td><td class="mono">1</td></tr>
+          </tbody>
+        </table>
+        <p class="xs muted reveal d3">1行 ＝ ToDo 1件。列（id・title・done）は Pydantic モデルの項目と対応。</p>
+      </div>
+      <div class="cell flex green">
+        <span class="label">SQLite（エスキューライト）</span>
+        <div class="box reveal d4" style="display: flex; gap: 28px; align-items: center;">
+          <div style="width: 120px; height: 140px; border: 3px solid var(--black); background: var(--white); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 14px; box-shadow: var(--shadow-sm); flex: none;"><span class="mono" style="font: 800 22px var(--mono);">todo.db</span></div>
+          <p class="small"><strong>データベースがファイル1つ。</strong><br>サーバーを別に立てる必要がなく、コピーすれば持ち運べる。</p>
+        </div>
+        <ul class="check reveal d5">
+          <li class="small">Python に最初から入っている（<code class="i">import sqlite3</code>）</li>
+          <li class="small">インストールも設定もいらない</li>
+          <li class="small">スマホアプリやブラウザの中でも使われている実績</li>
+          <li class="small">練習〜小さなアプリなら十分な性能</li>
+        </ul>
+        <p class="xs muted reveal d6">本格的なサービスでは PostgreSQL や MySQL を使うことが多いが、SQL の書き方はほぼ同じ。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.08</b><span>DB</span></div><h2>SQL の4つの命令は、HTTP メソッドと対応する</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-rows: 1fr 230px;">
+      <div class="cell center">
+        <table class="t reveal d1">
+          <thead><tr><th style="width: 200px;">HTTP</th><th style="width: 190px;">SQL</th><th style="width: 190px;">意味</th><th>SQL の例</th></tr></thead>
+          <tbody>
+            <tr><td><span class="m get">GET</span></td><td class="mono"><b>SELECT</b></td><td>取り出す</td><td><code>SELECT * FROM todos</code></td></tr>
+            <tr><td><span class="m post">POST</span></td><td class="mono"><b>INSERT</b></td><td>追加する</td><td><code>INSERT INTO todos (title, done) VALUES (?, ?)</code></td></tr>
+            <tr><td><span class="m put">PUT</span></td><td class="mono"><b>UPDATE</b></td><td>書き換える</td><td><code>UPDATE todos SET title = ?, done = ? WHERE id = ?</code></td></tr>
+            <tr><td><span class="m del">DELETE</span></td><td class="mono"><b>DELETE</b></td><td>削除する</td><td><code>DELETE FROM todos WHERE id = ?</code></td></tr>
+          </tbody>
+        </table>
+        <p class="small reveal d2" style="margin-top: 22px;"><code class="i">*</code> は「全部の列」、<code class="i">WHERE id = ?</code> は「id が〇〇の行だけ」という条件。WHERE を忘れると<strong>全行</strong>が対象になるので注意。</p>
+      </div>
+      <div class="body" style="grid-template-columns: 1fr 1fr; gap: 3px;">
+        <div class="cell pink reveal d3">
+          <h4><code class="i">?</code> はプレースホルダ（値の差し込み口）</h4>
+          <p class="small">値は <code class="i">?</code> の位置に、あとからタプルで渡す。<code class="i">execute(sql, (title, done))</code></p>
+        </div>
+        <div class="cell black reveal d4">
+          <h4>文字列をつなげて SQL を作らない！</h4>
+          <p class="small"><code class="i" style="color: var(--black);">f"... WHERE id = {todo_id}"</code> は SQL インジェクション（乗っ取り）の原因。必ず <code class="i" style="color: var(--black);">?</code> を使う。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.08</b><span>DB</span></div><h2>DB 版（1/3）：データベースの準備</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1.45fr 1fr;">
+      <div class="cell black">
+        <pre class="code reveal d1" style="font-size: 20px; line-height: 1.42;"><span class="k">import</span> sqlite3
+<span class="k">from</span> fastapi <span class="k">import</span> FastAPI, HTTPException
+<span class="k">from</span> fastapi.staticfiles <span class="k">import</span> StaticFiles
+<span class="k">from</span> pydantic <span class="k">import</span> BaseModel
+
+DB_PATH = <span class="s">"todo.db"</span>
+app = FastAPI()
+
+<span class="k">def</span> <span class="f">get_conn</span>():<span class="n">1</span>
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    <span class="k">return</span> conn
+
+<span class="k">with</span> get_conn() <span class="k">as</span> conn:<span class="n">2</span>
+    conn.execute(<span class="s">"""
+        CREATE TABLE IF NOT EXISTS todos (
+            id    INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT    NOT NULL,
+            done  INTEGER NOT NULL DEFAULT 0
+        )"""</span>)
+
+<span class="k">def</span> <span class="f">to_dict</span>(row):<span class="n">3</span>
+    <span class="k">return</span> {
+        <span class="s">"id"</span>: row[<span class="s">"id"</span>],
+        <span class="s">"title"</span>: row[<span class="s">"title"</span>],
+        <span class="s">"done"</span>: <span class="t">bool</span>(row[<span class="s">"done"</span>]),
+    }</pre>
+      </div>
+      <div class="cell notes" style="justify-content: center;">
+        <span class="label">examples/05_todo_sqlite/main.py</span>
+        <div class="note reveal d2"><span class="n">1</span><div><h4>DB につなぐ関数</h4><p>ファイルがなければ自動で作られる。<code class="i">row_factory</code> を設定すると <code class="i">row["title"]</code> のように列名で取り出せる。</p></div></div>
+        <div class="note reveal d3"><span class="n">2</span><div><h4>起動時にテーブルを作る</h4><p><code class="i">IF NOT EXISTS</code> で「なければ作る」。id は自動で 1, 2, 3… と振られる。<code class="i">with</code> を抜けると変更が保存（commit）される。</p></div></div>
+        <div class="note reveal d4"><span class="n">3</span><div><h4>行 → 辞書 に変換</h4><p>SQLite には真偽値の型がないので done は 0/1 で保存。返すときに <code class="i">bool()</code> で true/false に戻す。</p></div></div>
+        <div class="box green reveal d5"><p class="small">モデル <code class="i">TodoIn</code> と <code class="i">static/index.html</code> は前の章のものを<strong>そのまま</strong>使う。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.08</b><span>DB</span></div><h2>DB 版（2/3）：GET と POST を SQL で書く</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1.45fr 1fr;">
+      <div class="cell black">
+        <pre class="code reveal d1" style="font-size: 25px;"><span class="d">@app.get</span>(<span class="s">"/todos"</span>)
+<span class="k">def</span> <span class="f">list_todos</span>():
+    <span class="k">with</span> get_conn() <span class="k">as</span> conn:
+        rows = conn.execute(<span class="s">"SELECT * FROM todos"</span>).fetchall()<span class="n">1</span>
+    <span class="k">return</span> [to_dict(r) <span class="k">for</span> r <span class="k">in</span> rows]<span class="n">2</span>
+
+<span class="d">@app.post</span>(<span class="s">"/todos"</span>, status_code=<span class="s">201</span>)
+<span class="k">def</span> <span class="f">create_todo</span>(todo: TodoIn):
+    <span class="k">with</span> get_conn() <span class="k">as</span> conn:
+        cur = conn.execute(
+            <span class="s">"INSERT INTO todos (title, done) VALUES (?, ?)"</span>,
+            (todo.title, todo.done),<span class="n">3</span>
+        )
+    <span class="k">return</span> {<span class="s">"id"</span>: cur.lastrowid, **todo.model_dump()}<span class="n">4</span></pre>
+      </div>
+      <div class="cell notes" style="justify-content: center;">
+        <div class="note reveal d2"><span class="n">1</span><div><h4>SELECT して全行を取る</h4><p><code class="i">fetchall()</code> で結果をリストで受け取る。</p></div></div>
+        <div class="note reveal d3"><span class="n">2</span><div><h4>1行ずつ辞書に変換して返す</h4><p>リスト内包表記。<code class="i">for</code> ループで append するのと同じ意味。</p></div></div>
+        <div class="note reveal d4"><span class="n">3</span><div><h4>値は ? にタプルで渡す</h4><p>Pydantic でチェック済みの <code class="i">todo.title</code> などをそのまま使える。</p></div></div>
+        <div class="note reveal d5"><span class="n">4</span><div><h4>振られた id を返す</h4><p><code class="i">cur.lastrowid</code> に、いま INSERT した行の id が入っている。</p></div></div>
+        <div class="box pink reveal d6"><p class="small">関数の「形」（デコレータ・引数・return）はメモリ版と同じ。<strong>中身だけ SQL に変わった。</strong></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.08</b><span>DB</span></div><h2>DB 版（3/3）：PUT・DELETE と再起動テスト</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1.45fr 1fr;">
+      <div class="cell black">
+        <pre class="code reveal d1" style="font-size: 22px; line-height: 1.5;"><span class="d">@app.put</span>(<span class="s">"/todos/{todo_id}"</span>)
+<span class="k">def</span> <span class="f">update_todo</span>(todo_id: <span class="t">int</span>, todo: TodoIn):
+    <span class="k">with</span> get_conn() <span class="k">as</span> conn:
+        cur = conn.execute(
+            <span class="s">"UPDATE todos SET title = ?, done = ? WHERE id = ?"</span>,
+            (todo.title, todo.done, todo_id),
+        )
+    <span class="k">if</span> cur.rowcount == <span class="s">0</span>:<span class="n">1</span>
+        <span class="k">raise</span> HTTPException(status_code=<span class="s">404</span>, detail=<span class="s">"Todo not found"</span>)
+    <span class="k">return</span> {<span class="s">"id"</span>: todo_id, **todo.model_dump()}
+
+<span class="d">@app.delete</span>(<span class="s">"/todos/{todo_id}"</span>)
+<span class="k">def</span> <span class="f">delete_todo</span>(todo_id: <span class="t">int</span>):
+    <span class="k">with</span> get_conn() <span class="k">as</span> conn:
+        cur = conn.execute(
+            <span class="s">"DELETE FROM todos WHERE id = ?"</span>, (todo_id,)<span class="n">2</span>
+        )
+    <span class="k">if</span> cur.rowcount == <span class="s">0</span>:
+        <span class="k">raise</span> HTTPException(status_code=<span class="s">404</span>, detail=<span class="s">"Todo not found"</span>)
+    <span class="k">return</span> {<span class="s">"ok"</span>: <span class="k">True</span>}</pre>
+      </div>
+      <div class="cell flex">
+        <div class="notes">
+          <div class="note reveal d2"><span class="n">1</span><div><h4>何行変わった？ で 404 判定</h4><p><code class="i">rowcount</code> が 0 ＝ その id の行がなかった。</p></div></div>
+          <div class="note reveal d3"><span class="n">2</span><div><h4>値が1つでもタプルにする</h4><p><code class="i">(todo_id,)</code> のカンマを忘れずに。</p></div></div>
+        </div>
+        <div class="box green reveal d4" style="margin-top: 10px;">
+          <h4>再起動テスト</h4>
+          <ul class="arrow" style="margin-top: 8px;">
+            <li class="small">画面から ToDo を2件追加</li>
+            <li class="small">Ctrl+C で止めて、もう一度起動</li>
+            <li class="small">画面を再読み込み → <strong>消えずに残っている！</strong></li>
+            <li class="small">フォルダに <code class="i">todo.db</code> ができている</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.08</b><span>完成</span></div><h2>完成！「追加」を押したとき、裏で起きていること</h2><div class="pg"></div></div>
     <div class="body" style="grid-template-columns: 1fr 560px; grid-template-rows: 1fr 260px;">
       <div class="cell center">
         <div class="flow reveal d1" style="gap: 0;">
@@ -1549,7 +1589,7 @@ load();
       </div>
       <div class="cell gray flex tight">
         <span class="label">フォルダ構成</span>
-        <pre class="mono reveal d3" style="font: 700 22px/1.6 var(--mono);">04_todo_sqlite/
+        <pre class="mono reveal d3" style="font: 700 22px/1.6 var(--mono);">05_todo_sqlite/
 ├── main.py
 ├── static/
 │   └── index.html
@@ -1559,10 +1599,10 @@ load();
           <div class="view"><p style="font-weight: 900; font-size: 28px;">ToDo</p><p class="xs"><span style="border: 2px solid; padding: 0 8px;">やること</span> <span style="border: 2px solid; padding: 0 8px; background: var(--pink);">追加</span></p><p class="xs">☐ 牛乳を買う ［削除］<br>☑ レポート提出 ［削除］</p></div>
         </div>
       </div>
-      <div class="cell black center reveal d5" style="grid-column: 1 / 3;">
-        <div class="term" style="border-color: #444; box-shadow: none;"><pre><span class="prompt">$ </span>cd examples/04_todo_sqlite
+      <div class="cell black center tight reveal d5" style="grid-column: 1 / 3;">
+        <div class="term" style="border-color: #444; box-shadow: none;"><pre><span class="prompt">$ </span>cd examples/05_todo_sqlite
 <span class="prompt">$ </span>uvicorn main:app --reload        <span class="c" style="color: var(--code-comment);"># → ブラウザで http://127.0.0.1:8000/ を開く</span></pre></div>
-        <p class="small" style="margin-top: 14px; color: var(--white);">1章の全体図（クライアント → Web API → データベース）が、<strong>自分のコードで</strong>全部つながりました。</p>
+        <p class="small" style="margin-top: 14px; color: var(--white);">画面のコードは7章から<strong>1行も変えていない</strong>のに、データが残るようになった。1章の全体図（クライアント → Web API → データベース）が、自分のコードで全部つながりました。</p>
       </div>
     </div>
   </div>
@@ -1717,7 +1757,7 @@ class SlidePresentation {
 class InlineEditor {
     constructor() {
         this.isActive = false;
-        this.key = 'fastapi-deck-edits-v1';
+        this.key = 'fastapi-deck-edits-v2';
         this.targets = () => document.querySelectorAll('.slide h1, .slide h2, .slide h3, .slide h4, .slide p, .slide li, .slide td, .slide th, .slide pre, .slide .label');
         this.restore();
         this.bind();
