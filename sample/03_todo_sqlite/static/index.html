@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>ToDo</title>
+</head>
+<body>
+  <h1>ToDo</h1>
+  <form id="form">
+    <input id="title" placeholder="やること" required>
+    <button>追加</button>
+  </form>
+  <ul id="list"></ul>
+
+  <script>
+    // GET: 一覧を取ってきて表示する
+    async function load() {
+      const res = await fetch("/todos");
+      const todos = await res.json();
+      list.innerHTML = "";
+      for (const t of todos) {
+        const li = document.createElement("li");
+        li.innerHTML = `<input type="checkbox" ${t.done ? "checked" : ""}> ${t.title} <button>削除</button>`;
+        // PUT: チェックで完了/未完了を切り替える
+        li.querySelector("input").onchange = async (e) => {
+          await fetch(`/todos/${t.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title: t.title, done: e.target.checked }),
+          });
+        };
+        // DELETE: 削除ボタン
+        li.querySelector("button").onclick = async () => {
+          await fetch(`/todos/${t.id}`, { method: "DELETE" });
+          load();
+        };
+        list.appendChild(li);
+      }
+    }
+
+    // POST: フォーム送信で新しい ToDo を作る
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      await fetch("/todos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: title.value }),
+      });
+      title.value = "";
+      load();
+    };
+
+    load();
+  </script>
+</body>
+</html>

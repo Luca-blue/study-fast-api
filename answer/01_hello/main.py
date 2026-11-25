@@ -3,9 +3,14 @@ from fastapi import FastAPI
 app = FastAPI()
 
 
+@app.get("/")
+def hello():
+    return {"message": "Hello, FastAPI!"}
+
+
 # パスパラメータ: URL の一部を変数として受け取る
 @app.get("/hello/{name}")
-def hello(name: str):
+def hello_name(name: str):
     return {"message": f"こんにちは、{name}さん"}
 
 

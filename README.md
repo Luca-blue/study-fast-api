@@ -1,43 +1,45 @@
 # study-fast-api
 
-FastAPI 入門のハンズオン資料と、スライドで使うサンプルコードです。
+FastAPI 入門のハンズオン教材です。スライドを見ながら、`sample/` のファイルを開いて編集していきます。
 
 ## スライド
 
-`slides/fastapi-intro.html` をブラウザで開いてください（31枚・1ファイル完結）。
+`slides/fastapi-intro.html` をブラウザで開いてください（28枚・1ファイル完結）。
 
 - `←` `→` / `Space` / マウスホイール / スワイプでページ送り、`Home` `End` で最初・最後へ
 - URL の `#13` のように番号を付けると、そのスライドから開く
-- `E` キー（または画面左上にマウスを乗せる）で編集モード。文字をクリックして直接書き換え、`Ctrl/Cmd + S` で HTML を保存
+- `E` キー（または画面左上にマウスを乗せる）で編集モード。`Ctrl/Cmd + S` で HTML を保存
 - 印刷（PDF 保存）すると 1 スライド 1 ページで出力
 
 | 章 | 内容 |
 |---|---|
 | 01 | Web API のしくみ（クライアント・Web API・DB、リクエスト/レスポンス） |
-| 02 | 準備（fastapi・uvicorn・pydantic・sqlite3 の役目、インストール） |
-| 03 | 書いてみる（最小コード、起動、PC 内のサーバーにブラウザでアクセス、パラメータ、トラブル対処） |
-| 04 | HTTP メソッド（GET / POST / PUT / DELETE を ToDo アプリで） |
-| 05 | データを受け取る（Pydantic、メモリ版 ToDo API、/docs） |
-| 06 | 画面をつなぐ（fetch、StaticFiles、メモリ版 API を画面から操作） |
-| 07 | SQLite につなぐ（SQL と HTTP メソッドの対応、DB 版 API、完成形） |
+| 02 | 準備（ライブラリの役目、教材の取得とインストール、`sample/` の進め方） |
+| 03 | 書いてみる（最小コード、起動、PC 内のサーバーにブラウザでアクセス、パラメータ） |
+| 04 | HTTP メソッド（GET / POST / PUT / DELETE） |
+| 05 | データを受け取る（Pydantic、ToDo API の関数を書く、/docs で試す） |
+| 06 | 画面をつなぐ（完成品の画面で動作確認、fetch の重要なところを読む） |
+| 07 | SQLite につなぐ（DB 版を読む、5章の関数との比較、再起動テスト） |
 
-## サンプルコード
+## 準備
 
 ```bash
+git clone https://github.com/luca-blue/study-fast-api.git
+cd study-fast-api
 python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install fastapi uvicorn
-
-cd examples/01_hello
-uvicorn main:app --reload        # → http://127.0.0.1:8000/ と /docs
 ```
 
-| フォルダ | 内容 | 対応する章 |
-|---|---|---|
-| `examples/01_hello` | いちばん小さな API | 3章 |
-| `examples/02_params` | パスパラメータ・クエリパラメータ | 3章 |
-| `examples/03_todo_memory` | Pydantic + メモリに保存する ToDo API（CRUD） | 5章 |
-| `examples/04_todo_frontend` | メモリ版 API + 画面（`static/index.html`） | 6章 |
-| `examples/05_todo_sqlite` | SQLite に保存する版（画面は 04 と同じ） | 7章 |
+## 教材フォルダ
 
-`04` と `05` は起動後に http://127.0.0.1:8000/ を開くと ToDo 画面が表示されます。
+| ファイル | 最初の状態 | やること | 章 |
+|---|---|---|---|
+| `sample/01_hello/main.py` | 空 | すべて自分で書く | 3章 |
+| `sample/02_todo/main.py` | import〜todos 辞書まで用意済み | API の関数だけ書く | 5章 |
+| `sample/02_todo/static/index.html` | 完成品 | 動かして、重要なところを読む | 6章 |
+| `sample/03_todo_sqlite/` | 完成品 | 動かして、5章との違いを読む | 7章 |
+
+各フォルダで `uvicorn main:app --reload` を実行し、http://127.0.0.1:8000/ （API は `/docs`）を開きます。
+
+`answer/` には `01_hello` と `02_todo` の書き終わった状態のコードがあります。動かないときに見比べてください。

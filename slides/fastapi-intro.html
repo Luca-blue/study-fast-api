@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@500;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
 <!-- Icons: Material Symbols Sharp（使うアイコンだけを読み込む） -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,500,0,0&icon_names=add,add_circle,alt_route,api,bolt,build,cloud_off,cloud_upload,code,computer,construction,create_new_folder,data_object,database,delete,description,devices,dns,download,edit,flag,folder,folder_open,format_list_numbered,forum,function,help,info,input,inventory_2,lan,lightbulb,link,lock,memory,north_east,open_in_browser,output,partly_cloudy_day,play_arrow,play_circle,power_settings_new,priority_high,restart_alt,schema,school,science,search_off,shield,shopping_cart,south_west,swap_horiz,sync_alt,task_alt,terminal,tune,upload_file,verified,visibility,warning,web&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,500,0,0&icon_names=add_circle,alt_route,api,cloud_off,computer,database,delete,devices,dns,edit,verified,visibility&display=block" rel="stylesheet">
 <style>
 /* ===========================================
    THEME TOKENS (Raw Grid)
@@ -144,7 +144,7 @@ body { font-family: var(--font); color: var(--black); }
 /* --- Header band: [章ラベル | タイトル | ページ番号] --- */
 .head {
     display: grid;
-    grid-template-columns: 262px 1fr 170px;
+    grid-template-columns: 230px 1fr 170px;
     gap: 3px;
     background: var(--black);
 }
@@ -152,7 +152,7 @@ body { font-family: var(--font); color: var(--black); }
 .head .chap {
     background: var(--pink); color: var(--black);  /* 黒いコード面と接しても区切りが見えるようにピンク */
     flex-direction: row; justify-content: flex-start; align-items: center;
-    padding: 0 24px; gap: 14px;
+    padding: 0 34px; gap: 14px;
 }
 .head .chap > .ic { font-size: 58px; vertical-align: 0; }
 .head .chap > div { display: flex; flex-direction: column; gap: 6px; }
@@ -320,6 +320,7 @@ table.t th, table.t td {
 }
 table.t th { background: var(--black); color: var(--white); font-weight: 800; letter-spacing: 0.04em; }
 table.t tr:nth-child(even) td { background: var(--gray); }
+table.t.compact th, table.t.compact td { padding: 8px 16px; font-size: 23px; }
 table.t td.hl { background: var(--green) !important; font-weight: 800; }
 table.t th.hl { background: var(--darkgray); }
 table.t td code, table.t td .mono { font: 700 23px var(--mono); }
@@ -366,11 +367,11 @@ table.t tbody tr:hover td { background: var(--green); }
 }
 .ibox {
     display: inline-flex; align-items: center; justify-content: center; flex: none;
-    width: 64px; height: 64px;
+    width: 96px; height: 96px;
     border: 3px solid var(--black); background: var(--white); box-shadow: var(--shadow-sm);
     color: var(--black);
 }
-.ibox .ic { font-size: 40px; vertical-align: 0; }
+.ibox .ic { font-size: 62px; vertical-align: 0; }
 .ibox.pink { background: var(--pink); } .ibox.green { background: var(--green); }
 .boxhead { display: flex; align-items: center; gap: 18px; }
 .exline { margin-top: 14px; border-top: 3px solid var(--black); padding-top: 12px; }
@@ -378,6 +379,17 @@ table.t tbody tr:hover td { background: var(--green); }
 .m .ic { font-size: 1.05em; margin-right: 6px; vertical-align: -0.18em; }
 .ic.callout { font-size: 1.25em; margin-right: 12px; vertical-align: -0.25em; }
 .cover .side .box span .ic { margin-right: 6px; }
+
+
+/* ===========================================
+   TASK CARD（作業手順：どのファイルを開いて何をするか）
+   =========================================== */
+.task { border: var(--border); box-shadow: var(--shadow-sm); background: var(--white); color: var(--black); }
+.task .th { background: var(--black); color: var(--white); font: 800 23px var(--font); letter-spacing: 0.04em; padding: 8px 20px; }
+.task ol { list-style: none; padding: 16px 22px; display: flex; flex-direction: column; gap: 12px; }
+.task li { display: flex; gap: 14px; align-items: flex-start; font: 500 24px/1.55 var(--font); }
+.task li .n { width: 36px; height: 36px; font-size: 19px; line-height: 30px; margin-top: 2px; background: var(--green); }
+code.path { font: 800 0.92em var(--mono); background: var(--green); border: 2px solid var(--black); padding: 0 8px; }
 
 /* ===========================================
    REVEAL ANIMATION
@@ -442,17 +454,17 @@ body.editing [contenteditable="true"]:focus { outline: 3px solid #e0533d; }
     <div class="top"><span class="label">PYTHON WEB API 入門</span><span class="mono">fastapi + uvicorn + sqlite</span></div>
     <div class="hero">
       <div class="bigbg">API</div>
-      <span class="label reveal"><span class="ic">school</span>ハンズオン資料</span>
+      <span class="label reveal">ハンズオン資料</span>
       <h1 class="reveal d1">はじめての<span class="en">FastAPI</span></h1>
       <p class="lead reveal d2">しくみを知る → 動かす → つなげる。<br>小さな ToDo アプリを作りながら学ぶ。</p>
     </div>
     <div class="side">
-      <span class="label"><span class="ic">construction</span>今日つくるもの</span>
-      <div class="box reveal d1"><span><span class="ic">computer</span> ブラウザ</span> <small>client</small></div>
+      <span class="label">今日つくるもの</span>
+      <div class="box reveal d1"><span>ブラウザ</span> <small>client</small></div>
       <div class="arrowline reveal d2">↓ GET /todos</div>
-      <div class="box reveal d2"><span><span class="ic">api</span> FastAPI</span> <small>server</small></div>
+      <div class="box reveal d2"><span>FastAPI</span> <small>server</small></div>
       <div class="arrowline reveal d3">↓ SELECT *</div>
-      <div class="box reveal d3"><span><span class="ic">database</span> SQLite</span> <small>database</small></div>
+      <div class="box reveal d3"><span>SQLite</span> <small>database</small></div>
     </div>
     <div class="chaps">
       <div class="reveal d1"><span>01</span>Web API の<br>しくみ</div>
@@ -468,16 +480,16 @@ body.editing [contenteditable="true"]:focus { outline: 3px solid #e0533d; }
      ===================================================== -->
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">format_list_numbered</span><div><b>INDEX</b><span>目次</span></div></div><h2>今日の流れ：7つの章</h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><div><b>INDEX</b><span>目次</span></div></div><h2>今日の流れ：7つの章</h2><div class="pg"></div></div>
     <div class="body" style="grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr 1fr;">
-      <div class="cell chapcard  reveal d1"><div class="boxhead" style="justify-content: space-between;"><span class="no">01</span><span class="ibox"><span class="ic">lan</span></span></div><h4>Web API のしくみ</h4><p class="muted">クライアント・サーバー・データベースの関係</p></div>
-      <div class="cell chapcard  reveal d2"><div class="boxhead" style="justify-content: space-between;"><span class="no">02</span><span class="ibox"><span class="ic">download</span></span></div><h4>準備</h4><p class="muted">fastapi・uvicorn・pydantic の役目とインストール</p></div>
-      <div class="cell chapcard pink reveal d3"><div class="boxhead" style="justify-content: space-between;"><span class="no">03</span><span class="ibox"><span class="ic">code</span></span></div><h4>書いてみる</h4><p>最小のコードを動かして、ブラウザで確かめる</p></div>
-      <div class="cell chapcard pink reveal d4"><div class="boxhead" style="justify-content: space-between;"><span class="no">04</span><span class="ibox"><span class="ic">swap_horiz</span></span></div><h4>HTTP メソッド</h4><p>GET・POST・PUT・DELETE を具体例で</p></div>
-      <div class="cell chapcard green reveal d5"><div class="boxhead" style="justify-content: space-between;"><span class="no">05</span><span class="ibox"><span class="ic">data_object</span></span></div><h4>データを受け取る</h4><p>Pydantic とメモリ版 ToDo API</p></div>
-      <div class="cell chapcard green reveal d6"><div class="boxhead" style="justify-content: space-between;"><span class="no">06</span><span class="ibox"><span class="ic">web</span></span></div><h4>画面をつなぐ</h4><p>fetch で API を呼んで ToDo アプリを動かす</p></div>
-      <div class="cell chapcard green reveal d7"><div class="boxhead" style="justify-content: space-between;"><span class="no">07</span><span class="ibox"><span class="ic">database</span></span></div><h4>SQLite につなぐ</h4><p>再起動しても消えないデータで完成</p></div>
-      <div class="cell chapcard black reveal d8"><div class="boxhead" style="justify-content: space-between;"><span class="no">GOAL</span><span class="ibox pink"><span class="ic">flag</span></span></div><h4>ToDo アプリ完成</h4><p>ブラウザ → FastAPI → SQLite が自分のコードでつながる</p></div>
+      <div class="cell chapcard  reveal d1"><div class="boxhead" style="justify-content: space-between;"><span class="no">01</span></div><h4>Web API のしくみ</h4><p class="muted">クライアント・サーバー・データベースの関係</p></div>
+      <div class="cell chapcard  reveal d2"><div class="boxhead" style="justify-content: space-between;"><span class="no">02</span></div><h4>準備</h4><p class="muted">fastapi・uvicorn・pydantic の役目とインストール</p></div>
+      <div class="cell chapcard pink reveal d3"><div class="boxhead" style="justify-content: space-between;"><span class="no">03</span></div><h4>書いてみる</h4><p>最小のコードを動かして、ブラウザで確かめる</p></div>
+      <div class="cell chapcard pink reveal d4"><div class="boxhead" style="justify-content: space-between;"><span class="no">04</span></div><h4>HTTP メソッド</h4><p>GET・POST・PUT・DELETE を具体例で</p></div>
+      <div class="cell chapcard green reveal d5"><div class="boxhead" style="justify-content: space-between;"><span class="no">05</span></div><h4>データを受け取る</h4><p>Pydantic とメモリ版 ToDo API</p></div>
+      <div class="cell chapcard green reveal d6"><div class="boxhead" style="justify-content: space-between;"><span class="no">06</span></div><h4>画面をつなぐ</h4><p>fetch で API を呼んで ToDo アプリを動かす</p></div>
+      <div class="cell chapcard green reveal d7"><div class="boxhead" style="justify-content: space-between;"><span class="no">07</span></div><h4>SQLite につなぐ</h4><p>再起動しても消えないデータで完成</p></div>
+      <div class="cell chapcard black reveal d8"><div class="boxhead" style="justify-content: space-between;"><span class="no">GOAL</span></div><h4>ToDo アプリ完成</h4><p>ブラウザ → FastAPI → SQLite が自分のコードでつながる</p></div>
     </div>
   </div>
 </section>
@@ -487,7 +499,7 @@ body.editing [contenteditable="true"]:focus { outline: 3px solid #e0533d; }
      ===================================================== -->
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">lan</span><div><b>CH.01</b><span>しくみ</span></div></div><h2>Web API の役割：画面とデータの間をつなぐ</h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><div><b>CH.01</b><span>しくみ</span></div></div><h2>Web API の役割：画面とデータの間をつなぐ</h2><div class="pg"></div></div>
     <div class="body" style="grid-template-rows: 1fr 290px;">
       <div class="cell center">
         <div class="flow">
@@ -511,10 +523,10 @@ body.editing [contenteditable="true"]:focus { outline: 3px solid #e0533d; }
         </div>
       </div>
       <div class="body" style="grid-template-columns: repeat(4, 1fr); gap: 3px;">
-        <div class="cell flex reveal d4"><div class="boxhead"><span class="ibox green"><span class="ic">partly_cloudy_day</span></span><h4>天気アプリ</h4></div><p class="small">「東京の天気」を要求<br>→「晴れ 18℃」が返る</p></div>
-        <div class="cell flex reveal d5"><div class="boxhead"><span class="ibox green"><span class="ic">forum</span></span><h4>SNS</h4></div><p class="small">新着投稿を要求<br>→ 投稿の一覧が返る</p></div>
-        <div class="cell flex reveal d6"><div class="boxhead"><span class="ibox green"><span class="ic">shopping_cart</span></span><h4>ネットショップ</h4></div><p class="small">カートへの追加を要求<br>→「追加しました」が返る</p></div>
-        <div class="cell pink flex reveal d7"><div class="boxhead"><span class="ibox"><span class="ic">shield</span></span><h4>API を通す理由</h4></div><p class="xs">決まった URL とメソッドでしか操作できないため、データを安全に、決められたルールどおりに扱える。</p></div>
+        <div class="cell flex reveal d4"><h4>天気アプリ</h4><p class="small">「東京の天気」を要求<br>→「晴れ 18℃」が返る</p></div>
+        <div class="cell flex reveal d5"><h4>SNS</h4><p class="small">新着投稿を要求<br>→ 投稿の一覧が返る</p></div>
+        <div class="cell flex reveal d6"><h4>ネットショップ</h4><p class="small">カートへの追加を要求<br>→「追加しました」が返る</p></div>
+        <div class="cell pink flex reveal d7"><h4>API を通す理由</h4><p class="xs">決まった URL とメソッドでしか操作できないため、データを安全に、決められたルールどおりに扱える。</p></div>
       </div>
     </div>
   </div>
@@ -522,10 +534,10 @@ body.editing [contenteditable="true"]:focus { outline: 3px solid #e0533d; }
 
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">lan</span><div><b>CH.01</b><span>しくみ</span></div></div><h2>リクエストとレスポンス：要求と応答</h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><div><b>CH.01</b><span>しくみ</span></div></div><h2>リクエストとレスポンス：要求と応答</h2><div class="pg"></div></div>
     <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 220px;">
       <div class="cell flex">
-        <span class="label"><span class="ic">north_east</span>REQUEST ／ リクエスト（要求）</span>
+        <span class="label">REQUEST ／ リクエスト（要求）</span>
         <div class="term reveal d1"><div class="bar">クライアント → サーバー</div><pre><span class="ok">GET</span> /todos/1 HTTP/1.1
 Host: 127.0.0.1:8000
 Accept: application/json</pre></div>
@@ -536,7 +548,7 @@ Accept: application/json</pre></div>
         </div>
       </div>
       <div class="cell flex gray">
-        <span class="label"><span class="ic">south_west</span>RESPONSE ／ レスポンス（応答）</span>
+        <span class="label">RESPONSE ／ レスポンス（応答）</span>
         <div class="term reveal d3"><div class="bar">サーバー → クライアント</div><pre>HTTP/1.1 <span class="ok">200 OK</span>
 content-type: application/json
 
@@ -547,7 +559,7 @@ content-type: application/json
         </div>
       </div>
       <div class="cell pink center reveal d5" style="grid-column: 1 / 3;">
-        <p style="font-size: 32px;"><span class="ic callout">lightbulb</span><strong>1回のリクエストに、必ず1回のレスポンス。</strong> この往復が HTTP（ブラウザとサーバーの通信のルール）の基本です。</p>
+        <p style="font-size: 32px;"><strong>1回のリクエストに、必ず1回のレスポンス。</strong> この往復が HTTP（ブラウザとサーバーの通信のルール）の基本です。</p>
       </div>
     </div>
   </div>
@@ -555,26 +567,26 @@ content-type: application/json
 
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">lan</span><div><b>CH.01</b><span>しくみ</span></div></div><h2>全体像：3つの登場人物と、つなぐもの</h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><div><b>CH.01</b><span>しくみ</span></div></div><h2>全体像：3つの登場人物と、つなぐもの</h2><div class="pg"></div></div>
     <div class="body" style="grid-template-rows: 1fr 230px;">
       <div class="cell center">
         <div class="flow" style="align-items: stretch;">
           <div class="box reveal d1">
-            <span class="label pink"><span class="ic">devices</span>CLIENT</span>
+            <div class="boxhead"><span class="ibox"><span class="ic">devices</span></span><span class="label pink">CLIENT</span></div>
             <h3 style="margin: 14px 0 8px;">クライアント</h3>
             <ul class="arrow"><li class="small">ブラウザ（HTML + JavaScript）</li><li class="small">スマホアプリ</li><li class="small">ほかのプログラム</li></ul>
             <p class="xs muted" style="margin-top: 14px;">この講座では → 6章</p>
           </div>
           <div class="conn" style="width: 150px;"><small>HTTP</small><i>→</i><i>←</i><small>JSON</small></div>
           <div class="box green reveal d2" style="flex: 1.15;">
-            <span class="label"><span class="ic">api</span>WEB API</span>
+            <div class="boxhead"><span class="ibox"><span class="ic">api</span></span><span class="label">WEB API</span></div>
             <h3 style="margin: 14px 0 8px;">Python + FastAPI</h3>
             <ul class="arrow"><li class="small">URL とメソッドごとに処理を決める</li><li class="small">届いたデータをチェックする</li><li class="small">DB に読み書きしてレスポンスを作る</li></ul>
             <p class="xs muted" style="margin-top: 14px;">この講座では → 2〜5章</p>
           </div>
           <div class="conn" style="width: 150px;"><small>SQL</small><i>→</i><i>←</i><small>行データ</small></div>
           <div class="box reveal d3">
-            <span class="label pink"><span class="ic">database</span>DATABASE</span>
+            <div class="boxhead"><span class="ibox"><span class="ic">database</span></span><span class="label pink">DATABASE</span></div>
             <h3 style="margin: 14px 0 8px;">データベース</h3>
             <ul class="arrow"><li class="small">SQLite（ファイル1つ）</li><li class="small">表（テーブル）で保存</li><li class="small">SQL という言葉で操作</li></ul>
             <p class="xs muted" style="margin-top: 14px;">この講座では → 7章</p>
@@ -582,8 +594,8 @@ content-type: application/json
         </div>
       </div>
       <div class="body" style="grid-template-columns: 1fr 1fr; gap: 3px;">
-        <div class="cell reveal d4"><h4><span class="ic">swap_horiz</span> クライアント ⇄ API は「HTTP」</h4><p class="small">URL・メソッド・ステータスコードでやりとり。データは JSON。</p></div>
-        <div class="cell reveal d5"><h4><span class="ic">database</span> API ⇄ DB は「SQL」</h4><p class="small">「この表からこの行を取り出して」と命令する専用の言葉。</p></div>
+        <div class="cell reveal d4"><h4>クライアント ⇄ API は「HTTP」</h4><p class="small">URL・メソッド・ステータスコードでやりとり。データは JSON。</p></div>
+        <div class="cell reveal d5"><h4>API ⇄ DB は「SQL」</h4><p class="small">「この表からこの行を取り出して」と命令する専用の言葉。</p></div>
       </div>
     </div>
   </div>
@@ -594,7 +606,7 @@ content-type: application/json
      ===================================================== -->
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">download</span><div><b>CH.02</b><span>準備</span></div></div><h2>主要ライブラリと、それぞれの役目</h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><div><b>CH.02</b><span>準備</span></div></div><h2>主要ライブラリと、それぞれの役目</h2><div class="pg"></div></div>
     <div class="body" style="grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr 250px;">
       <div class="cell flex green reveal d1"><div class="boxhead"><span class="ibox"><span class="ic">alt_route</span></span><span class="label">fastapi</span></div><h4>URL と処理の対応づけ</h4><p class="small">「どの URL に、どのメソッドでリクエストが来たら、どの関数を実行するか」を書くためのライブラリ。</p><p class="xs muted" style="margin-top: auto;">pip install が必要</p></div>
       <div class="cell flex pink reveal d2"><div class="boxhead"><span class="ibox"><span class="ic">dns</span></span><span class="label">uvicorn</span></div><h4>リクエストを受け付けるサーバー</h4><p class="small">ネットワークから届いたリクエストを受け取り、FastAPI に渡す<strong>サーバー</strong>。アプリの起動に使う。</p><p class="xs muted" style="margin-top: auto;">pip install が必要</p></div>
@@ -602,13 +614,13 @@ content-type: application/json
       <div class="cell flex gray reveal d4"><div class="boxhead"><span class="ibox"><span class="ic">database</span></span><span class="label">sqlite3</span></div><h4>データベース操作</h4><p class="small">SQLite データベースを読み書きするための標準モジュール。7章で使う。</p><p class="xs muted" style="margin-top: auto;">Python に最初から入っている</p></div>
       <div class="cell center" style="grid-column: 1 / 5;">
         <div class="flow reveal d5">
-          <div class="box"><h4><span class="ic">computer</span> ブラウザ</h4></div>
+          <div class="box"><h4>ブラウザ</h4></div>
           <div class="conn"><i>→</i></div>
-          <div class="box pink"><h4><span class="ic">dns</span> uvicorn</h4><p class="xs">受け取る</p></div>
+          <div class="box pink"><h4>uvicorn</h4><p class="xs">受け取る</p></div>
           <div class="conn"><i>→</i></div>
-          <div class="box green"><h4><span class="ic">alt_route</span> FastAPI（app）</h4><p class="xs">振り分ける</p></div>
+          <div class="box green"><h4>FastAPI（app）</h4><p class="xs">振り分ける</p></div>
           <div class="conn"><i>→</i></div>
-          <div class="box"><h4><span class="ic">function</span> あなたの関数</h4><p class="xs">pydantic でチェック済みのデータを受け取る</p></div>
+          <div class="box"><h4>あなたの関数</h4><p class="xs">pydantic でチェック済みのデータを受け取る</p></div>
         </div>
       </div>
     </div>
@@ -617,16 +629,17 @@ content-type: application/json
 
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">download</span><div><b>CH.02</b><span>準備</span></div></div><h2>インストール：3ステップ</h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 250px;">
+    <div class="head"><div class="chap"><div><b>CH.02</b><span>準備</span></div></div><h2>教材を取得してインストール：3ステップ</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1.3fr 1fr 1fr; grid-template-rows: 1fr 220px;">
       <div class="cell flex reveal d1">
-        <span class="label"><span class="ic">create_new_folder</span>STEP 1 ／ 作業フォルダを作る</span>
-        <div class="term"><pre><span class="prompt">$ </span>mkdir fastapi-study
-<span class="prompt">$ </span>cd fastapi-study</pre></div>
-        <p class="small">ターミナル（Windows は PowerShell）で実行。以降はずっとこのフォルダの中で作業します。</p>
+        <span class="label">STEP 1 ／ 教材を取得する</span>
+        <div class="term" style="--tfs: 19px;"><pre><span class="prompt">$ </span>git clone \
+  https://github.com/luca-blue/study-fast-api.git
+<span class="prompt">$ </span>cd study-fast-api</pre></div>
+        <p class="small">git がない場合は、GitHub の「Code」→「Download ZIP」で取得して展開する。</p>
       </div>
       <div class="cell flex green reveal d2">
-        <span class="label"><span class="ic">inventory_2</span>STEP 2 ／ 仮想環境を作って有効にする</span>
+        <span class="label">STEP 2 ／ 仮想環境を作って有効にする</span>
         <div class="term"><pre><span class="prompt">$ </span>python -m venv .venv
 <span class="c prompt"># Mac / Linux</span>
 <span class="prompt">$ </span>source .venv/bin/activate
@@ -635,7 +648,7 @@ content-type: application/json
         <p class="small">先頭に <code class="i">(.venv)</code> と出れば OK。</p>
       </div>
       <div class="cell flex pink reveal d3">
-        <span class="label"><span class="ic">download</span>STEP 3 ／ ライブラリを入れる</span>
+        <span class="label">STEP 3 ／ ライブラリを入れる</span>
         <div class="term"><pre><span class="prompt">$ </span>pip install fastapi uvicorn
 <span class="prompt">$ </span>pip list
 <span class="ok">fastapi    0.x.x</span>
@@ -644,12 +657,49 @@ content-type: application/json
         <p class="small">一覧に3つ出れば準備完了。</p>
       </div>
       <div class="cell gray reveal d4" style="grid-column: 1 / 3;">
-        <h4><span class="ic">help</span> 仮想環境（venv）とは</h4>
-        <p class="small">プロジェクト専用の <strong>Python 環境</strong>。ここに入れたライブラリはこのフォルダの中でだけ使われるので、ほかのプロジェクトとバージョンがぶつからない。新しくターミナルを開いたら、もう一度 activate する。</p>
+        <h4>仮想環境（venv）とは</h4>
+        <p class="small">プロジェクト専用の Python 環境。ここに入れたライブラリはこのフォルダの中でだけ使われるので、ほかのプロジェクトとバージョンがぶつからない。新しくターミナルを開いたら、もう一度 activate する。</p>
       </div>
       <div class="cell reveal d5">
-        <h4><span class="ic">info</span> Python のバージョン</h4>
-        <p class="small"><code class="i">python --version</code> で <strong>3.9 以上</strong>なら OK。Mac では <code class="i">python3</code> の場合あり。</p>
+        <h4>エディタで開いておく</h4>
+        <p class="small">VS Code などで <code class="i">study-fast-api</code> フォルダを開く。Python は <strong>3.9 以上</strong>。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><div><b>CH.02</b><span>準備</span></div></div><h2>教材フォルダ <code>sample/</code> の中身と進め方</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 640px 1fr; grid-template-rows: 1fr 150px;">
+      <div class="cell gray flex">
+        <span class="label">study-fast-api/</span>
+        <pre class="mono reveal d1" style="font: 700 23px/1.6 var(--mono);">study-fast-api/
+├── slides/   <span style="color: var(--darkgray); font-weight: 500;">← このスライド</span>
+├── <span class="mark">sample/</span>   <span style="color: var(--darkgray); font-weight: 500;">← ここを開いて編集する</span>
+│   ├── 01_hello/
+│   │   └── main.py
+│   ├── 02_todo/
+│   │   ├── main.py
+│   │   └── static/index.html
+│   └── 03_todo_sqlite/
+│       ├── main.py
+│       └── static/index.html
+└── answer/   <span style="color: var(--darkgray); font-weight: 500;">← 答え合わせ用</span></pre>
+      </div>
+      <div class="cell center">
+        <table class="t reveal d2">
+          <thead><tr><th style="width: 380px;">ファイル</th><th style="width: 270px;">最初の状態</th><th>やること</th><th style="width: 100px;">章</th></tr></thead>
+          <tbody>
+            <tr><td><code>01_hello/main.py</code></td><td>空</td><td class="hl">すべて自分で書く</td><td>3章</td></tr>
+            <tr><td><code>02_todo/main.py</code></td><td>import〜todos 辞書まで用意済み</td><td class="hl">API の関数だけ書く</td><td>5章</td></tr>
+            <tr><td><code>02_todo/static/index.html</code></td><td>完成品</td><td>動かして、重要なところを読む</td><td>6章</td></tr>
+            <tr><td><code>03_todo_sqlite/</code></td><td>完成品</td><td>動かして、5章との違いを読む</td><td>7章</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cell pink center reveal d3" style="grid-column: 1 / 3;">
+        <p style="font-size: 30px;"><strong>動かないときは、<code class="i">answer/</code> の同じ名前のファイルと見比べる。</strong><span class="small">　各スライドの「作業」の手順どおりに進めれば OK。</span></p>
       </div>
     </div>
   </div>
@@ -660,24 +710,33 @@ content-type: application/json
      ===================================================== -->
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">code</span><div><b>CH.03</b><span>書いてみる</span></div></div><h2>いちばん小さな API：<code>main.py</code></h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><div><b>CH.03</b><span>書いてみる</span></div></div><h2>いちばん小さな API：<code>main.py</code></h2><div class="pg"></div></div>
     <div class="body" style="grid-template-columns: 1fr 1fr;">
       <div class="cell black flex">
-        <span class="label"><span class="ic">description</span>main.py（たった6行）</span>
+        <span class="label">sample/01_hello/main.py（6行）</span>
         <pre class="code reveal d1" style="font-size: 30px; line-height: 1.85; margin-top: 20px;"><span class="k">from</span> fastapi <span class="k">import</span> FastAPI<span class="n">1</span>
 
 app = FastAPI()<span class="n">2</span>
 
+
 <span class="d">@app.get</span>(<span class="s">"/"</span>)<span class="n">3</span>
 <span class="k">def</span> <span class="f">hello</span>():
     <span class="k">return</span> {<span class="s">"message"</span>: <span class="s">"Hello, FastAPI!"</span>}<span class="n">4</span></pre>
-        <p class="xs reveal d2" style="margin-top: auto; color: var(--code-comment);">サンプル: examples/01_hello/main.py</p>
       </div>
-      <div class="cell notes" style="justify-content: center; gap: 30px;">
-        <div class="note reveal d2"><span class="n">1</span><div><h4>ライブラリを読み込む</h4><p>fastapi から FastAPI クラスを取り出す。</p></div></div>
-        <div class="note reveal d3"><span class="n">2</span><div><h4>アプリ本体を作る</h4><p>変数 <code class="i">app</code> がこの API そのもの。名前は起動のときに使うので覚えておく。</p></div></div>
-        <div class="note reveal d4"><span class="n">3</span><div><h4>「どの URL で動くか」の目印</h4><p><code class="i">@</code> で始まる行は<strong>デコレータ</strong>。「GET で <code class="i">/</code> にリクエストが来たら、直下の関数を実行する」という登録。</p></div></div>
-        <div class="note reveal d5"><span class="n">4</span><div><h4>レスポンスを返す</h4><p>辞書を return すると、FastAPI が自動で JSON にしてレスポンスにしてくれる。</p></div></div>
+      <div class="cell flex" style="gap: 24px;">
+        <div class="task reveal d1">
+          <div class="th">作業</div>
+          <ol>
+            <li><span class="n">A</span><span><code class="path">sample/01_hello/main.py</code> を開く（コメント1行だけの空ファイル）</span></li>
+            <li><span class="n">B</span><span>左のコードを<strong>すべて自分で</strong>書いて保存する</span></li>
+          </ol>
+        </div>
+        <div class="notes" style="gap: 14px;">
+          <div class="note reveal d2"><span class="n">1</span><div><h4>ライブラリを読み込む</h4><p>fastapi から FastAPI クラスを取り出す。</p></div></div>
+          <div class="note reveal d3"><span class="n">2</span><div><h4>アプリ本体を作る</h4><p>変数 <code class="i">app</code> がこの API そのもの。起動のときに名前を使う。</p></div></div>
+          <div class="note reveal d4"><span class="n">3</span><div><h4>「どの URL で動くか」の目印</h4><p><code class="i">@</code> で始まる行は<strong>デコレータ</strong>。「GET で <code class="i">/</code> にリクエストが来たら、直下の関数を実行する」という登録。</p></div></div>
+          <div class="note reveal d5"><span class="n">4</span><div><h4>レスポンスを返す</h4><p>辞書を return すると、FastAPI が自動で JSON にして返す。</p></div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -685,7 +744,7 @@ app = FastAPI()<span class="n">2</span>
 
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">code</span><div><b>CH.03</b><span>書いてみる</span></div></div><h2>起動する：<code>uvicorn main:app --reload</code></h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><div><b>CH.03</b><span>書いてみる</span></div></div><h2>起動する：<code>uvicorn main:app --reload</code></h2><div class="pg"></div></div>
     <div class="body" style="grid-template-rows: 300px 1fr;">
       <div class="cell center">
         <div style="display: grid; grid-template-columns: 1.1fr 0.9fr 0.9fr 1.3fr; gap: 24px;">
@@ -697,8 +756,9 @@ app = FastAPI()<span class="n">2</span>
       </div>
       <div class="body" style="grid-template-columns: 1.45fr 1fr; gap: 3px;">
         <div class="cell gray flex">
-          <span class="label"><span class="ic">terminal</span>実行結果</span>
-          <div class="term reveal d3" style="--tfs: 19px;"><div class="bar">main.py があるフォルダで実行</div><pre><span class="prompt">$ </span>uvicorn main:app --reload
+          <span class="label">実行結果</span>
+          <div class="term reveal d3" style="--tfs: 19px;"><div class="bar">main.py があるフォルダで実行</div><pre><span class="prompt">$ </span>cd sample/01_hello
+<span class="prompt">$ </span>uvicorn main:app --reload
 INFO:     Will watch for changes in these directories: [...]
 INFO:     <span class="ok">Uvicorn running on http://127.0.0.1:8000</span> (Press CTRL+C to quit)
 INFO:     Started reloader process [12345]
@@ -707,7 +767,7 @@ INFO:     Waiting for application startup.
 INFO:     <span class="ok">Application startup complete.</span></pre></div>
         </div>
         <div class="cell flex">
-          <span class="label"><span class="ic">priority_high</span>ポイント</span>
+          <span class="label">ポイント</span>
           <ul class="arrow reveal d4">
             <li class="small"><code class="i">Uvicorn running on …</code> が出たら成功</li>
             <li class="small">起動中のサーバーは<strong>動き続ける</strong>。ターミナルは占有されるので、ほかの作業は別のターミナルで</li>
@@ -722,10 +782,10 @@ INFO:     <span class="ok">Application startup complete.</span></pre></div>
 
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">code</span><div><b>CH.03</b><span>書いてみる</span></div></div><h2>ブラウザで確かめる</h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><div><b>CH.03</b><span>書いてみる</span></div></div><h2>ブラウザで確かめる</h2><div class="pg"></div></div>
     <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 240px;">
       <div class="cell green flex">
-        <span class="label"><span class="ic">open_in_browser</span>① API を直接開く</span>
+        <span class="label">① API を直接開く</span>
         <div class="browser reveal d1" style="flex: 1;">
           <div class="bar"><i></i><i></i><div class="url">http://127.0.0.1:8000/</div></div>
           <div class="view"><pre class="mono" style="font: 700 30px var(--mono);">{"message":"Hello, FastAPI!"}</pre></div>
@@ -733,12 +793,12 @@ INFO:     <span class="ok">Application startup complete.</span></pre></div>
         <p class="small reveal d2">return した辞書が JSON で表示される。<br>ブラウザの URL 欄に打つ＝ <strong>GET リクエスト</strong>を送っている。</p>
       </div>
       <div class="cell pink flex">
-        <span class="label"><span class="ic">description</span>② 自動ドキュメントを開く</span>
+        <span class="label">② 自動ドキュメントを開く</span>
         <div class="browser reveal d3" style="flex: 1;">
           <div class="bar"><i></i><i></i><div class="url">http://127.0.0.1:8000/docs</div></div>
           <div class="view" style="display: flex; flex-direction: column; gap: 14px;">
             <p style="font-weight: 900; font-size: 30px;">FastAPI <span class="xs mono" style="border: 2px solid; padding: 0 6px;">0.1.0</span></p>
-            <div class="box" style="box-shadow: none; padding: 12px 16px; display: flex; gap: 18px; align-items: center; background: var(--green);"><span class="m get"><span class="ic">visibility</span>GET</span><span class="mono" style="font: 700 24px var(--mono);">/</span><span class="xs">Hello</span></div>
+            <div class="box" style="box-shadow: none; padding: 12px 16px; display: flex; gap: 18px; align-items: center; background: var(--green);"><span class="m get">GET</span><span class="mono" style="font: 700 24px var(--mono);">/</span><span class="xs">Hello</span></div>
             <p class="xs muted">クリック → Try it out → Execute で、その場で試せる</p>
           </div>
         </div>
@@ -755,18 +815,18 @@ INFO:     <span class="ok">Application startup complete.</span></pre></div>
 
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">code</span><div><b>CH.03</b><span>書いてみる</span></div></div><h2>いま起きていること：PC の中でサーバーが動いている</h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><div><b>CH.03</b><span>書いてみる</span></div></div><h2>いま起きていること：PC の中でサーバーが動いている</h2><div class="pg"></div></div>
     <div class="body" style="grid-template-columns: 1.55fr 1fr; grid-template-rows: 1fr 262px;">
       <div class="cell gray center">
         <div class="box reveal d1" style="padding: 26px 30px; box-shadow: var(--shadow);">
           <div class="boxhead"><span class="ibox pink"><span class="ic">computer</span></span><h3>あなたの PC</h3><span class="label" style="margin-left: auto;">127.0.0.1 ＝ この PC 自身</span></div>
           <div class="flow" style="margin-top: 26px; align-items: center;">
-            <div class="term" style="flex: 1;"><div class="bar"><span class="ic">terminal</span> ターミナル（サーバー）</div><pre style="--tfs: 20px;"><span class="prompt">$ </span>uvicorn main:app --reload
+            <div class="term" style="flex: 1;"><div class="bar">ターミナル（サーバー）</div><pre style="--tfs: 20px;"><span class="prompt">$ </span>uvicorn main:app --reload
 <span class="ok">Uvicorn running on
   http://127.0.0.1:8000</span>
 … 8000番でリクエストを待機中</pre></div>
             <div class="conn" style="width: 200px;"><small>GET / </small><i>←</i><i>→</i><small>200 + JSON</small></div>
-            <div class="browser" style="flex: 1;"><div class="bar"><span class="ic">open_in_browser</span><div class="url">127.0.0.1:8000/</div></div>
+            <div class="browser" style="flex: 1;"><div class="bar"><div class="url">127.0.0.1:8000/</div></div>
               <div class="view"><p class="xs" style="font-weight: 800;">ブラウザ（クライアント）</p><pre class="mono" style="font: 700 21px var(--mono); margin-top: 10px;">{"message":
  "Hello, FastAPI!"}</pre></div></div>
           </div>
@@ -780,12 +840,12 @@ INFO:     <span class="ok">Application startup complete.</span></pre></div>
       </div>
       <div class="body" style="grid-column: 1 / 3; grid-template-columns: 1fr 1fr; gap: 3px;">
         <div class="cell flex green tight reveal d5">
-          <span class="label"><span class="ic">visibility</span>確認 1：ログを見る</span>
+          <span class="label">確認 1：ログを見る</span>
           <div class="term" style="box-shadow: none;"><pre style="--tfs: 20px;">INFO:     127.0.0.1:53086 - "<span class="ok">GET / HTTP/1.1</span>" 200 OK</pre></div>
           <p class="xs">ブラウザで開く・再読み込みするたびに、ターミナルに1行ずつ増える。</p>
         </div>
         <div class="cell flex pink tight reveal d6">
-          <span class="label"><span class="ic">power_settings_new</span>確認 2：サーバーを止める</span>
+          <span class="label">確認 2：サーバーを止める</span>
           <div class="term" style="box-shadow: none;"><pre style="--tfs: 20px;">Ctrl+C → 再読み込み → 「このサイトにアクセスできません」</pre></div>
           <p class="xs">応答するサーバーがいなくなるため接続できない。もう一度起動すれば元に戻る。</p>
         </div>
@@ -794,27 +854,30 @@ INFO:     <span class="ok">Application startup complete.</span></pre></div>
   </div>
 </section>
 
-
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">code</span><div><b>CH.03</b><span>書いてみる</span></div></div><h2>URL から値を受け取る：2つの方法</h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 405px;">
-      <div class="cell black flex">
-        <span class="label"><span class="ic">link</span>パスパラメータ：URL の「途中」を変数に</span>
-        <pre class="code reveal d1" style="font-size: 28px;"><span class="d">@app.get</span>(<span class="s">"/hello/<span class="hl" style="width: auto;">{name}</span>"</span>)
-<span class="k">def</span> <span class="f">hello</span>(name: <span class="t">str</span>):
-    <span class="k">return</span> {<span class="s">"message"</span>: <span class="k">f</span><span class="s">"こんにちは、{name}さん"</span>}</pre>
-        <p class="small reveal d2" style="color: var(--white);"><code class="i" style="color: var(--black);">{name}</code> の部分に入った文字が、関数の引数 <code class="i" style="color: var(--black);">name</code> に入る。</p>
+    <div class="head"><div class="chap"><div><b>CH.03</b><span>書いてみる</span></div></div><h2>URL から値を受け取る：2つの方法</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 88px 1fr 372px;">
+      <div class="cell tight reveal" style="grid-column: 1 / 3; display: flex; align-items: center; gap: 24px; padding-top: 0; padding-bottom: 0;">
+        <span class="label">作業</span>
+        <p class="small">同じ <code class="i">sample/01_hello/main.py</code> の<strong>末尾に2つの関数を追記</strong> → 保存（<code class="i">--reload</code> で自動反映）→ 下の URL をブラウザで開く</p>
       </div>
       <div class="cell black flex">
-        <span class="label"><span class="ic">tune</span>クエリパラメータ：URL の「? 以降」を変数に</span>
-        <pre class="code reveal d3" style="font-size: 28px;"><span class="d">@app.get</span>(<span class="s">"/add"</span>)
+        <span class="label">パスパラメータ：URL の「途中」を変数に</span>
+        <pre class="code reveal d1" style="font-size: 26px;"><span class="d">@app.get</span>(<span class="s">"/hello/{name}"</span>)
+<span class="k">def</span> <span class="f">hello_name</span>(name: <span class="t">str</span>):
+    <span class="k">return</span> {<span class="s">"message"</span>: <span class="k">f</span><span class="s">"こんにちは、{name}さん"</span>}</pre>
+        <p class="small reveal d2" style="color: var(--white);"><code class="i" style="color: var(--black);">{name}</code> に入った文字が、引数 <code class="i" style="color: var(--black);">name</code> に入る。</p>
+      </div>
+      <div class="cell black flex">
+        <span class="label">クエリパラメータ：URL の「? 以降」を変数に</span>
+        <pre class="code reveal d3" style="font-size: 26px;"><span class="d">@app.get</span>(<span class="s">"/add"</span>)
 <span class="k">def</span> <span class="f">add</span>(a: <span class="t">int</span>, b: <span class="t">int</span>):
     <span class="k">return</span> {<span class="s">"result"</span>: a + b}</pre>
-        <p class="small reveal d4" style="color: var(--white);">URL に書いていない引数は、自動で <code class="i" style="color: var(--black);">?a=1&amp;b=2</code> から受け取る。</p>
+        <p class="small reveal d4" style="color: var(--white);">URL に書いていない引数は <code class="i" style="color: var(--black);">?a=1&amp;b=2</code> から受け取る。</p>
       </div>
-      <div class="cell green flex">
-        <span class="label"><span class="ic">play_arrow</span>実行例</span>
+      <div class="cell green flex tight">
+        <span class="label">実行例</span>
         <table class="t reveal d3" style="background: var(--white);">
           <thead><tr><th>URL</th><th>結果</th></tr></thead>
           <tbody>
@@ -823,13 +886,13 @@ INFO:     <span class="ok">Application startup complete.</span></pre></div>
           </tbody>
         </table>
       </div>
-      <div class="cell pink flex">
-        <span class="label"><span class="ic">play_arrow</span>実行例</span>
+      <div class="cell pink flex tight">
+        <span class="label">実行例</span>
         <table class="t reveal d4" style="background: var(--white);">
           <thead><tr><th>URL</th><th>結果</th></tr></thead>
           <tbody>
             <tr><td><code>/add?a=1&amp;b=2</code></td><td><code>{"result":3}</code></td></tr>
-            <tr><td><code>/add?a=x&amp;b=2</code></td><td><strong>422 エラー</strong>：「a は整数じゃない」<br><span class="xs">← <code>a: int</code> と書いたおかげで自動チェック</span></td></tr>
+            <tr><td><code>/add?a=x&amp;b=2</code></td><td><strong>422 エラー</strong>：「a は整数ではない」<br><span class="xs">← <code>a: int</code> と書いたので自動でチェック</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -839,11 +902,11 @@ INFO:     <span class="ok">Application startup complete.</span></pre></div>
 
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">code</span><div><b>CH.03</b><span>書いてみる</span></div></div><h2>うまく動かないときのチェック表</h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><div><b>CH.03</b><span>書いてみる</span></div></div><h2>うまく動かないときのチェック表</h2><div class="pg"></div></div>
     <div class="body" style="grid-template-rows: 1fr 160px;">
       <div class="cell center">
         <table class="t reveal d1">
-          <thead><tr><th style="width: 640px;"><span class="ic">warning</span> こんなメッセージが出たら</th><th style="width: 470px;"><span class="ic">help</span> よくある原因</th><th><span class="ic">build</span> こうする</th></tr></thead>
+          <thead><tr><th style="width: 640px;">こんなメッセージが出たら</th><th style="width: 470px;">よくある原因</th><th>こうする</th></tr></thead>
           <tbody>
             <tr><td><code>command not found: uvicorn</code></td><td>仮想環境が有効になっていない</td><td>activate してから、もう一度 pip install</td></tr>
             <tr><td><code>Could not import module "main"</code></td><td>別のフォルダで実行している</td><td><code>cd</code> で main.py のあるフォルダへ移動</td></tr>
@@ -855,7 +918,7 @@ INFO:     <span class="ok">Application startup complete.</span></pre></div>
         </table>
       </div>
       <div class="cell pink center reveal d2">
-        <p style="font-size: 30px;"><span class="ic callout">lightbulb</span><strong>困ったら、まずターミナルを見る。</strong> サーバー側で何が起きたかは、すべてそこに表示されます。</p>
+        <p style="font-size: 30px;"><strong>困ったら、まずターミナルを見る。</strong> サーバー側で何が起きたかは、すべてそこに表示されます。</p>
       </div>
     </div>
   </div>
@@ -866,38 +929,34 @@ INFO:     <span class="ok">Application startup complete.</span></pre></div>
      ===================================================== -->
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">swap_horiz</span><div><b>CH.04</b><span>メソッド</span></div></div><h2>HTTP メソッド：「どうしてほしいか」を表す動詞</h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><div><b>CH.04</b><span>メソッド</span></div></div><h2>HTTP メソッド：「どうしてほしいか」を表す動詞</h2><div class="pg"></div></div>
     <div class="body" style="grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr 170px;">
       <div class="cell flex green reveal d1">
-        <span class="m get"><span class="ic">visibility</span>GET</span>
+        <span class="m get">GET</span>
         <div class="boxhead"><span class="ibox"><span class="ic">visibility</span></span><h3>取得する</h3></div>
         <p class="small">データを取り出す。中身は<strong>変わらない</strong>。</p>
         <table class="t" style="background: var(--white);"><tr><td style="width: 40%; white-space: nowrap;" class="xs"><b>ボディ</b></td><td class="xs">なし</td></tr><tr><td class="xs" style="white-space: nowrap;"><b>成功時</b></td><td class="xs mono">200 OK</td></tr></table>
-        <div class="box" style="margin-top: auto;"><p class="xs"><strong>ToDo の例</strong>：一覧を表示する</p><p class="xs mono" style="margin-top: 8px;">GET /todos</p></div>
       </div>
       <div class="cell flex pink reveal d2">
-        <span class="m post"><span class="ic">add</span>POST</span>
+        <span class="m post">POST</span>
         <div class="boxhead"><span class="ibox"><span class="ic">add_circle</span></span><h3>作成する</h3></div>
         <p class="small">新しいデータを送って登録する。データが<strong>増える</strong>。</p>
-        <table class="t" style="background: var(--white);"><tr><td style="width: 40%; white-space: nowrap;" class="xs"><b>ボディ</b></td><td class="xs">あり（作る中身）</td></tr><tr><td class="xs" style="white-space: nowrap;"><b>成功時</b></td><td class="xs mono">201 Created</td></tr></table>
-        <div class="box" style="margin-top: auto;"><p class="xs"><strong>ToDo の例</strong>：新しい ToDo を追加する</p><p class="xs mono" style="margin-top: 8px;">POST /todos</p></div>
+        <table class="t" style="background: var(--white);"><tr><td style="width: 40%; white-space: nowrap;" class="xs"><b>ボディ</b></td><td class="xs">あり（作る中身）</td></tr><tr><td class="xs" style="white-space: nowrap;"><b>成功時</b></td><td class="xs mono">200 OK</td></tr></table>
       </div>
       <div class="cell flex gray reveal d3">
-        <span class="m put"><span class="ic">edit</span>PUT</span>
+        <span class="m put">PUT</span>
         <div class="boxhead"><span class="ibox"><span class="ic">edit</span></span><h3>更新する</h3></div>
         <p class="small">すでにあるデータを、送った内容で<strong>置き換える</strong>。</p>
         <table class="t" style="background: var(--white);"><tr><td style="width: 40%; white-space: nowrap;" class="xs"><b>ボディ</b></td><td class="xs">あり（新しい中身）</td></tr><tr><td class="xs" style="white-space: nowrap;"><b>成功時</b></td><td class="xs mono">200 OK</td></tr></table>
-        <div class="box" style="margin-top: auto;"><p class="xs"><strong>ToDo の例</strong>：ToDo を完了にする</p><p class="xs mono" style="margin-top: 8px;">PUT /todos/1</p></div>
       </div>
       <div class="cell flex reveal d4">
-        <span class="m del"><span class="ic">delete</span>DELETE</span>
+        <span class="m del">DELETE</span>
         <div class="boxhead"><span class="ibox"><span class="ic">delete</span></span><h3>削除する</h3></div>
         <p class="small">指定したデータを削除する。データが<strong>減る</strong>。</p>
         <table class="t" style="background: var(--white);"><tr><td style="width: 40%; white-space: nowrap;" class="xs"><b>ボディ</b></td><td class="xs">なし</td></tr><tr><td class="xs" style="white-space: nowrap;"><b>成功時</b></td><td class="xs mono">200 OK</td></tr></table>
-        <div class="box" style="margin-top: auto;"><p class="xs"><strong>ToDo の例</strong>：ToDo を削除する</p><p class="xs mono" style="margin-top: 8px;">DELETE /todos/1</p></div>
       </div>
       <div class="cell black center reveal d5" style="grid-column: 1 / 5;">
-        <p style="font-size: 32px;"><span class="ic callout">lightbulb</span><strong>URL は「何を」（名詞）、メソッドは「どうする」（動詞）。</strong><span class="small" style="color: var(--code-comment);">　この4つで、作る・読む・更新・削除（CRUD）が全部できる。</span></p>
+        <p style="font-size: 32px;"><strong>URL は「何を」（名詞）、メソッドは「どうする」（動詞）。</strong><span class="small" style="color: var(--code-comment);">　この4つで、作る・読む・更新・削除（CRUD）が全部できる。</span></p>
       </div>
     </div>
   </div>
@@ -905,107 +964,40 @@ INFO:     <span class="ok">Application startup complete.</span></pre></div>
 
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">swap_horiz</span><div><b>CH.04</b><span>メソッド</span></div></div><h2>ToDo アプリの操作を、メソッドに置き換えると</h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><div><b>CH.04</b><span>メソッド</span></div></div><h2>ToDo アプリの操作を、メソッドに置き換えると</h2><div class="pg"></div></div>
     <div class="body" style="grid-template-rows: 1fr 170px;">
       <div class="cell center">
         <table class="t reveal d1">
           <thead><tr><th style="width: 330px;">画面での操作</th><th style="width: 200px;">メソッド</th><th style="width: 230px;">URL</th><th style="width: 560px;">送るデータ（ボディ）</th><th>返ってくるもの</th></tr></thead>
           <tbody>
-            <tr><td>一覧を開く</td><td><span class="m get"><span class="ic">visibility</span>GET</span></td><td><code>/todos</code></td><td class="muted">なし</td><td>ToDo のリスト</td></tr>
-            <tr><td>1件の詳細を見る</td><td><span class="m get"><span class="ic">visibility</span>GET</span></td><td><code>/todos/1</code></td><td class="muted">なし</td><td>id が 1 の ToDo</td></tr>
-            <tr><td>「追加」ボタン</td><td><span class="m post"><span class="ic">add</span>POST</span></td><td><code>/todos</code></td><td><code>{"title": "牛乳を買う"}</code></td><td>作られた ToDo <b>(201)</b></td></tr>
-            <tr><td>チェックを付ける</td><td><span class="m put"><span class="ic">edit</span>PUT</span></td><td><code>/todos/1</code></td><td><code>{"title": "牛乳を買う", "done": true}</code></td><td>更新後の ToDo</td></tr>
-            <tr><td>「削除」ボタン</td><td><span class="m del"><span class="ic">delete</span>DELETE</span></td><td><code>/todos/1</code></td><td class="muted">なし</td><td><code>{"ok": true}</code></td></tr>
+            <tr><td>一覧を開く</td><td><span class="m get">GET</span></td><td><code>/todos</code></td><td class="muted">なし</td><td>ToDo のリスト</td></tr>
+            <tr><td>「追加」ボタン</td><td><span class="m post">POST</span></td><td><code>/todos</code></td><td><code>{"title": "牛乳を買う"}</code></td><td>作られた ToDo</td></tr>
+            <tr><td>チェックを付ける</td><td><span class="m put">PUT</span></td><td><code>/todos/1</code></td><td><code>{"title": "牛乳を買う", "done": true}</code></td><td>更新後の ToDo</td></tr>
+            <tr><td>「削除」ボタン</td><td><span class="m del">DELETE</span></td><td><code>/todos/1</code></td><td class="muted">なし</td><td><code>{"ok": true}</code></td></tr>
           </tbody>
         </table>
       </div>
       <div class="body" style="grid-template-columns: 1fr 1fr; gap: 3px;">
-        <div class="cell green center reveal d2"><p class="small"><strong>同じ <code class="i">/todos/1</code> でも、</strong>メソッドが GET・PUT・DELETE で別々の処理になる。</p></div>
+        <div class="cell green center reveal d2"><p class="small"><strong>同じ <code class="i">/todos/1</code> でも、</strong>メソッドが PUT か DELETE かで別々の処理になる。</p></div>
         <div class="cell pink center reveal d3"><p class="small"><strong>GET と DELETE はボディなし。</strong>何をするかは URL だけで伝わる。</p></div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="slide">
-  <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">swap_horiz</span><div><b>CH.04</b><span>メソッド</span></div></div><h2><code>GET</code> と <code>POST</code>：取得と作成</h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: 1fr 1fr;">
-      <div class="cell flex green">
-        <span class="m get"><span class="ic">visibility</span>GET</span>
-        <div class="term reveal d1"><div class="bar">REQUEST</div><pre><span class="ok">GET</span> /todos HTTP/1.1</pre></div>
-        <div class="term reveal d2"><div class="bar">RESPONSE</div><pre><span class="ok">200 OK</span>
-[
-  {"id": 1, "title": "牛乳を買う", "done": false},
-  {"id": 2, "title": "レポート提出", "done": true}
-]</pre></div>
-        <ul class="arrow reveal d3">
-          <li class="small">データは<strong>変わらない</strong>。何回呼んでも同じ結果</li>
-          <li class="small">ブラウザの URL 欄からそのまま試せる</li>
-          <li class="small">条件はクエリで：<code class="i">/todos?done=false</code></li>
-        </ul>
-      </div>
-      <div class="cell flex pink">
-        <span class="m post"><span class="ic">add</span>POST</span>
-        <div class="term reveal d4"><div class="bar">REQUEST</div><pre><span class="ok">POST</span> /todos HTTP/1.1
-Content-Type: application/json
 
-{"title": "歯医者を予約"}</pre></div>
-        <div class="term reveal d5"><div class="bar">RESPONSE</div><pre><span class="ok">201 Created</span>
-{"id": 3, "title": "歯医者を予約", "done": false}</pre></div>
-        <ul class="arrow reveal d6">
-          <li class="small">データが<strong>増える</strong>。2回送れば2件できる</li>
-          <li class="small">中身は URL ではなく<strong>ボディ</strong>に JSON で入れる</li>
-          <li class="small">URL 欄では送れない → <code class="i">/docs</code> か JavaScript で</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
 
-<section class="slide">
-  <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">swap_horiz</span><div><b>CH.04</b><span>メソッド</span></div></div><h2><code>PUT</code> と <code>DELETE</code>：更新と削除</h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 220px;">
-      <div class="cell flex gray">
-        <span class="m put"><span class="ic">edit</span>PUT</span>
-        <div class="term reveal d1"><div class="bar">REQUEST</div><pre><span class="ok">PUT</span> /todos/1 HTTP/1.1
-Content-Type: application/json
 
-{"title": "牛乳を買う", "done": true}</pre></div>
-        <div class="term reveal d2"><div class="bar">RESPONSE</div><pre><span class="ok">200 OK</span>
-{"id": 1, "title": "牛乳を買う", "done": true}</pre></div>
-        <p class="small reveal d3">URL で「どれを」、ボディで「どう変えるか」を伝える。</p>
-      </div>
-      <div class="cell flex">
-        <span class="m del"><span class="ic">delete</span>DELETE</span>
-        <div class="term reveal d4"><div class="bar">REQUEST</div><pre><span class="ok">DELETE</span> /todos/1 HTTP/1.1</pre></div>
-        <div class="term reveal d5"><div class="bar">RESPONSE</div><pre><span class="ok">200 OK</span>
-{"ok": true}</pre></div>
-        <div class="term reveal d6"><div class="bar">もう一度同じ DELETE を送ると</div><pre>404 Not Found
-{"detail": "Todo not found"}</pre></div>
-      </div>
-      <div class="cell pink reveal d5">
-        <h4><span class="ic">info</span> 補足：PATCH というメソッドもある</h4>
-        <p class="small">PUT は「まるごと置き換え」、PATCH は「一部だけ変更」。今回は分かりやすさ優先で PUT だけ使います。</p>
-      </div>
-      <div class="cell green reveal d6">
-        <h4><span class="ic">search_off</span> 存在しない id を指定した場合</h4>
-        <p class="small">PUT も DELETE も、対象が見つからなければ <strong>404</strong> を返すのが一般的（5章で実装）。</p>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- =====================================================
      CH.05 — データを受け取る
      ===================================================== -->
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">data_object</span><div><b>CH.05</b><span>データ</span></div></div><h2>Pydantic：受け取るデータの「形」を決める</h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><div><b>CH.05</b><span>データ</span></div></div><h2>Pydantic：受け取るデータの「形」を決める</h2><div class="pg"></div></div>
     <div class="body" style="grid-template-columns: 780px 1fr; grid-template-rows: 1fr 410px;">
       <div class="cell black flex">
-        <span class="label"><span class="ic">schema</span>モデルを定義する</span>
+        <span class="label">用意済み（sample/02_todo/main.py）</span>
         <pre class="code reveal d1" style="font-size: 28px; line-height: 1.65;"><span class="k">from</span> pydantic <span class="k">import</span> BaseModel
 
 <span class="k">class</span> <span class="f">TodoIn</span>(BaseModel):
@@ -1034,37 +1026,48 @@ Content-Type: application/json
 
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">data_object</span><div><b>CH.05</b><span>データ</span></div></div><h2>メモリ版 ToDo API（1/2）：準備と GET</h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: 1.4fr 1fr;">
+    <div class="head"><div class="chap"><div><b>CH.05</b><span>データ</span></div></div><h2>用意済みのファイルを開く：<code>sample/02_todo/main.py</code></h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1.1fr 1fr;">
       <div class="cell black">
-        <pre class="code sm reveal d1"><span class="k">from</span> fastapi <span class="k">import</span> FastAPI, HTTPException
+        <pre class="code reveal d1" style="font-size: 21px; line-height: 1.5;"><span class="k">from</span> fastapi <span class="k">import</span> FastAPI
+<span class="k">from</span> fastapi.staticfiles <span class="k">import</span> StaticFiles
 <span class="k">from</span> pydantic <span class="k">import</span> BaseModel
 
 app = FastAPI()
 
+<span class="c"># 受け取るデータの形</span>
 <span class="k">class</span> <span class="f">TodoIn</span>(BaseModel):
     title: <span class="t">str</span>
     done: <span class="t">bool</span> = <span class="k">False</span>
 
-<span class="c"># データ置き場 {id: {"id": 1, "title": ..., "done": ...}}</span>
+<span class="c"># ToDo の置き場所</span>
 todos = {}<span class="n">1</span>
 
-<span class="d">@app.get</span>(<span class="s">"/todos"</span>)
-<span class="k">def</span> <span class="f">list_todos</span>():
-    <span class="k">return</span> <span class="t">list</span>(todos.values())<span class="n">2</span>
+<span class="c"># 次に使う id を返す</span>
+<span class="k">def</span> <span class="f">new_id</span>():<span class="n">2</span>
+    <span class="k">return</span> <span class="t">max</span>(todos, default=<span class="s">0</span>) + <span class="s">1</span>
 
-<span class="d">@app.get</span>(<span class="s">"/todos/{todo_id}"</span>)
-<span class="k">def</span> <span class="f">get_todo</span>(todo_id: <span class="t">int</span>):
-    <span class="k">if</span> todo_id <span class="k">not in</span> todos:
-        <span class="k">raise</span> HTTPException(status_code=<span class="s">404</span>, detail=<span class="s">"Todo not found"</span>)<span class="n">3</span>
-    <span class="k">return</span> todos[todo_id]</pre>
+<span class="hl"><span class="c"># ===== ここから下に API の関数を書く =====</span>   ← ここに書く</span>
+
+
+
+<span class="c"># ===== この行より上に書く =====</span>
+app.mount(<span class="s">"/"</span>, StaticFiles(directory=<span class="s">"static"</span>, html=<span class="k">True</span>), ...)<span class="n">3</span></pre>
       </div>
-      <div class="cell notes" style="justify-content: center;">
-        <span class="label"><span class="ic">folder_open</span>examples/03_todo_memory/main.py</span>
-        <div class="note reveal d2"><span class="n">1</span><div><h4>データはただの辞書に入れる</h4><p>キーが id、値が ToDo の辞書。まずは DB なしで動きを理解する。</p></div></div>
-        <div class="note reveal d3"><span class="n">2</span><div><h4>一覧は「値」をリストにして返す</h4><p>リストを return すれば JSON の配列 <code class="i">[...]</code> になる。</p></div></div>
-        <div class="note reveal d4"><span class="n">3</span><div><h4>見つからなければ 404</h4><p><code class="i">raise HTTPException(...)</code> でその場で処理を止めて、エラーのレスポンスを返す。</p></div></div>
-        <div class="box green reveal d5"><p class="small"><code class="i">todo_id: int</code> なので、<code class="i">/todos/abc</code> は自動で 422 になる。</p></div>
+      <div class="cell flex" style="gap: 26px;">
+        <div class="task reveal d1">
+          <div class="th">作業</div>
+          <ol>
+            <li><span class="n">A</span><span><code class="path">sample/02_todo/main.py</code> を開き、用意済みの部分を確認する</span></li>
+            <li><span class="n">B</span><span>「ここから下に API の関数を書く」の下に、次のスライドの4つの関数を書く</span></li>
+            <li><span class="n">C</span><span>一番下の <code class="i">app.mount</code> の行は消さない</span></li>
+          </ol>
+        </div>
+        <div class="notes" style="gap: 16px;">
+          <div class="note reveal d2"><span class="n">1</span><div><h4>todos：ToDo を入れる辞書</h4><p>キーが id、値が ToDo 1件。<br><code class="i">{1: {"id": 1, "title": "牛乳を買う", "done": False}}</code></p></div></div>
+          <div class="note reveal d3"><span class="n">2</span><div><h4>new_id()：次に使う id を返す</h4><p>中身は気にせず、呼ぶだけで OK。</p></div></div>
+          <div class="note reveal d4"><span class="n">3</span><div><h4>app.mount：画面ファイルを配信する</h4><p><code class="i">static/index.html</code> を <code class="i">http://127.0.0.1:8000/</code> で開けるようにする（6章で使う）。</p></div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1072,33 +1075,47 @@ todos = {}<span class="n">1</span>
 
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">data_object</span><div><b>CH.05</b><span>データ</span></div></div><h2>メモリ版 ToDo API（2/2）：POST / PUT / DELETE</h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: 1.4fr 1fr;">
+    <div class="head"><div class="chap"><div><b>CH.05</b><span>データ</span></div></div><h2>API の関数を書く：GET・POST・PUT・DELETE</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1.32fr 1fr;">
       <div class="cell black">
-        <pre class="code sm reveal d1"><span class="d">@app.post</span>(<span class="s">"/todos"</span>, status_code=<span class="s">201</span>)<span class="n">1</span>
-<span class="k">def</span> <span class="f">create_todo</span>(todo: TodoIn):
-    new_id = <span class="t">max</span>(todos, default=<span class="s">0</span>) + <span class="s">1</span>
-    todos[new_id] = {<span class="s">"id"</span>: new_id, **todo.model_dump()}<span class="n">2</span>
-    <span class="k">return</span> todos[new_id]
+        <pre class="code reveal d1" style="font-size: 20px; line-height: 1.6;"><span class="d">@app.get</span>(<span class="s">"/todos"</span>)<span class="n">1</span>
+<span class="k">def</span> <span class="f">list_todos</span>():
+    <span class="k">return</span> <span class="t">list</span>(todos.values())
 
-<span class="d">@app.put</span>(<span class="s">"/todos/{todo_id}"</span>)
-<span class="k">def</span> <span class="f">update_todo</span>(todo_id: <span class="t">int</span>, todo: TodoIn):<span class="n">3</span>
-    <span class="k">if</span> todo_id <span class="k">not in</span> todos:
-        <span class="k">raise</span> HTTPException(status_code=<span class="s">404</span>, detail=<span class="s">"Todo not found"</span>)
-    todos[todo_id] = {<span class="s">"id"</span>: todo_id, **todo.model_dump()}
+
+<span class="d">@app.post</span>(<span class="s">"/todos"</span>)<span class="n">2</span>
+<span class="k">def</span> <span class="f">create_todo</span>(todo: TodoIn):
+    todo_id = new_id()
+    todos[todo_id] = {<span class="s">"id"</span>: todo_id, <span class="s">"title"</span>: todo.title, <span class="s">"done"</span>: todo.done}
     <span class="k">return</span> todos[todo_id]
 
-<span class="d">@app.delete</span>(<span class="s">"/todos/{todo_id}"</span>)
+
+<span class="d">@app.put</span>(<span class="s">"/todos/{todo_id}"</span>)<span class="n">3</span>
+<span class="k">def</span> <span class="f">update_todo</span>(todo_id: <span class="t">int</span>, todo: TodoIn):
+    todos[todo_id] = {<span class="s">"id"</span>: todo_id, <span class="s">"title"</span>: todo.title, <span class="s">"done"</span>: todo.done}
+    <span class="k">return</span> todos[todo_id]
+
+
+<span class="d">@app.delete</span>(<span class="s">"/todos/{todo_id}"</span>)<span class="n">4</span>
 <span class="k">def</span> <span class="f">delete_todo</span>(todo_id: <span class="t">int</span>):
-    <span class="k">if</span> todo_id <span class="k">not in</span> todos:
-        <span class="k">raise</span> HTTPException(status_code=<span class="s">404</span>, detail=<span class="s">"Todo not found"</span>)
     <span class="k">del</span> todos[todo_id]
     <span class="k">return</span> {<span class="s">"ok"</span>: <span class="k">True</span>}</pre>
       </div>
-      <div class="cell notes" style="justify-content: center;">
-        <div class="note reveal d2"><span class="n">1</span><div><h4>メソッドごとにデコレータを変える</h4><p><code class="i">@app.post</code> <code class="i">@app.put</code> <code class="i">@app.delete</code>。<code class="i">status_code=201</code> で「作れた」を返す。</p></div></div>
-        <div class="note reveal d3"><span class="n">2</span><div><h4>モデル → 辞書に変換</h4><p><code class="i">todo.model_dump()</code> は <code class="i">{"title": ..., "done": ...}</code> を返す。<code class="i">**</code> で中身を展開して id とくっつける。</p></div></div>
-        <div class="note reveal d4"><span class="n">3</span><div><h4>引数は2種類が混ざってもOK</h4><p><code class="i">todo_id</code> は URL から、<code class="i">todo</code> はボディから。FastAPI が<strong>型を見て</strong>自動で振り分ける。</p></div></div>
+      <div class="cell flex" style="gap: 20px;">
+        <div class="notes" style="gap: 18px;">
+          <div class="note reveal d2"><span class="n">1</span><div><h4>GET：一覧を返す</h4><p>todos の値（ToDo）をリストにして返す。</p></div></div>
+          <div class="note reveal d3"><span class="n">2</span><div><h4>POST：新しく追加する</h4><p><code class="i">new_id()</code> で id を決め、送られた title と done を辞書に入れる。</p></div></div>
+          <div class="note reveal d4"><span class="n">3</span><div><h4>PUT：上書きする</h4><p>URL の id の場所を、送られた内容で置き換える。</p></div></div>
+          <div class="note reveal d5"><span class="n">4</span><div><h4>DELETE：削除する</h4><p><code class="i">del</code> で辞書から消す。</p></div></div>
+        </div>
+        <div class="task reveal d6" style="margin-top: auto;">
+          <div class="th">作業</div>
+          <ol>
+            <li><span class="n">A</span><span>4つの関数を書いて保存する</span></li>
+            <li><span class="n">B</span><span>ターミナルで起動する<br><code class="i">cd sample/02_todo</code><br><code class="i">uvicorn main:app --reload</code></span></li>
+          </ol>
+        </div>
+        <p class="xs muted reveal d6">※ 存在しない id を指定したときのエラー処理は、今回は扱わない。</p>
       </div>
     </div>
   </div>
@@ -1106,194 +1123,152 @@ todos = {}<span class="n">1</span>
 
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">data_object</span><div><b>CH.05</b><span>データ</span></div></div><h2><code>/docs</code> で全部のメソッドを試す</h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: 1.1fr 1fr; grid-template-rows: 1fr 180px;">
+    <div class="head"><div class="chap"><div><b>CH.05</b><span>データ</span></div></div><h2><code>/docs</code> で全部のメソッドを試す</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1.1fr 1fr; grid-template-rows: 1fr 170px;">
       <div class="cell gray center tight">
         <div class="browser reveal d1">
           <div class="bar"><i></i><i></i><div class="url">http://127.0.0.1:8000/docs</div></div>
-          <div class="view" style="display: flex; flex-direction: column; gap: 9px; padding: 16px 22px;">
-            <div class="box" style="box-shadow: none; padding: 10px 16px; display: flex; gap: 18px; align-items: center;"><span class="m get"><span class="ic">visibility</span>GET</span><span class="mono" style="font: 700 24px var(--mono);">/todos</span><span class="xs muted">List Todos</span></div>
+          <div class="view" style="display: flex; flex-direction: column; gap: 10px; padding: 16px 22px;">
+            <div class="box" style="box-shadow: none; padding: 10px 16px; display: flex; gap: 18px; align-items: center;"><span class="m get">GET</span><span class="mono" style="font: 700 24px var(--mono);">/todos</span><span class="xs muted">List Todos</span></div>
             <div class="box pink" style="padding: 14px 16px;">
-              <div style="display: flex; gap: 18px; align-items: center;"><span class="m post"><span class="ic">add</span>POST</span><span class="mono" style="font: 700 24px var(--mono);">/todos</span><span class="xs">Create Todo</span><span class="label" style="margin-left: auto;">Try it out</span></div>
+              <div style="display: flex; gap: 18px; align-items: center;"><span class="m post">POST</span><span class="mono" style="font: 700 24px var(--mono);">/todos</span><span class="xs">Create Todo</span><span class="label" style="margin-left: auto;">Try it out</span></div>
               <div class="term" style="margin-top: 12px; box-shadow: none;"><div class="bar">Request body</div><pre>{"title": "牛乳を買う"}</pre></div>
-              <div style="display: flex; gap: 14px; align-items: center; margin-top: 12px;"><span class="label">Execute</span><span class="xs mono">→ <b>201</b> {"id": 1, "title": "牛乳を買う", "done": false}</span></div>
+              <div style="display: flex; gap: 14px; align-items: center; margin-top: 12px;"><span class="label">Execute</span><span class="xs mono">→ <b>200</b> {"id": 1, "title": "牛乳を買う", "done": false}</span></div>
             </div>
-                        <div class="box" style="box-shadow: none; padding: 10px 16px; display: flex; gap: 18px; align-items: center;"><span class="m put"><span class="ic">edit</span>PUT</span><span class="mono" style="font: 700 24px var(--mono);">/todos/{todo_id}</span></div>
-            <div class="box" style="box-shadow: none; padding: 10px 16px; display: flex; gap: 18px; align-items: center;"><span class="m del"><span class="ic">delete</span>DELETE</span><span class="mono" style="font: 700 24px var(--mono);">/todos/{todo_id}</span></div>
+            <div class="box" style="box-shadow: none; padding: 10px 16px; display: flex; gap: 18px; align-items: center;"><span class="m put">PUT</span><span class="mono" style="font: 700 24px var(--mono);">/todos/{todo_id}</span></div>
+            <div class="box" style="box-shadow: none; padding: 10px 16px; display: flex; gap: 18px; align-items: center;"><span class="m del">DELETE</span><span class="mono" style="font: 700 24px var(--mono);">/todos/{todo_id}</span></div>
           </div>
         </div>
       </div>
-      <div class="cell notes" style="justify-content: center;">
-        <span class="label"><span class="ic">play_circle</span>演習</span>
-        <div class="note reveal d2"><span class="n">1</span><div><h4>POST /todos を開いて「Try it out」</h4><p>Request body に JSON を書いて Execute。2〜3件作る。</p></div></div>
-        <div class="note reveal d3"><span class="n">2</span><div><h4>GET /todos で一覧を確認</h4><p>作った ToDo が並んでいれば成功。</p></div></div>
-        <div class="note reveal d4"><span class="n">3</span><div><h4>PUT で done を true に、DELETE で削除</h4><p>存在しない id で試すと 404 が返る。</p></div></div>
-        <div class="note reveal d5"><span class="n">4</span><div><h4>誤ったデータを送る</h4><p>title を消して POST → 422 と理由が返ってくる。</p></div></div>
+      <div class="cell flex" style="justify-content: center;">
+        <div class="task reveal d2">
+          <div class="th">作業：http://127.0.0.1:8000/docs を開く</div>
+          <ol>
+            <li><span class="n">A</span><span><strong>POST /todos</strong> → Try it out → Request body に JSON を書いて Execute。2〜3件作る</span></li>
+            <li><span class="n">B</span><span><strong>GET /todos</strong> で、作った ToDo が並んでいることを確認</span></li>
+            <li><span class="n">C</span><span><strong>PUT</strong> で done を true に、<strong>DELETE</strong> で1件削除</span></li>
+            <li><span class="n">D</span><span>title を消して POST → <strong>422</strong> と理由が返ってくることを確認</span></li>
+          </ol>
+        </div>
       </div>
-      <div class="cell pink center tight reveal d6" style="grid-column: 1 / 3;">
-        <p style="font-size: 30px;"><span class="ic callout">lightbulb</span><strong>/docs ですべて動作したら、次は自作の画面から API を呼び出す。</strong><br><span class="small">→ 6章：HTML + JavaScript の画面を作り、このメモリ版 API にそのままつなぐ。</span></p>
+      <div class="cell pink center tight reveal d3" style="grid-column: 1 / 3;">
+        <p style="font-size: 30px;"><strong>/docs ですべて動作したら、次は画面から API を使う。</strong><br><span class="small">→ 6章：用意済みの画面 <code class="i">static/index.html</code> を開いて操作する。</span></p>
       </div>
     </div>
   </div>
 </section>
+
+
+
+
 
 <!-- =====================================================
      CH.06 — 画面をつなぐ（メモリ版 API のまま）
      ===================================================== -->
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">web</span><div><b>CH.06</b><span>画面</span></div></div><h2>画面から API を呼ぶ：JavaScript の <code>fetch</code></h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 320px;">
-      <div class="cell black flex">
-        <span class="label"><span class="ic">visibility</span>GET：一覧を取得</span>
-        <pre class="code reveal d1" style="font-size: 22px;"><span class="k">const</span> res = <span class="k">await</span> <span class="f">fetch</span>(<span class="s">"/todos"</span>);
-<span class="k">const</span> todos = <span class="k">await</span> res.<span class="f">json</span>();
-<span class="c">// todos は [{id: 1, title: "...", done: false}, ...]</span></pre>
-        <span class="label" style="margin-top: 16px;">POST：新規作成</span>
-        <pre class="code reveal d2" style="font-size: 22px;"><span class="k">await</span> <span class="f">fetch</span>(<span class="s">"/todos"</span>, {
-  method: <span class="s">"POST"</span>,
-  headers: { <span class="s">"Content-Type"</span>: <span class="s">"application/json"</span> },
-  body: JSON.<span class="f">stringify</span>({ title: <span class="s">"牛乳を買う"</span> }),
-});</pre>
-      </div>
-      <div class="cell flex">
-        <span class="label"><span class="ic">sync_alt</span>fetch ＝ ブラウザから HTTP リクエストを送る関数</span>
-        <ul class="arrow reveal d3">
-          <li class="small">これまで <code class="i">/docs</code> でやっていたことを、JavaScript から行う</li>
-          <li class="small"><code class="i">method</code> にメソッド、<code class="i">body</code> に JSON の文字列を入れる</li>
-          <li class="small"><code class="i">JSON.stringify</code> は JS のオブジェクト → JSON 文字列</li>
-          <li class="small"><code class="i">res.json()</code> は JSON 文字列 → JS のオブジェクト</li>
-          <li class="small"><code class="i">await</code> は「レスポンスが届くまで待つ」</li>
-        </ul>
-      </div>
-      <div class="cell green flex tight">
-        <span class="label"><span class="ic">upload_file</span>画面ファイルも FastAPI から配る</span>
-        <pre class="mono reveal d4" style="font: 700 19px/1.45 var(--mono); background: var(--white); border: 3px solid var(--black); padding: 10px 14px;"><span style="color: var(--darkgray);"># 5章の main.py に2行追加</span>
-from fastapi.staticfiles import StaticFiles   <span style="color: var(--darkgray);"># 先頭</span>
-app.mount("/", StaticFiles(directory="static", html=True))   <span style="color: var(--darkgray);"># 最後</span></pre>
-        <p class="xs reveal d5"><code class="i">static/index.html</code> が <code class="i">http://127.0.0.1:8000/</code> で開ける。mount は API より<strong>後ろ</strong>に。</p>
-      </div>
-      <div class="cell pink flex tight">
-        <span class="label"><span class="ic">info</span>補足：CORS（コース）</span>
-        <p class="xs reveal d5">画面と API が<strong>別のサーバー</strong>（例：React の開発サーバー <code class="i">localhost:5173</code>）だと、ブラウザが安全のためにブロックする。そのときは FastAPI に <code class="i">CORSMiddleware</code> を追加する。今回は同じサーバーから配るので不要。</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="slide">
-  <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">web</span><div><b>CH.06</b><span>画面</span></div></div><h2>画面のコード：<code>static/index.html</code></h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: 1fr 1.08fr;">
-      <div class="cell black tight">
-        <pre class="code xs reveal d1"><span class="c">&lt;!-- 入力フォームと、一覧を入れる場所 --&gt;</span>
-&lt;h1&gt;ToDo&lt;/h1&gt;
-&lt;form id=<span class="s">"form"</span>&gt;
-  &lt;input id=<span class="s">"title"</span> placeholder=<span class="s">"やること"</span> required&gt;
-  &lt;button&gt;追加&lt;/button&gt;
-&lt;/form&gt;
-&lt;ul id=<span class="s">"list"</span>&gt;&lt;/ul&gt;
-
-&lt;script&gt;
-<span class="c">// GET: 一覧を取ってきて表示する</span>
-<span class="k">async function</span> <span class="f">load</span>() {<span class="n">1</span>
-  <span class="k">const</span> res = <span class="k">await</span> fetch(<span class="s">"/todos"</span>);
-  <span class="k">const</span> todos = <span class="k">await</span> res.json();
-  list.innerHTML = <span class="s">""</span>;
-  <span class="k">for</span> (<span class="k">const</span> t <span class="k">of</span> todos) {
-    <span class="k">const</span> li = document.createElement(<span class="s">"li"</span>);
-    li.innerHTML = <span class="s">`&lt;input type="checkbox" ${t.done ? "checked" : ""}&gt;
-      ${t.title} &lt;button&gt;削除&lt;/button&gt;`</span>;
-    <span class="c">// (右につづく: PUT と DELETE をここに書く)</span>
-    list.appendChild(li);
-  }
-}</pre>
-      </div>
-      <div class="cell black tight">
-        <pre class="code xs reveal d2">    <span class="c">// PUT: チェックで完了/未完了を切り替える</span>
-    li.querySelector(<span class="s">"input"</span>).onchange = <span class="k">async</span> (e) =&gt; {<span class="n">2</span>
-      <span class="k">await</span> fetch(<span class="s">`/todos/${t.id}`</span>, {
-        method: <span class="s">"PUT"</span>,
-        headers: { <span class="s">"Content-Type"</span>: <span class="s">"application/json"</span> },
-        body: JSON.stringify({ title: t.title, done: e.target.checked }),
-      });
-    };
-    <span class="c">// DELETE: 削除ボタン</span>
-    li.querySelector(<span class="s">"button"</span>).onclick = <span class="k">async</span> () =&gt; {<span class="n">3</span>
-      <span class="k">await</span> fetch(<span class="s">`/todos/${t.id}`</span>, { method: <span class="s">"DELETE"</span> });
-      load();
-    };
-
-<span class="c">// POST: フォーム送信で新しい ToDo を作る</span>
-form.onsubmit = <span class="k">async</span> (e) =&gt; {<span class="n">4</span>
-  e.preventDefault();   <span class="c">// ページの再読み込みを止める</span>
-  <span class="k">await</span> fetch(<span class="s">"/todos"</span>, {
-    method: <span class="s">"POST"</span>,
-    headers: { <span class="s">"Content-Type"</span>: <span class="s">"application/json"</span> },
-    body: JSON.stringify({ title: title.value }),
-  });
-  title.value = <span class="s">""</span>;
-  load();
-};
-load();
-&lt;/script&gt;</pre>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="slide">
-  <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">web</span><div><b>CH.06</b><span>画面</span></div></div><h2>動かしてみる：画面の操作 ＝ HTTP リクエスト</h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 200px;">
-      <div class="cell gray flex">
-        <span class="label"><span class="ic">open_in_browser</span>http://127.0.0.1:8000/ を開いて操作する</span>
-        <div class="browser reveal d1">
+    <div class="head"><div class="chap"><div><b>CH.06</b><span>画面</span></div></div><h2>画面で動作を確認する：操作 ＝ HTTP リクエスト</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 160px;">
+      <div class="cell gray flex" style="gap: 20px;">
+        <div class="task reveal d1">
+          <div class="th">作業：sample/02_todo/static/index.html（完成品）</div>
+          <ol>
+            <li><span class="n">A</span><span>5章のサーバーを起動したまま <code class="i">http://127.0.0.1:8000/</code> を開く</span></li>
+            <li><span class="n">B</span><span>ToDo を追加 → チェック → 削除 してみる</span></li>
+            <li><span class="n">C</span><span>再読み込みしても一覧が表示されることを確認</span></li>
+            <li><span class="n">D</span><span>右のように、ターミナルのログを確認</span></li>
+          </ol>
+        </div>
+        <div class="browser reveal d2">
           <div class="bar"><i></i><i></i><div class="url">http://127.0.0.1:8000/</div></div>
-          <div class="view" style="display: flex; flex-direction: column; gap: 14px;">
-            <p style="font-weight: 900; font-size: 40px;">ToDo</p>
-            <div style="display: flex; gap: 12px;"><span class="box" style="box-shadow: none; padding: 6px 16px; flex: 1;"><span class="small muted">歯医者を予約</span></span><span class="box pink" style="box-shadow: none; padding: 6px 20px;"><b class="small">追加</b></span></div>
-            <p class="small">☐ 牛乳を買う <span class="xs" style="border: 2px solid; padding: 0 8px;">削除</span><br>☑ レポート提出 <span class="xs" style="border: 2px solid; padding: 0 8px;">削除</span></p>
+          <div class="view" style="display: flex; flex-direction: column; gap: 10px;">
+            <p style="font-weight: 900; font-size: 32px;">ToDo</p>
+            <div style="display: flex; gap: 12px;"><span class="box" style="box-shadow: none; padding: 4px 16px; flex: 1;"><span class="small muted">歯医者を予約</span></span><span class="box pink" style="box-shadow: none; padding: 4px 20px;"><b class="small">追加</b></span></div>
+            <p class="small">☐ 牛乳を買う <span class="xs" style="border: 2px solid; padding: 0 8px;">削除</span>　☑ レポート提出 <span class="xs" style="border: 2px solid; padding: 0 8px;">削除</span></p>
           </div>
         </div>
-        <div class="flow reveal d2" style="margin-top: 6px; gap: 12px; flex-wrap: wrap;">
-          <span class="small">「追加」→ <span class="m post" style="min-width: 0;"><span class="ic">add</span>POST</span></span>
-          <span class="small">チェック → <span class="m put" style="min-width: 0;"><span class="ic">edit</span>PUT</span></span>
-          <span class="small">「削除」→ <span class="m del" style="min-width: 0;"><span class="ic">delete</span>DELETE</span></span>
-        </div>
       </div>
       <div class="cell flex">
-        <span class="label"><span class="ic">terminal</span>ターミナルのログ</span>
-        <div class="term reveal d3" style="--tfs: 21px;"><div class="bar">uvicorn のログ（1行 ＝ 1リクエスト）</div><pre>INFO: 127.0.0.1 - "<span class="ok">GET</span> / HTTP/1.1" 200 OK
+        <div class="term reveal d3" style="--tfs: 20px;"><div class="bar">ターミナルのログ（1行 ＝ 1リクエスト）</div><pre>INFO: 127.0.0.1 - "<span class="ok">GET</span> / HTTP/1.1" 200 OK
 INFO: 127.0.0.1 - "<span class="ok">GET</span> /todos HTTP/1.1" 200 OK
-INFO: 127.0.0.1 - "<span class="ok">POST</span> /todos HTTP/1.1" 201 Created
+INFO: 127.0.0.1 - "<span class="ok">POST</span> /todos HTTP/1.1" 200 OK
 INFO: 127.0.0.1 - "<span class="ok">GET</span> /todos HTTP/1.1" 200 OK
 INFO: 127.0.0.1 - "<span class="ok">PUT</span> /todos/1 HTTP/1.1" 200 OK
 INFO: 127.0.0.1 - "<span class="ok">DELETE</span> /todos/2 HTTP/1.1" 200 OK</pre></div>
-        <p class="small reveal d4">ボタン操作のたびに、4章で見たリクエストが送信されている。ブラウザの開発者ツール（F12）→「ネットワーク」タブでも見られる。</p>
-        <div class="term reveal d5" style="--tfs: 21px;"><pre><span class="prompt">$ </span>cd examples/04_todo_frontend
-<span class="prompt">$ </span>uvicorn main:app --reload</pre></div>
+        <table class="t compact reveal d4">
+          <thead><tr><th>画面での操作</th><th>送られるリクエスト</th></tr></thead>
+          <tbody>
+            <tr><td>開く・再読み込み</td><td><span class="m get">GET</span> <code>/todos</code></td></tr>
+            <tr><td>「追加」</td><td><span class="m post">POST</span> <code>/todos</code></td></tr>
+            <tr><td>チェック</td><td><span class="m put">PUT</span> <code>/todos/1</code></td></tr>
+            <tr><td>「削除」</td><td><span class="m del">DELETE</span> <code>/todos/2</code></td></tr>
+          </tbody>
+        </table>
       </div>
-      <div class="cell pink center reveal d6" style="grid-column: 1 / 3;">
-        <p style="font-size: 30px;"><span class="ic callout">warning</span><strong>ただし、サーバーを Ctrl+C で止めて再起動すると、ToDo はすべて消える。</strong><br><span class="small">データが Python の変数（メモリ）にしかないから。→ 次の章で、画面はそのままに保存先をデータベースへ変える。</span></p>
+      <div class="cell pink center tight reveal d5" style="grid-column: 1 / 3;">
+        <p style="font-size: 30px;"><strong>ただし、サーバーを Ctrl+C で止めて再起動すると、ToDo はすべて消える。</strong><br><span class="small">データが Python の変数（メモリ）にしかないため。→ 7章で、保存先をデータベースに変える。</span></p>
       </div>
     </div>
   </div>
 </section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><div><b>CH.06</b><span>画面</span></div></div><h2>コードの重要なところを読む：<code>fetch</code></h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr 190px;">
+      <div class="cell black flex tight">
+        <span class="label">GET：一覧を取得して表示（load 関数）</span>
+        <pre class="code reveal d1" style="font-size: 21px;"><span class="k">const</span> res = <span class="k">await</span> <span class="f">fetch</span>(<span class="s">"/todos"</span>);
+<span class="k">const</span> todos = <span class="k">await</span> res.<span class="f">json</span>();</pre>
+        <p class="small" style="color: var(--white);">返ってきた JSON の配列を、1件ずつ画面に並べる。</p>
+      </div>
+      <div class="cell black flex tight">
+        <span class="label">POST：「追加」ボタン</span>
+        <pre class="code reveal d2" style="font-size: 21px;"><span class="k">await</span> <span class="f">fetch</span>(<span class="s">"/todos"</span>, {
+  method: <span class="s">"POST"</span>,
+  headers: { <span class="s">"Content-Type"</span>: <span class="s">"application/json"</span> },
+  body: JSON.<span class="f">stringify</span>({ title: title.value }),
+});</pre>
+      </div>
+      <div class="cell black flex tight">
+        <span class="label">PUT：チェックボックス</span>
+        <pre class="code reveal d3" style="font-size: 19px;"><span class="k">await</span> <span class="f">fetch</span>(<span class="s">`/todos/${t.id}`</span>, {
+  method: <span class="s">"PUT"</span>,
+  headers: { <span class="s">"Content-Type"</span>: <span class="s">"application/json"</span> },
+  body: JSON.<span class="f">stringify</span>({ title: t.title, done: e.target.checked }),
+});</pre>
+      </div>
+      <div class="cell black flex tight">
+        <span class="label">DELETE：「削除」ボタン</span>
+        <pre class="code reveal d4" style="font-size: 21px;"><span class="k">await</span> <span class="f">fetch</span>(<span class="s">`/todos/${t.id}`</span>, { method: <span class="s">"DELETE"</span> });</pre>
+        <p class="small" style="color: var(--white);">消すだけなのでボディは送らない。</p>
+      </div>
+      <div class="cell green reveal d5" style="grid-column: 1 / 3; display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; align-items: center;">
+        <div><h4><code class="i">fetch(URL, {...})</code></h4><p class="xs">ブラウザから HTTP リクエストを送る。method にメソッド、body に送るデータ。</p></div>
+        <div><h4><code class="i">JSON.stringify</code></h4><p class="xs">JavaScript のデータを JSON の文字列にする（Pydantic が受け取る形）。</p></div>
+        <div><h4><code class="i">await</code></h4><p class="xs">レスポンスが届くまで待ってから、次の行に進む。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
 
 <!-- =====================================================
      CH.07 — SQLite につなぐ（画面はそのまま、保存先だけ変える）
      ===================================================== -->
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">database</span><div><b>CH.07</b><span>DB</span></div></div><h2>なぜデータベース？ そして SQLite とは</h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><div><b>CH.07</b><span>DB</span></div></div><h2>なぜデータベース？ そして SQLite とは</h2><div class="pg"></div></div>
     <div class="body" style="grid-template-columns: 1fr 1fr;">
       <div class="cell flex">
-        <span class="label"><span class="ic">memory</span>メモリ（変数）の弱点</span>
+        <span class="label">メモリ（変数）の弱点</span>
         <div class="flow reveal d1">
-          <div class="box green"><h4><span class="ic">play_circle</span> 起動中</h4><p class="xs mono">todos = {1: ..., 2: ...}</p></div>
+          <div class="box green"><h4>起動中</h4><p class="xs mono">todos = {1: ..., 2: ...}</p></div>
           <div class="conn" style="width: 120px;"><small>再起動</small><i>→</i></div>
-          <div class="box pink"><h4><span class="ic">restart_alt</span> 再起動後</h4><p class="xs mono">todos = {}　← 空っぽ</p></div>
+          <div class="box pink"><h4>再起動後</h4><p class="xs mono">todos = {}　← 空っぽ</p></div>
         </div>
         <p class="small reveal d2">プログラムが終わると変数は消える。<br>だから<strong>ファイルに書き残す</strong>仕組み＝データベースが必要。</p>
         <span class="label" style="margin-top: 14px;">データベースは「表（テーブル）」でしまう</span>
@@ -1307,7 +1282,7 @@ INFO: 127.0.0.1 - "<span class="ok">DELETE</span> /todos/2 HTTP/1.1" 200 OK</pre
         <p class="xs muted reveal d3">1行 ＝ ToDo 1件。列（id・title・done）は Pydantic モデルの項目と対応。</p>
       </div>
       <div class="cell flex green">
-        <span class="label"><span class="ic">database</span>SQLite（エスキューライト）</span>
+        <span class="label">SQLite（エスキューライト）</span>
         <div class="box reveal d4" style="display: flex; gap: 28px; align-items: center;">
           <div style="width: 120px; height: 140px; border: 3px solid var(--black); background: var(--white); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 14px; box-shadow: var(--shadow-sm); flex: none;"><span class="mono" style="font: 800 22px var(--mono);">todo.db</span></div>
           <p class="small"><strong>データベースがファイル1つ。</strong><br>サーバーを別に立てる必要がなく、コピーすれば持ち運べる。</p>
@@ -1326,27 +1301,27 @@ INFO: 127.0.0.1 - "<span class="ok">DELETE</span> /todos/2 HTTP/1.1" 200 OK</pre
 
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">database</span><div><b>CH.07</b><span>DB</span></div></div><h2>SQL の4つの命令は、HTTP メソッドと対応する</h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><div><b>CH.07</b><span>DB</span></div></div><h2>SQL の4つの命令は、HTTP メソッドと対応する</h2><div class="pg"></div></div>
     <div class="body" style="grid-template-rows: 1fr 230px;">
       <div class="cell center">
         <table class="t reveal d1">
           <thead><tr><th style="width: 200px;">HTTP</th><th style="width: 190px;">SQL</th><th style="width: 190px;">意味</th><th>SQL の例</th></tr></thead>
           <tbody>
-            <tr><td><span class="m get"><span class="ic">visibility</span>GET</span></td><td class="mono"><b>SELECT</b></td><td>取り出す</td><td><code>SELECT * FROM todos</code></td></tr>
-            <tr><td><span class="m post"><span class="ic">add</span>POST</span></td><td class="mono"><b>INSERT</b></td><td>追加する</td><td><code>INSERT INTO todos (title, done) VALUES (?, ?)</code></td></tr>
-            <tr><td><span class="m put"><span class="ic">edit</span>PUT</span></td><td class="mono"><b>UPDATE</b></td><td>書き換える</td><td><code>UPDATE todos SET title = ?, done = ? WHERE id = ?</code></td></tr>
-            <tr><td><span class="m del"><span class="ic">delete</span>DELETE</span></td><td class="mono"><b>DELETE</b></td><td>削除する</td><td><code>DELETE FROM todos WHERE id = ?</code></td></tr>
+            <tr><td><span class="m get">GET</span></td><td class="mono"><b>SELECT</b></td><td>取り出す</td><td><code>SELECT * FROM todos</code></td></tr>
+            <tr><td><span class="m post">POST</span></td><td class="mono"><b>INSERT</b></td><td>追加する</td><td><code>INSERT INTO todos (title, done) VALUES (?, ?)</code></td></tr>
+            <tr><td><span class="m put">PUT</span></td><td class="mono"><b>UPDATE</b></td><td>書き換える</td><td><code>UPDATE todos SET title = ?, done = ? WHERE id = ?</code></td></tr>
+            <tr><td><span class="m del">DELETE</span></td><td class="mono"><b>DELETE</b></td><td>削除する</td><td><code>DELETE FROM todos WHERE id = ?</code></td></tr>
           </tbody>
         </table>
         <p class="small reveal d2" style="margin-top: 22px;"><code class="i">*</code> は「全部の列」、<code class="i">WHERE id = ?</code> は「id が〇〇の行だけ」という条件。WHERE を忘れると<strong>全行</strong>が対象になるので注意。</p>
       </div>
       <div class="body" style="grid-template-columns: 1fr 1fr; gap: 3px;">
         <div class="cell pink reveal d3">
-          <h4><span class="ic">input</span> <code class="i">?</code> はプレースホルダ（値の差し込み口）</h4>
+          <h4><code class="i">?</code> はプレースホルダ（値の差し込み口）</h4>
           <p class="small">値は <code class="i">?</code> の位置に、あとからタプルで渡す。<code class="i">execute(sql, (title, done))</code></p>
         </div>
         <div class="cell black reveal d4">
-          <h4><span class="ic">warning</span> 文字列をつなげて SQL を作らない</h4>
+          <h4>文字列をつなげて SQL を作らない</h4>
           <p class="small"><code class="i" style="color: var(--black);">f"... WHERE id = {todo_id}"</code> は SQL インジェクション（乗っ取り）の原因。必ず <code class="i" style="color: var(--black);">?</code> を使う。</p>
         </div>
       </div>
@@ -1356,119 +1331,40 @@ INFO: 127.0.0.1 - "<span class="ok">DELETE</span> /todos/2 HTTP/1.1" 200 OK</pre
 
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">database</span><div><b>CH.07</b><span>DB</span></div></div><h2>DB 版（1/3）：データベースの準備</h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: 1.45fr 1fr;">
+    <div class="head"><div class="chap"><div><b>CH.07</b><span>DB</span></div></div><h2>DB 版を読む（1/2）：データベースの準備</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1.2fr 1fr;">
       <div class="cell black">
-        <pre class="code reveal d1" style="font-size: 20px; line-height: 1.42;"><span class="k">import</span> sqlite3
-<span class="k">from</span> fastapi <span class="k">import</span> FastAPI, HTTPException
-<span class="k">from</span> fastapi.staticfiles <span class="k">import</span> StaticFiles
-<span class="k">from</span> pydantic <span class="k">import</span> BaseModel
+        <pre class="code reveal d1" style="font-size: 23px; line-height: 1.55;"><span class="k">import</span> sqlite3
+<span class="c"># （FastAPI・StaticFiles・BaseModel の import と</span>
+<span class="c">#   app・TodoIn は 02_todo と同じ）</span>
 
-DB_PATH = <span class="s">"todo.db"</span>
-app = FastAPI()
 
 <span class="k">def</span> <span class="f">get_conn</span>():<span class="n">1</span>
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(<span class="s">"todo.db"</span>)
     conn.row_factory = sqlite3.Row
     <span class="k">return</span> conn
 
+
 <span class="k">with</span> get_conn() <span class="k">as</span> conn:<span class="n">2</span>
-    conn.execute(<span class="s">"""
-        CREATE TABLE IF NOT EXISTS todos (
-            id    INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT    NOT NULL,
-            done  INTEGER NOT NULL DEFAULT 0
-        )"""</span>)
-
-<span class="k">def</span> <span class="f">to_dict</span>(row):<span class="n">3</span>
-    <span class="k">return</span> {
-        <span class="s">"id"</span>: row[<span class="s">"id"</span>],
-        <span class="s">"title"</span>: row[<span class="s">"title"</span>],
-        <span class="s">"done"</span>: <span class="t">bool</span>(row[<span class="s">"done"</span>]),
-    }</pre>
+    conn.execute(
+        <span class="s">"CREATE TABLE IF NOT EXISTS todos ("</span>
+        <span class="s">" id INTEGER PRIMARY KEY AUTOINCREMENT,"</span>
+        <span class="s">" title TEXT NOT NULL,"</span>
+        <span class="s">" done INTEGER NOT NULL DEFAULT 0)"</span>
+    )</pre>
       </div>
-      <div class="cell notes" style="justify-content: center;">
-        <span class="label"><span class="ic">folder_open</span>examples/05_todo_sqlite/main.py</span>
-        <div class="note reveal d2"><span class="n">1</span><div><h4>DB につなぐ関数</h4><p>ファイルがなければ自動で作られる。<code class="i">row_factory</code> を設定すると <code class="i">row["title"]</code> のように列名で取り出せる。</p></div></div>
-        <div class="note reveal d3"><span class="n">2</span><div><h4>起動時にテーブルを作る</h4><p><code class="i">IF NOT EXISTS</code> で「なければ作る」。id は自動で 1, 2, 3… と振られる。<code class="i">with</code> を抜けると変更が保存（commit）される。</p></div></div>
-        <div class="note reveal d4"><span class="n">3</span><div><h4>行 → 辞書 に変換</h4><p>SQLite には真偽値の型がないので done は 0/1 で保存。返すときに <code class="i">bool()</code> で true/false に戻す。</p></div></div>
-        <div class="box green reveal d5"><p class="small">モデル <code class="i">TodoIn</code> と <code class="i">static/index.html</code> は前の章のものを<strong>そのまま</strong>使う。</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="slide">
-  <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">database</span><div><b>CH.07</b><span>DB</span></div></div><h2>DB 版（2/3）：GET と POST を SQL で書く</h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: 1.45fr 1fr;">
-      <div class="cell black">
-        <pre class="code reveal d1" style="font-size: 25px;"><span class="d">@app.get</span>(<span class="s">"/todos"</span>)
-<span class="k">def</span> <span class="f">list_todos</span>():
-    <span class="k">with</span> get_conn() <span class="k">as</span> conn:
-        rows = conn.execute(<span class="s">"SELECT * FROM todos"</span>).fetchall()<span class="n">1</span>
-    <span class="k">return</span> [to_dict(r) <span class="k">for</span> r <span class="k">in</span> rows]<span class="n">2</span>
-
-<span class="d">@app.post</span>(<span class="s">"/todos"</span>, status_code=<span class="s">201</span>)
-<span class="k">def</span> <span class="f">create_todo</span>(todo: TodoIn):
-    <span class="k">with</span> get_conn() <span class="k">as</span> conn:
-        cur = conn.execute(
-            <span class="s">"INSERT INTO todos (title, done) VALUES (?, ?)"</span>,
-            (todo.title, todo.done),<span class="n">3</span>
-        )
-    <span class="k">return</span> {<span class="s">"id"</span>: cur.lastrowid, **todo.model_dump()}<span class="n">4</span></pre>
-      </div>
-      <div class="cell notes" style="justify-content: center;">
-        <div class="note reveal d2"><span class="n">1</span><div><h4>SELECT して全行を取る</h4><p><code class="i">fetchall()</code> で結果をリストで受け取る。</p></div></div>
-        <div class="note reveal d3"><span class="n">2</span><div><h4>1行ずつ辞書に変換して返す</h4><p>リスト内包表記。<code class="i">for</code> ループで append するのと同じ意味。</p></div></div>
-        <div class="note reveal d4"><span class="n">3</span><div><h4>値は ? にタプルで渡す</h4><p>Pydantic でチェック済みの <code class="i">todo.title</code> などをそのまま使える。</p></div></div>
-        <div class="note reveal d5"><span class="n">4</span><div><h4>振られた id を返す</h4><p><code class="i">cur.lastrowid</code> に、いま INSERT した行の id が入っている。</p></div></div>
-        <div class="box pink reveal d6"><p class="small">関数の「形」（デコレータ・引数・return）はメモリ版と同じ。<strong>中身だけ SQL に変わった。</strong></p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="slide">
-  <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">database</span><div><b>CH.07</b><span>DB</span></div></div><h2>DB 版（3/3）：PUT・DELETE と再起動テスト</h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: 1.45fr 1fr;">
-      <div class="cell black">
-        <pre class="code reveal d1" style="font-size: 22px; line-height: 1.5;"><span class="d">@app.put</span>(<span class="s">"/todos/{todo_id}"</span>)
-<span class="k">def</span> <span class="f">update_todo</span>(todo_id: <span class="t">int</span>, todo: TodoIn):
-    <span class="k">with</span> get_conn() <span class="k">as</span> conn:
-        cur = conn.execute(
-            <span class="s">"UPDATE todos SET title = ?, done = ? WHERE id = ?"</span>,
-            (todo.title, todo.done, todo_id),
-        )
-    <span class="k">if</span> cur.rowcount == <span class="s">0</span>:<span class="n">1</span>
-        <span class="k">raise</span> HTTPException(status_code=<span class="s">404</span>, detail=<span class="s">"Todo not found"</span>)
-    <span class="k">return</span> {<span class="s">"id"</span>: todo_id, **todo.model_dump()}
-
-<span class="d">@app.delete</span>(<span class="s">"/todos/{todo_id}"</span>)
-<span class="k">def</span> <span class="f">delete_todo</span>(todo_id: <span class="t">int</span>):
-    <span class="k">with</span> get_conn() <span class="k">as</span> conn:
-        cur = conn.execute(
-            <span class="s">"DELETE FROM todos WHERE id = ?"</span>, (todo_id,)<span class="n">2</span>
-        )
-    <span class="k">if</span> cur.rowcount == <span class="s">0</span>:
-        <span class="k">raise</span> HTTPException(status_code=<span class="s">404</span>, detail=<span class="s">"Todo not found"</span>)
-    <span class="k">return</span> {<span class="s">"ok"</span>: <span class="k">True</span>}</pre>
-      </div>
-      <div class="cell flex">
+      <div class="cell flex" style="gap: 24px;">
+        <div class="task reveal d1">
+          <div class="th">作業</div>
+          <ol>
+            <li><span class="n">A</span><span><code class="path">sample/03_todo_sqlite/main.py</code> を開いて読む（完成品）</span></li>
+          </ol>
+        </div>
         <div class="notes">
-          <div class="note reveal d2"><span class="n">1</span><div><h4>何行変わった？ で 404 判定</h4><p><code class="i">rowcount</code> が 0 ＝ その id の行がなかった。</p></div></div>
-          <div class="note reveal d3"><span class="n">2</span><div><h4>値が1つでもタプルにする</h4><p><code class="i">(todo_id,)</code> のカンマを忘れずに。</p></div></div>
+          <div class="note reveal d2"><span class="n">1</span><div><h4>DB につなぐ関数</h4><p><code class="i">todo.db</code> がなければ自動で作られる。<code class="i">row_factory</code> で <code class="i">row["title"]</code> のように列名で取り出せる。</p></div></div>
+          <div class="note reveal d3"><span class="n">2</span><div><h4>起動時にテーブルを作る</h4><p><code class="i">IF NOT EXISTS</code>＝なければ作る。id は自動で 1, 2, 3… と振られる。<code class="i">with</code> を抜けると変更が保存される。</p></div></div>
         </div>
-        <div class="box green reveal d4" style="margin-top: 10px;">
-          <h4><span class="ic">restart_alt</span> 再起動テスト</h4>
-          <ul class="arrow" style="margin-top: 8px;">
-            <li class="small">画面から ToDo を2件追加</li>
-            <li class="small">Ctrl+C で止めて、もう一度起動</li>
-            <li class="small">画面を再読み込み → <strong>消えずに残っている！</strong></li>
-            <li class="small">フォルダに <code class="i">todo.db</code> ができている</li>
-          </ul>
-        </div>
+        <div class="box green reveal d4"><p class="small">SQLite には true/false の型がないので、done は 0 / 1 で保存する。</p></div>
       </div>
     </div>
   </div>
@@ -1476,54 +1372,97 @@ app = FastAPI()
 
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">database</span><div><b>CH.07</b><span>完成</span></div></div><h2>完成！「追加」を押したとき、裏で起きていること</h2><div class="pg"></div></div>
-    <div class="body" style="grid-template-columns: 1fr 560px; grid-template-rows: 1fr 260px;">
+    <div class="head"><div class="chap"><div><b>CH.07</b><span>DB</span></div></div><h2>DB 版を読む（2/2）：5章の関数と比べる</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 232px 1fr 1.3fr; grid-template-rows: 92px repeat(4, 1fr);">
+      <div class="cell gray"></div>
+      <div class="cell gray center tight"><h4>5章：辞書に入れる（メモリ）</h4></div>
+      <div class="cell green center tight"><h4>7章：SQL で todo.db に保存 <span class="xs muted">（with get_conn() as conn: の中）</span></h4></div>
+
+      <div class="cell center tight"><span class="m get">GET</span><p class="xs" style="margin-top: 8px;">一覧</p></div>
+      <div class="cell black center tight"><pre class="code reveal d1" style="font-size: 20px;"><span class="k">return</span> <span class="t">list</span>(todos.values())</pre></div>
+      <div class="cell black center tight"><pre class="code reveal d1" style="font-size: 20px;">rows = conn.execute(
+    <span class="s">"SELECT id, title, done FROM todos"</span>
+).fetchall()   <span class="c"># → 辞書のリストにして返す</span></pre></div>
+
+      <div class="cell center tight"><span class="m post">POST</span><p class="xs" style="margin-top: 8px;">追加</p></div>
+      <div class="cell black center tight"><pre class="code reveal d2" style="font-size: 20px;">todo_id = new_id()
+todos[todo_id] = {<span class="s">"id"</span>: todo_id,
+    <span class="s">"title"</span>: todo.title, <span class="s">"done"</span>: todo.done}</pre></div>
+      <div class="cell black center tight"><pre class="code reveal d2" style="font-size: 20px;">cur = conn.execute(
+    <span class="s">"INSERT INTO todos (title, done) VALUES (?, ?)"</span>,
+    (todo.title, todo.done),
+)   <span class="c"># id は cur.lastrowid</span></pre></div>
+
+      <div class="cell center tight"><span class="m put">PUT</span><p class="xs" style="margin-top: 8px;">上書き</p></div>
+      <div class="cell black center tight"><pre class="code reveal d3" style="font-size: 20px;">todos[todo_id] = {<span class="s">"id"</span>: todo_id,
+    <span class="s">"title"</span>: todo.title, <span class="s">"done"</span>: todo.done}</pre></div>
+      <div class="cell black center tight"><pre class="code reveal d3" style="font-size: 20px;">conn.execute(
+    <span class="s">"UPDATE todos SET title = ?, done = ? WHERE id = ?"</span>,
+    (todo.title, todo.done, todo_id),
+)</pre></div>
+
+      <div class="cell center tight"><span class="m del">DELETE</span><p class="xs" style="margin-top: 8px;">削除</p></div>
+      <div class="cell black center tight"><pre class="code reveal d4" style="font-size: 20px;"><span class="k">del</span> todos[todo_id]</pre></div>
+      <div class="cell black center tight"><pre class="code reveal d4" style="font-size: 20px;">conn.execute(<span class="s">"DELETE FROM todos WHERE id = ?"</span>, (todo_id,))</pre></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><div><b>CH.07</b><span>完成</span></div></div><h2>完成！「追加」を押したとき、裏で起きていること</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 600px; grid-template-rows: 1fr 200px;">
       <div class="cell center">
         <div class="flow reveal d1" style="gap: 0;">
-          <div class="box"><span class="n">1</span><h4 style="margin-top: 10px;"><span class="ic">computer</span> ブラウザ</h4><p class="xs">「追加」クリック<br>→ fetch で POST</p></div>
+          <div class="box"><div class="boxhead"><span class="ibox"><span class="ic">computer</span></span><span class="n">1</span></div><h4 style="margin-top: 12px;">ブラウザ</h4><p class="xs">「追加」クリック<br>→ fetch で POST</p></div>
           <div class="conn" style="width: 150px;"><small>POST /todos</small><i>→</i></div>
-          <div class="box pink"><span class="n">2</span><h4 style="margin-top: 10px;"><span class="ic">api</span> uvicorn → FastAPI</h4><p class="xs">Pydantic でチェック<br>→ create_todo() 実行</p></div>
+          <div class="box pink"><div class="boxhead"><span class="ibox"><span class="ic">api</span></span><span class="n">2</span></div><h4 style="margin-top: 12px;">FastAPI</h4><p class="xs">Pydantic でチェック<br>→ create_todo() 実行</p></div>
           <div class="conn" style="width: 130px;"><small>INSERT</small><i>→</i></div>
-          <div class="box green"><span class="n">3</span><h4 style="margin-top: 10px;"><span class="ic">database</span> SQLite</h4><p class="xs">todo.db に<br>1行追加</p></div>
+          <div class="box green"><div class="boxhead"><span class="ibox"><span class="ic">database</span></span><span class="n">3</span></div><h4 style="margin-top: 12px;">SQLite</h4><p class="xs">todo.db に<br>1行追加</p></div>
         </div>
         <div class="flow reveal d2" style="gap: 0; margin-top: 30px; flex-direction: row-reverse;">
           <div class="box green" style="visibility: hidden;"><h4>.</h4></div>
           <div class="conn" style="width: 130px;"><small>lastrowid</small><i>←</i></div>
-          <div class="box pink"><span class="n">4</span><h4 style="margin-top: 10px;"><span class="ic">api</span> FastAPI</h4><p class="xs">201 Created と<br>作った ToDo の JSON</p></div>
-          <div class="conn" style="width: 150px;"><small>201 + JSON</small><i>←</i></div>
-          <div class="box black"><span class="n">5</span><h4 style="margin-top: 10px;"><span class="ic">computer</span> ブラウザ</h4><p class="xs">load() で GET /todos<br>→ 一覧を描き直す</p></div>
+          <div class="box pink"><span class="n">4</span><h4 style="margin-top: 10px;">FastAPI</h4><p class="xs">作った ToDo を<br>JSON で返す</p></div>
+          <div class="conn" style="width: 150px;"><small>200 + JSON</small><i>←</i></div>
+          <div class="box black"><span class="n">5</span><h4 style="margin-top: 10px;">ブラウザ</h4><p class="xs">load() で GET /todos<br>→ 一覧を描き直す</p></div>
         </div>
       </div>
-      <div class="cell gray flex tight">
-        <span class="label"><span class="ic">folder</span>フォルダ構成</span>
-        <pre class="mono reveal d3" style="font: 700 22px/1.6 var(--mono);">05_todo_sqlite/
-├── main.py
-├── static/
-│   └── index.html
-└── todo.db  <span style="color: var(--darkgray); font-weight: 500;">← 自動で作られる</span></pre>
-        <div class="browser reveal d4" style="margin-top: auto;">
-          <div class="bar"><i></i><i></i><div class="url">127.0.0.1:8000</div></div>
-          <div class="view"><p style="font-weight: 900; font-size: 28px;">ToDo</p><p class="xs"><span style="border: 2px solid; padding: 0 8px;">やること</span> <span style="border: 2px solid; padding: 0 8px; background: var(--pink);">追加</span></p><p class="xs">☐ 牛乳を買う ［削除］<br>☑ レポート提出 ［削除］</p></div>
+      <div class="cell gray flex" style="justify-content: center;">
+        <div class="task reveal d3">
+          <div class="th">作業：再起動テスト</div>
+          <ol>
+            <li><span class="n">A</span><span>5章のサーバーを Ctrl+C で止める</span></li>
+            <li><span class="n">B</span><span><code class="i">cd sample/03_todo_sqlite</code><br><code class="i">uvicorn main:app --reload</code></span></li>
+            <li><span class="n">C</span><span>画面で ToDo を2件追加する</span></li>
+            <li><span class="n">D</span><span>Ctrl+C で止めて、もう一度起動</span></li>
+            <li><span class="n">E</span><span>再読み込み → <strong>消えずに残っている</strong></span></li>
+          </ol>
         </div>
       </div>
-      <div class="cell black center tight reveal d5" style="grid-column: 1 / 3;">
-        <div class="term" style="border-color: #444; box-shadow: none;"><pre><span class="prompt">$ </span>cd examples/05_todo_sqlite
-<span class="prompt">$ </span>uvicorn main:app --reload        <span class="c" style="color: var(--code-comment);"># → ブラウザで http://127.0.0.1:8000/ を開く</span></pre></div>
-        <p class="small" style="margin-top: 14px; color: var(--white);">画面のコードは6章から<strong>1行も変えていない</strong>のに、データが残るようになった。1章の全体図（クライアント → Web API → データベース）が、自分のコードで全部つながりました。</p>
+      <div class="cell black center reveal d4" style="grid-column: 1 / 3;">
+        <p style="font-size: 30px; color: var(--white);"><strong>画面（index.html）は 6章と同じ。保存先を辞書から SQLite に変えただけで、データが残るようになった。</strong></p>
+        <p class="small" style="margin-top: 10px; color: var(--code-comment);">1章の全体図（クライアント → Web API → データベース）が、すべてつながりました。</p>
       </div>
     </div>
   </div>
 </section>
+
+
+
+
+
+
 
 <!-- =====================================================
      SUMMARY
      ===================================================== -->
 <section class="slide">
   <div class="frame">
-    <div class="head"><div class="chap"><span class="ic">flag</span><div><b>FIN.</b><span>まとめ</span></div></div><h2>まとめと、次の一歩</h2><div class="pg"></div></div>
+    <div class="head"><div class="chap"><div><b>FIN.</b><span>まとめ</span></div></div><h2>まとめと、次の一歩</h2><div class="pg"></div></div>
     <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 150px;">
       <div class="cell flex">
-        <span class="label"><span class="ic">task_alt</span>今日できるようになったこと</span>
+        <span class="label">今日できるようになったこと</span>
         <ul class="check reveal d1" style="gap: 22px; margin-top: 10px;">
           <li>クライアント・Web API・DB の役割を説明できる</li>
           <li>HTTP の往復（JSON・ステータスコード）が読める</li>
@@ -1534,20 +1473,20 @@ app = FastAPI()
         </ul>
       </div>
       <div class="cell flex green">
-        <span class="label"><span class="ic">school</span>次に学ぶと良いこと</span>
+        <span class="label">次に学ぶと良いこと</span>
         <table class="t reveal d2" style="background: var(--white);">
           <tbody>
-            <tr><td style="width: 300px;"><b><span class="ic">database</span> SQLModel / SQLAlchemy</b></td><td>SQL を書かずに Python のクラスで DB を扱う（ORM）</td></tr>
-            <tr><td><b><span class="ic">output</span> レスポンスモデル</b></td><td><code>response_model=</code> で返す形も決める</td></tr>
-            <tr><td><b><span class="ic">science</span> テスト</b></td><td><code>TestClient</code> で API を自動テスト</td></tr>
-            <tr><td><b><span class="ic">lock</span> 認証</b></td><td>ログインして自分の ToDo だけ見る</td></tr>
-            <tr><td><b><span class="ic">bolt</span> async / await</b></td><td>待ち時間の多い処理を効率よくさばく</td></tr>
-            <tr><td><b><span class="ic">cloud_upload</span> デプロイ</b></td><td>インターネットに公開して誰でも使えるように</td></tr>
+            <tr><td style="width: 300px;"><b>SQLModel / SQLAlchemy</b></td><td>SQL を書かずに Python のクラスで DB を扱う（ORM）</td></tr>
+            <tr><td><b>レスポンスモデル</b></td><td><code>response_model=</code> で返す形も決める</td></tr>
+            <tr><td><b>テスト</b></td><td><code>TestClient</code> で API を自動テスト</td></tr>
+            <tr><td><b>認証</b></td><td>ログインして自分の ToDo だけ見る</td></tr>
+            <tr><td><b>async / await</b></td><td>待ち時間の多い処理を効率よくさばく</td></tr>
+            <tr><td><b>デプロイ</b></td><td>インターネットに公開して誰でも使えるように</td></tr>
           </tbody>
         </table>
       </div>
       <div class="cell pink center reveal d3" style="grid-column: 1 / 3;">
-        <p style="font-size: 30px;"><span class="ic callout">lightbulb</span><strong>公式チュートリアル（日本語あり）：</strong><span class="mono" style="font-weight: 800;">fastapi.tiangolo.com/ja/</span>　<span class="small">サンプルコードは <code class="i">examples/</code> フォルダに全部あります。</span></p>
+        <p style="font-size: 30px;"><strong>公式チュートリアル（日本語あり）：</strong><span class="mono" style="font-weight: 800;">fastapi.tiangolo.com/ja/</span>　<span class="small">教材は <code class="i">sample/</code>、答えは <code class="i">answer/</code> にあります。</span></p>
       </div>
     </div>
   </div>
@@ -1664,7 +1603,7 @@ class SlidePresentation {
 class InlineEditor {
     constructor() {
         this.isActive = false;
-        this.key = 'fastapi-deck-edits-v4';
+        this.key = 'fastapi-deck-edits-v5';
         this.targets = () => document.querySelectorAll('.slide h1, .slide h2, .slide h3, .slide h4, .slide p, .slide li, .slide td, .slide th, .slide pre, .slide .label');
         this.restore();
         this.bind();
