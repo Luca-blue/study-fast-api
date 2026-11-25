@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>はじめての FastAPI</title>
+<!-- Fonts: 和文は M PLUS 1p（単一ファミリーで太さだけで強弱を作る）、コードは JetBrains Mono -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@500;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===========================================
+   THEME TOKENS (Raw Grid)
+   色・フォント・サイズはここを変えれば全体に反映されます
+   =========================================== */
+:root {
+    --black: #0A0A0A;
+    --white: #FFFFFF;
+    --pink: #F2D4CF;
+    --green: #E5EDD6;
+    --gray: #F5F5F5;
+    --darkgray: #333333;
+    --code-comment: #9A9A9A;
+
+    --stage-bg: #0A0A0A;
+    --slide-bg: #FFFFFF;
+
+    --font: 'M PLUS 1p', sans-serif;
+    --mono: 'JetBrains Mono', 'M PLUS 1p', monospace;
+
+    --border: 3px solid var(--black);
+    --shadow: 6px 6px 0 var(--black);
+    --shadow-sm: 4px 4px 0 var(--black);
+
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ===========================================
+   BASE RESET
+   =========================================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ===========================================
+   FIXED 16:9 STAGE (viewport-base.css — full contents)
+   =========================================== */
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+.deck-viewport {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+.deck-stage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    transform-origin: 0 0;
+    background: var(--slide-bg, #fff);
+}
+.slide {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--slide-bg, #fff);
+}
+.slide.active,
+.slide.visible {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+}
+img, video, canvas, svg { max-width: 100%; max-height: 100%; }
+.deck-controls {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+@media print {
+    html, body { width: 1920px; height: auto; overflow: visible; background: #fff; }
+    .deck-viewport { position: static; overflow: visible; background: #fff; }
+    .deck-stage { position: static; width: auto; height: auto; transform: none !important; background: none; }
+    .slide {
+        position: relative;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        width: 1920px;
+        height: 1080px;
+        break-after: page;
+        page-break-after: always;
+    }
+    .slide:last-child { break-after: auto; page-break-after: auto; }
+    .deck-controls, .progress, .edit-toggle, .edit-hotzone { display: none !important; }
+    .reveal { opacity: 1 !important; transform: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+}
+
+/* ===========================================
+   SLIDE FRAME
+   すべてのスライドは「太枠 + ハードシャドウ」の1枚の板。
+   中の領域は gap:3px + 黒背景で区切る（＝ 3px の罫線がそのままレイアウト）
+   =========================================== */
+body { font-family: var(--font); color: var(--black); }
+
+.frame {
+    position: absolute;
+    left: 40px; top: 34px;
+    width: 1834px; height: 1006px;
+    border: var(--border);
+    box-shadow: var(--shadow);
+    background: var(--black);
+    display: grid;
+    grid-template-rows: 132px 1fr;
+    gap: 3px;
+}
+
+/* --- Header band: [章ラベル | タイトル | ページ番号] --- */
+.head {
+    display: grid;
+    grid-template-columns: 230px 1fr 170px;
+    gap: 3px;
+    background: var(--black);
+}
+.head > * { background: var(--white); display: flex; align-items: center; }
+.head .chap {
+    background: var(--black); color: var(--white);
+    flex-direction: column; justify-content: center; align-items: flex-start;
+    padding: 0 34px; gap: 6px;
+}
+.head .chap b { font: 800 30px var(--mono); letter-spacing: 0.04em; }
+.head .chap span { font: 700 22px var(--font); letter-spacing: 0.06em; }
+.head h2 { padding: 0 48px; font: 900 50px/1.2 var(--font); letter-spacing: 0; white-space: nowrap; }
+.head h2 code { font: 800 46px var(--mono); letter-spacing: -0.02em; }
+.head .pg { justify-content: center; font: 800 28px var(--mono); }
+
+/* --- Body grid: 子要素（.cell）が白い板、隙間3pxが黒い罫線になる --- */
+.body {
+    display: grid;
+    gap: 3px;
+    background: var(--black);
+    min-height: 0;
+}
+.cell {
+    background: var(--white);
+    padding: 40px 48px;
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+}
+.cell.pink  { background: var(--pink); }
+.cell.green { background: var(--green); }
+.cell.gray  { background: var(--gray); }
+.cell.black { background: var(--black); color: var(--white); }
+.cell.tight { padding: 28px 36px; }
+.cell.flex  { display: flex; flex-direction: column; gap: 22px; }
+.cell.center { display: flex; flex-direction: column; justify-content: center; }
+
+/* ===========================================
+   TYPOGRAPHY
+   =========================================== */
+.label {
+    display: inline-block;
+    background: var(--black); color: var(--white);
+    font: 800 21px var(--font); letter-spacing: 0.06em;
+    padding: 6px 16px;
+    align-self: flex-start;
+}
+.cell.black .label { background: var(--white); color: var(--black); }
+.label.pink  { background: var(--pink);  color: var(--black); }
+.label.green { background: var(--green); color: var(--black); }
+
+h3 { font: 900 40px/1.3 var(--font); }
+h4 { font: 800 30px/1.35 var(--font); }
+p, li { font: 500 28px/1.75 var(--font); }
+.small { font-size: 24px; line-height: 1.7; }
+.xs { font-size: 21px; line-height: 1.6; }
+.mono { font-family: var(--mono); }
+.muted { color: var(--darkgray); }
+strong, b { font-weight: 800; }
+.mark { background: linear-gradient(transparent 58%, var(--pink) 58%); font-weight: 800; }
+.cell.pink .mark { background: linear-gradient(transparent 58%, var(--white) 58%); }
+code.i {
+    font: 700 0.9em var(--mono);
+    background: var(--gray); border: 2px solid var(--black);
+    padding: 0 8px;
+}
+.cell.gray code.i { background: var(--white); }
+
+/* 矢印つきリスト（Raw Grid のインタラクション記号） */
+ul.arrow { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+ul.arrow li { padding-left: 1.3em; text-indent: -1.3em; }
+ul.arrow li::before { content: "→\00a0"; font-weight: 900; }
+ul.check { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+ul.check li::before {
+    content: "✓"; display: inline-block; width: 38px; height: 38px; margin-right: 16px;
+    border: 3px solid var(--black); background: var(--green);
+    text-align: center; line-height: 32px; font: 900 24px var(--font); vertical-align: 2px;
+}
+
+/* 大きな薄い数字（壁紙） */
+.wall {
+    position: absolute; right: 24px; bottom: -40px;
+    font: 800 260px/1 var(--mono); letter-spacing: -0.04em;
+    opacity: 0.08; pointer-events: none;
+}
+
+/* ===========================================
+   CODE BLOCKS
+   黒い面（唯一の反転色）にモノスペース
+   =========================================== */
+pre.code {
+    font: 500 26px/1.6 var(--mono);
+    color: var(--white);
+    white-space: pre;
+    tab-size: 4;
+}
+pre.code.sm { font-size: 22px; line-height: 1.5; }
+pre.code.xs { font-size: 20px; line-height: 1.45; }
+pre.code .k { color: var(--pink); font-weight: 700; }      /* keyword */
+pre.code .s { color: #C7DDB0; }                            /* string */
+pre.code .c { color: var(--code-comment); }                /* comment */
+pre.code .d { color: var(--pink); font-weight: 800; }      /* decorator */
+pre.code .f { font-weight: 800; }                          /* function name */
+pre.code .t { color: #A8D8EA; }                            /* type */
+pre.code .hl { background: rgba(242, 212, 207, 0.22); display: inline-block; width: 100%; }
+.prompt { color: var(--code-comment); user-select: none; }
+
+/* 番号バッジ（コードと説明を対応させる） */
+.n {
+    display: inline-block; flex: none;
+    width: 40px; height: 40px;
+    background: var(--pink); color: var(--black);
+    border: 3px solid var(--black);
+    font: 800 22px/34px var(--mono); text-align: center;
+    vertical-align: middle;
+}
+pre.code .n { width: 34px; height: 34px; font-size: 19px; line-height: 28px; margin-left: 14px; border-color: var(--pink); }
+
+.notes { display: flex; flex-direction: column; gap: 20px; }
+.note { display: flex; gap: 18px; align-items: flex-start; }
+.note .n { margin-top: 4px; }
+.note h4 { font-size: 28px; }
+.note p { font-size: 24px; line-height: 1.65; }
+
+/* ===========================================
+   COMPONENTS
+   =========================================== */
+/* 箱（浮かせたカード） */
+.box {
+    border: var(--border); background: var(--white);
+    box-shadow: var(--shadow-sm);
+    padding: 22px 28px;
+}
+.box.pink { background: var(--pink); }
+.box.green { background: var(--green); }
+.box.black { background: var(--black); color: var(--white); }
+
+/* 横向きフロー（箱 → 箱 → 箱） */
+.flow { display: flex; align-items: stretch; gap: 0; }
+.flow > .box { flex: 1; }
+.conn {
+    flex: none; align-self: center;
+    width: 64px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.conn i {
+    display: block; width: 40px; height: 40px;
+    background: var(--black); color: var(--white);
+    font: 900 24px/40px var(--font); text-align: center; font-style: normal;
+}
+.conn small { font: 800 17px var(--mono); white-space: nowrap; }
+
+/* HTTP メソッドのバッジ */
+.m {
+    display: inline-block; min-width: 128px; text-align: center;
+    border: 3px solid var(--black);
+    font: 800 24px var(--mono); padding: 2px 12px; letter-spacing: 0.02em;
+}
+.m.get { background: var(--green); }
+.m.post { background: var(--pink); }
+.m.put { background: var(--gray); }
+.m.del { background: var(--black); color: var(--white); }
+
+/* テーブル */
+table.t { width: 100%; border-collapse: collapse; }
+table.t th, table.t td {
+    border: 3px solid var(--black);
+    padding: 14px 20px; text-align: left; vertical-align: middle;
+    font: 500 25px/1.5 var(--font);
+}
+table.t th { background: var(--black); color: var(--white); font-weight: 800; letter-spacing: 0.04em; }
+table.t tr:nth-child(even) td { background: var(--gray); }
+table.t td.hl { background: var(--green) !important; font-weight: 800; }
+table.t th.hl { background: var(--darkgray); }
+table.t td code, table.t td .mono { font: 700 23px var(--mono); }
+table.t tbody tr { transition: background 0.15s; }
+table.t tbody tr:hover td { background: var(--green); }
+
+/* ブラウザ風ウィンドウ */
+.browser { border: var(--border); box-shadow: var(--shadow-sm); background: var(--white); display: flex; flex-direction: column; }
+.browser .bar {
+    border-bottom: var(--border); background: var(--gray);
+    padding: 10px 16px; display: flex; gap: 14px; align-items: center;
+}
+.browser .bar i { width: 16px; height: 16px; border: 3px solid var(--black); display: block; }
+.browser .bar .url { flex: 1; background: var(--white); border: 3px solid var(--black); padding: 4px 14px; font: 700 21px var(--mono); }
+.browser .view { padding: 22px 26px; flex: 1; }
+
+/* ターミナル */
+.term { background: var(--black); color: var(--white); border: var(--border); box-shadow: var(--shadow-sm); }
+.term .bar { border-bottom: 3px solid #444; padding: 8px 16px; font: 700 18px var(--mono); color: var(--code-comment); }
+.term pre { padding: 18px 24px; font: 500 var(--tfs, 22px)/1.55 var(--mono); white-space: pre; }
+.term .ok { color: #C7DDB0; font-weight: 700; }
+
+/* スタットタイル */
+.tile-num { font: 800 92px/1 var(--mono); letter-spacing: -0.04em; }
+
+/* 章カード（目次） */
+.chapcard { display: flex; flex-direction: column; gap: 12px; }
+.chapcard .no { font: 800 64px/1 var(--mono); letter-spacing: -0.03em; }
+.chapcard h4 { font-size: 34px; }
+.chapcard p { font-size: 23px; line-height: 1.6; }
+
+/* ===========================================
+   REVEAL ANIMATION
+   アクティブなスライドに .visible が付くと順に浮かび上がる
+   =========================================== */
+.reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+.slide.visible .reveal { opacity: 1; transform: none; }
+.d1 { transition-delay: 0.08s; } .d2 { transition-delay: 0.16s; } .d3 { transition-delay: 0.24s; }
+.d4 { transition-delay: 0.32s; } .d5 { transition-delay: 0.40s; } .d6 { transition-delay: 0.48s; }
+.d7 { transition-delay: 0.56s; } .d8 { transition-delay: 0.64s; }
+
+/* ===========================================
+   COVER SLIDE
+   =========================================== */
+.cover .frame { grid-template-rows: 110px 1fr 240px; grid-template-columns: 1.35fr 1fr; }
+.cover .top { grid-column: 1 / 3; background: var(--white); display: flex; align-items: center; justify-content: space-between; padding: 0 48px; }
+.cover .top .mono { font: 800 26px var(--mono); }
+.cover .hero { background: var(--white); padding: 52px 60px; position: relative; overflow: hidden; }
+.cover .hero .bigbg { position: absolute; right: -30px; bottom: -130px; font: 800 520px/1 var(--mono); opacity: 0.05; }
+.cover h1 { font: 900 124px/1.1 var(--font); margin-top: 30px; position: relative; }
+.cover h1 .en { display: block; font: 800 156px/1.05 var(--mono); letter-spacing: -0.03em; }
+.cover .lead { font: 500 34px/1.7 var(--font); margin-top: 30px; color: var(--darkgray); position: relative; }
+.cover .side { background: var(--green); padding: 52px 56px; display: flex; flex-direction: column; gap: 18px; }
+.cover .side .box { display: flex; justify-content: space-between; align-items: center; font: 800 36px var(--font); padding: 20px 28px; }
+.cover .side .box small { font: 500 24px var(--mono); color: var(--darkgray); }
+.cover .side .arrowline { font: 800 26px var(--mono); padding-left: 30px; }
+.cover .chaps { grid-column: 1 / 3; display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; background: var(--black); }
+.cover .chaps div { background: var(--pink); padding: 34px 40px; font: 800 33px/1.4 var(--font); }
+.cover .chaps span { display: block; font: 800 22px var(--mono); margin-bottom: 10px; }
+
+/* ===========================================
+   PRESENTATION CHROME (ステージの外側)
+   =========================================== */
+.progress { position: fixed; left: 0; bottom: 0; height: 6px; background: var(--pink); z-index: 1000; transition: width 0.3s var(--ease); }
+.edit-hotzone { position: fixed; top: 0; left: 0; width: 80px; height: 80px; z-index: 10000; cursor: pointer; }
+.edit-toggle {
+    position: fixed; top: 16px; left: 16px; z-index: 10001;
+    border: 3px solid var(--black); background: var(--white); box-shadow: var(--shadow-sm);
+    font: 800 16px var(--font); padding: 8px 14px; cursor: pointer;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+}
+.edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
+.edit-toggle.active { background: var(--pink); }
+body.editing [contenteditable="true"] { outline: 2px dashed rgba(10, 10, 10, 0.35); outline-offset: 2px; }
+body.editing [contenteditable="true"]:focus { outline: 3px solid #e0533d; }
+@media (hover: none) { .edit-hotzone, .edit-toggle { display: none; } }  /* タッチ端末では編集UIを出さない */
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<!-- =====================================================
+     01. COVER
+     ===================================================== -->
+<section class="slide cover">
+  <div class="frame">
+    <div class="top"><span class="label">PYTHON WEB API 入門</span><span class="mono">fastapi + uvicorn + sqlite</span></div>
+    <div class="hero">
+      <div class="bigbg">API</div>
+      <span class="label reveal">ハンズオン資料</span>
+      <h1 class="reveal d1">はじめての<span class="en">FastAPI</span></h1>
+      <p class="lead reveal d2">しくみを知る → 動かす → つなげる。<br>小さな ToDo アプリを作りながら覚えよう。</p>
+    </div>
+    <div class="side">
+      <span class="label">今日つくるもの</span>
+      <div class="box reveal d1">ブラウザ <small>client</small></div>
+      <div class="arrowline reveal d2">↓ GET /todos</div>
+      <div class="box reveal d2">FastAPI <small>server</small></div>
+      <div class="arrowline reveal d3">↓ SELECT *</div>
+      <div class="box reveal d3">SQLite <small>database</small></div>
+    </div>
+    <div class="chaps">
+      <div class="reveal d1"><span>01—02</span>Web API の<br>しくみ</div>
+      <div class="reveal d2"><span>03—04</span>準備と<br>はじめてのコード</div>
+      <div class="reveal d3"><span>05—06</span>HTTPメソッドと<br>データの受け渡し</div>
+      <div class="reveal d4"><span>07—08</span>データベースと<br>画面をつなぐ</div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     02. AGENDA
+     ===================================================== -->
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>INDEX</b><span>目次</span></div><h2>今日の流れ：8つの章</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr 1fr;">
+      <div class="cell chapcard reveal d1"><span class="no">01</span><h4>Web API のしくみ</h4><p class="muted">クライアント・サーバー・データベースの関係</p></div>
+      <div class="cell chapcard reveal d2"><span class="no">02</span><h4>FastAPI の立ち位置</h4><p class="muted">ほかのフレームワークと何が違う？</p></div>
+      <div class="cell chapcard reveal d3"><span class="no">03</span><h4>準備とインポート</h4><p class="muted">fastapi・uvicorn・pydantic の役目</p></div>
+      <div class="cell chapcard pink reveal d4"><span class="no">04</span><h4>書いてみる</h4><p>最小のコードを動かして、ブラウザで確かめる</p></div>
+      <div class="cell chapcard pink reveal d5"><span class="no">05</span><h4>HTTP メソッド</h4><p>GET・POST・PUT・DELETE を具体例で</p></div>
+      <div class="cell chapcard green reveal d6"><span class="no">06</span><h4>データを受け取る</h4><p>Pydantic とメモリ版 ToDo API</p></div>
+      <div class="cell chapcard green reveal d7"><span class="no">07</span><h4>SQLite につなぐ</h4><p>再起動しても消えないデータ</p></div>
+      <div class="cell chapcard green reveal d8"><span class="no">08</span><h4>画面をつなぐ</h4><p>fetch で API を呼んで ToDo アプリ完成</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     CH.01 — Web API のしくみ
+     ===================================================== -->
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.01</b><span>しくみ</span></div><h2>やりたいこと：アプリの「裏側」を作る</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 210px;">
+      <div class="cell flex">
+        <span class="label">そもそも</span>
+        <p class="reveal d1">天気アプリや SNS の画面に出ている情報は、<br>スマホの中に入っているわけではありません。</p>
+        <p class="reveal d2">インターネットの向こうにある<span class="mark">サーバー</span>に<br>「データちょうだい」とお願いして、<br>返ってきたものを表示しています。</p>
+        <div class="box pink reveal d3" style="margin-top: 8px;">
+          <h4>この講座のゴール</h4>
+          <p>画面からのお願いに応えてデータを返す係<br>＝ <strong>Web API</strong> を Python で作れるようになる</p>
+        </div>
+      </div>
+      <div class="cell green center">
+        <div class="flow reveal d2" style="gap: 0;">
+          <div class="box" style="flex: 0 0 300px;">
+            <span class="label">画面</span>
+            <p style="margin-top: 14px; font-weight: 800;">ToDo アプリ</p>
+            <p class="small">□ 牛乳を買う<br>☑ レポート提出<br>□ 歯医者を予約</p>
+          </div>
+          <div class="conn" style="width: 210px;"><small>「一覧ちょうだい」</small><i>→</i><i>←</i><small>「はい、どうぞ」</small></div>
+          <div class="box black">
+            <span class="label">サーバー</span>
+            <p style="margin-top: 14px; font-weight: 800;">Web API</p>
+            <p class="small">お願いを受け取り<br>データを探して<br>返事をする</p>
+          </div>
+        </div>
+      </div>
+      <div class="cell tight reveal d3" style="grid-column: 1 / 3; display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; align-items: center;">
+        <div><span class="label green">天気アプリ</span><p>「東京の天気は？」→「晴れ 18℃」</p></div>
+        <div><span class="label green">SNS</span><p>「新着投稿を見せて」→ 投稿の一覧</p></div>
+        <div><span class="label green">ネットショップ</span><p>「カートに入れて」→「追加しました」</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.01</b><span>しくみ</span></div><h2>クライアントとサーバー：レストランで考える</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-rows: 1fr 260px;">
+      <div class="cell center">
+        <div class="flow">
+          <div class="box reveal d1">
+            <span class="label pink">お客さん</span>
+            <h3 style="margin-top: 14px;">クライアント</h3>
+            <p class="small">ブラウザ・スマホアプリなど。<br>「〇〇ください」と<strong>お願いする側</strong>。</p>
+            <p class="xs mono" style="margin-top: 14px; border-top: 3px solid var(--black); padding-top: 12px;">例：ブラウザで ToDo 画面を開く</p>
+          </div>
+          <div class="conn" style="width: 110px;"><small>注文</small><i>→</i><i>←</i><small>料理</small></div>
+          <div class="box green reveal d2">
+            <span class="label">店員（注文の窓口）</span>
+            <h3 style="margin-top: 14px;">Web API</h3>
+            <p class="small">注文を受けて、厨房に伝え、<br>料理を運ぶ。<strong>← 今日作るのはここ</strong></p>
+            <p class="xs mono" style="margin-top: 14px; border-top: 3px solid var(--black); padding-top: 12px;">例：GET /todos → 一覧を返す</p>
+          </div>
+          <div class="conn" style="width: 110px;"><small>取り出す</small><i>→</i><i>←</i><small>食材</small></div>
+          <div class="box reveal d3">
+            <span class="label pink">厨房の冷蔵庫</span>
+            <h3 style="margin-top: 14px;">データベース</h3>
+            <p class="small">データをしまっておく場所。<br>お客さんは直接さわれない。</p>
+            <p class="xs mono" style="margin-top: 14px; border-top: 3px solid var(--black); padding-top: 12px;">例：todo.db の todos 表</p>
+          </div>
+        </div>
+      </div>
+      <div class="body" style="grid-template-columns: 1fr 1fr; gap: 3px;">
+        <div class="cell pink reveal d4">
+          <h4>なぜ「店員」をはさむの？</h4>
+          <p class="small">お客さんが勝手に厨房に入ったら大混乱。決まった<strong>メニュー（URL）</strong>と決まった<strong>頼み方（メソッド）</strong>でだけ受け付けるから、安全で分かりやすい。</p>
+        </div>
+        <div class="cell reveal d5">
+          <h4>「サーバー」は2つの意味で使われる</h4>
+          <p class="small">① お願いを受け付ける<strong>プログラム</strong>（FastAPI で作るもの）<br>② そのプログラムが動いている<strong>コンピューター</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.01</b><span>しくみ</span></div><h2>リクエストとレスポンス：お願いと返事</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 220px;">
+      <div class="cell flex">
+        <span class="label">REQUEST ／ リクエスト（お願い）</span>
+        <div class="term reveal d1"><div class="bar">クライアント → サーバー</div><pre><span class="ok">GET</span> /todos/1 HTTP/1.1
+Host: 127.0.0.1:8000
+Accept: application/json</pre></div>
+        <div class="notes reveal d2">
+          <div class="note"><span class="n">1</span><div><h4>メソッド（どうしてほしい？）</h4><p><code class="i">GET</code> = 「見せて」。ほかに作る・変える・消す がある</p></div></div>
+          <div class="note"><span class="n">2</span><div><h4>URL（何に対して？）</h4><p><code class="i">/todos/1</code> = 「ToDo の1番」</p></div></div>
+          <div class="note"><span class="n">3</span><div><h4>ヘッダー・ボディ（付け足し情報）</h4><p>新しく作るときは、中身をボディに入れて送る</p></div></div>
+        </div>
+      </div>
+      <div class="cell flex gray">
+        <span class="label">RESPONSE ／ レスポンス（返事）</span>
+        <div class="term reveal d3"><div class="bar">サーバー → クライアント</div><pre>HTTP/1.1 <span class="ok">200 OK</span>
+content-type: application/json
+
+{"id": 1, "title": "牛乳を買う", "done": false}</pre></div>
+        <div class="notes reveal d4">
+          <div class="note"><span class="n">4</span><div><h4>ステータスコード（結果どうだった？）</h4><p><code class="i">200</code> = 成功。見つからなければ <code class="i">404</code></p></div></div>
+          <div class="note"><span class="n">5</span><div><h4>ボディ（データ本体）</h4><p>Web API では <strong>JSON</strong> という形式で返すのが定番</p></div></div>
+        </div>
+      </div>
+      <div class="cell pink center reveal d5" style="grid-column: 1 / 3;">
+        <p style="font-size: 32px;"><strong>1回のリクエストに、必ず1回のレスポンス。</strong> この往復が HTTP（ブラウザとサーバーの会話のルール）の基本です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.01</b><span>しくみ</span></div><h2>全体像：3つの登場人物と、つなぐもの</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-rows: 1fr 230px;">
+      <div class="cell center">
+        <div class="flow" style="align-items: stretch;">
+          <div class="box reveal d1">
+            <span class="label pink">CLIENT</span>
+            <h3 style="margin: 14px 0 8px;">クライアント</h3>
+            <ul class="arrow"><li class="small">ブラウザ（HTML + JavaScript）</li><li class="small">スマホアプリ</li><li class="small">ほかのプログラム</li></ul>
+            <p class="xs muted" style="margin-top: 14px;">この講座では → 8章</p>
+          </div>
+          <div class="conn" style="width: 150px;"><small>HTTP</small><i>→</i><i>←</i><small>JSON</small></div>
+          <div class="box green reveal d2" style="flex: 1.15;">
+            <span class="label">WEB API</span>
+            <h3 style="margin: 14px 0 8px;">Python + FastAPI</h3>
+            <ul class="arrow"><li class="small">URL とメソッドごとに処理を決める</li><li class="small">届いたデータをチェックする</li><li class="small">DB に読み書きして返事を作る</li></ul>
+            <p class="xs muted" style="margin-top: 14px;">この講座では → 3〜6章</p>
+          </div>
+          <div class="conn" style="width: 150px;"><small>SQL</small><i>→</i><i>←</i><small>行データ</small></div>
+          <div class="box reveal d3">
+            <span class="label pink">DATABASE</span>
+            <h3 style="margin: 14px 0 8px;">データベース</h3>
+            <ul class="arrow"><li class="small">SQLite（ファイル1つ）</li><li class="small">表（テーブル）で保存</li><li class="small">SQL という言葉で操作</li></ul>
+            <p class="xs muted" style="margin-top: 14px;">この講座では → 7章</p>
+          </div>
+        </div>
+      </div>
+      <div class="body" style="grid-template-columns: 1fr 1fr; gap: 3px;">
+        <div class="cell reveal d4"><h4>クライアント ⇄ API は「HTTP」</h4><p class="small">URL・メソッド・ステータスコードでやりとり。データは JSON。</p></div>
+        <div class="cell reveal d5"><h4>API ⇄ DB は「SQL」</h4><p class="small">「この表からこの行を取り出して」と命令する専用の言葉。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.01</b><span>しくみ</span></div><h2>JSON とステータスコード</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr;">
+      <div class="cell flex">
+        <span class="label">JSON ＝ データを書く形式</span>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;" class="reveal d1">
+          <div><p class="xs" style="font-weight: 800;">JSON（API が返す）</p><div class="term"><pre>{
+  "id": 1,
+  "title": "牛乳",
+  "done": <span class="ok">false</span>,
+  "memo": <span class="ok">null</span>
+}</pre></div></div>
+          <div><p class="xs" style="font-weight: 800;">Python の辞書</p><div class="term"><pre>{
+  "id": 1,
+  "title": "牛乳",
+  "done": <span class="ok">False</span>,
+  "memo": <span class="ok">None</span>
+}</pre></div></div>
+        </div>
+        <ul class="arrow reveal d2">
+          <li class="small">形は Python の辞書・リストとほぼ同じ</li>
+          <li class="small">違いは <code class="i">true / false / null</code> が小文字なところ</li>
+          <li class="small">FastAPI は<strong>辞書を return するだけで自動で JSON に変換</strong>してくれる</li>
+        </ul>
+      </div>
+      <div class="cell flex green">
+        <span class="label">ステータスコード ＝ 結果を表す3桁の数字</span>
+        <table class="t reveal d3" style="background: var(--white);">
+          <thead><tr><th style="width: 130px;">コード</th><th style="width: 290px;">名前</th><th>意味</th></tr></thead>
+          <tbody>
+            <tr><td class="mono"><b>200</b></td><td class="mono">OK</td><td>成功</td></tr>
+            <tr><td class="mono"><b>201</b></td><td class="mono">Created</td><td>新しく作れた</td></tr>
+            <tr><td class="mono"><b>404</b></td><td class="mono">Not Found</td><td>見つからない</td></tr>
+            <tr><td class="mono"><b>422</b></td><td class="mono">Unprocessable</td><td>送ったデータの形が違う</td></tr>
+            <tr><td class="mono"><b>500</b></td><td class="mono">Server Error</td><td>サーバー側のバグ</td></tr>
+          </tbody>
+        </table>
+        <p class="small reveal d4"><strong>2xx</strong> 成功 ／ <strong>4xx</strong> 頼んだ側のミス ／ <strong>5xx</strong> サーバー側のミス</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     CH.02 — FastAPI の立ち位置
+     ===================================================== -->
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.02</b><span>立ち位置</span></div><h2>Python の Web フレームワーク 3兄弟</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-rows: 1fr 200px;">
+      <div class="cell center">
+        <p class="small reveal" style="margin-bottom: 20px;"><strong>フレームワーク</strong> ＝ Web の面倒な部分（通信・URL の振り分けなど）を引き受けてくれる土台。自分は「何をするか」だけ書けばよくなる。</p>
+        <table class="t reveal d1">
+          <thead><tr><th style="width: 260px;"></th><th>Django</th><th>Flask</th><th class="hl">FastAPI</th></tr></thead>
+          <tbody>
+            <tr><td><b>得意なこと</b></td><td>画面つきの大きな Web サイト</td><td>小さく自由に作る</td><td class="hl">Web API を速く・安全に作る</td></tr>
+            <tr><td><b>付いてくる機能</b></td><td>全部入り（管理画面・DB・ログイン）</td><td>最小限（あとから足す）</td><td class="hl">API に必要なもの（型チェック・ドキュメント）</td></tr>
+            <tr><td><b>覚えること</b></td><td>多い</td><td>少ない</td><td class="hl">少ない（型ヒントが分かれば OK）</td></tr>
+            <tr><td><b>登場した年</b></td><td class="mono">2005</td><td class="mono">2010</td><td class="hl mono">2018</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cell pink center reveal d2">
+        <p style="font-size: 32px;"><strong>「Web API を作りたい」なら FastAPI がいちばんの近道。</strong><br><span class="small">新しい分、Python の新しい書き方（型ヒント・async）を前提に設計されています。</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.02</b><span>立ち位置</span></div><h2>FastAPI の4つの特徴</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr 640px; grid-template-rows: 1fr 1fr;">
+      <div class="cell flex reveal d1" style="grid-column: 1; grid-row: 1;"><span class="tile-num">01</span><h4>速い</h4><p class="small">Python のフレームワークの中でもトップクラスの処理速度。たくさんのお願いを同時にさばける。</p></div>
+      <div class="cell flex green reveal d2" style="grid-column: 2; grid-row: 1;"><span class="tile-num">02</span><h4>型ヒントで自動チェック</h4><p class="small"><code class="i">age: int</code> と書くだけで、数字以外が来たら自動で 422 エラーにしてくれる。</p></div>
+      <div class="cell black flex" style="grid-column: 3; grid-row: 1 / 3;">
+        <span class="label">中身はこうなっている</span>
+        <div class="reveal d3" style="display: flex; flex-direction: column; gap: 0; margin-top: 10px;">
+          <div class="box" style="color: var(--black); box-shadow: none;"><h4>あなたのコード</h4><p class="xs">@app.get(...) と関数</p></div>
+          <div class="box green" style="color: var(--black); box-shadow: none; border-top: 0;"><h4>FastAPI</h4><p class="xs">2つをつないで使いやすくする</p></div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr;">
+            <div class="box pink" style="color: var(--black); box-shadow: none; border-top: 0;"><h4>Starlette</h4><p class="xs">Web 通信の部分</p></div>
+            <div class="box pink" style="color: var(--black); box-shadow: none; border-top: 0; border-left: 0;"><h4>Pydantic</h4><p class="xs">データチェックの部分</p></div>
+          </div>
+          <div class="box" style="color: var(--black); box-shadow: none; border-top: 0; background: var(--gray);"><h4>Uvicorn（サーバー）</h4><p class="xs">ネットからの通信を受け取って渡す</p></div>
+        </div>
+        <p class="xs reveal d4" style="margin-top: 8px;">FastAPI は「いいとこ取り」の組み合わせ。<br>だから一緒にインストールするものがある（→ 3章）</p>
+      </div>
+      <div class="cell flex pink reveal d3" style="grid-column: 1; grid-row: 2;"><span class="tile-num">03</span><h4>ドキュメント自動生成</h4><p class="small"><code class="i">/docs</code> を開くだけで、API の一覧と「試せる画面」ができあがる。</p></div>
+      <div class="cell flex reveal d4" style="grid-column: 2; grid-row: 2;"><span class="tile-num">04</span><h4>書く量が少ない</h4><p class="small">「デコレータ1行＋関数1つ」で API が1本できる。最初の一歩が軽い。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     CH.03 — 準備とインポート
+     ===================================================== -->
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.03</b><span>準備</span></div><h2>主要ライブラリと、それぞれの役目</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr 250px;">
+      <div class="cell flex green reveal d1"><span class="label">fastapi</span><h4>店のルールブック</h4><p class="small">「どの URL に、どのメソッドで来たら、どの関数を動かすか」を書くための道具。</p><p class="xs muted" style="margin-top: auto;">pip install が必要</p></div>
+      <div class="cell flex pink reveal d2"><span class="label">uvicorn</span><h4>お店の入口・開店係</h4><p class="small">ネットから届いたリクエストを受け取り FastAPI に渡す<strong>サーバー</strong>。これがないと誰も来られない。</p><p class="xs muted" style="margin-top: auto;">pip install が必要</p></div>
+      <div class="cell flex reveal d3"><span class="label">pydantic</span><h4>検品係</h4><p class="small">届いたデータが決めた形（型）どおりかチェック。間違っていれば自動で 422 を返す。</p><p class="xs muted" style="margin-top: auto;">fastapi と一緒に自動で入る</p></div>
+      <div class="cell flex gray reveal d4"><span class="label">sqlite3</span><h4>倉庫</h4><p class="small">SQLite データベースを使うための道具。7章で使う。</p><p class="xs muted" style="margin-top: auto;">Python に最初から入っている</p></div>
+      <div class="cell center" style="grid-column: 1 / 5;">
+        <div class="flow reveal d5">
+          <div class="box"><h4>ブラウザ</h4></div>
+          <div class="conn"><i>→</i></div>
+          <div class="box pink"><h4>uvicorn</h4><p class="xs">受け取る</p></div>
+          <div class="conn"><i>→</i></div>
+          <div class="box green"><h4>FastAPI（app）</h4><p class="xs">振り分ける</p></div>
+          <div class="conn"><i>→</i></div>
+          <div class="box"><h4>あなたの関数</h4><p class="xs">pydantic でチェック済みのデータを受け取る</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.03</b><span>準備</span></div><h2>インストール：3ステップ</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 250px;">
+      <div class="cell flex reveal d1">
+        <span class="label">STEP 1 ／ 作業フォルダを作る</span>
+        <div class="term"><pre><span class="prompt">$ </span>mkdir fastapi-study
+<span class="prompt">$ </span>cd fastapi-study</pre></div>
+        <p class="small">ターミナル（Windows は PowerShell）で実行。以降はずっとこのフォルダの中で作業します。</p>
+      </div>
+      <div class="cell flex green reveal d2">
+        <span class="label">STEP 2 ／ 仮想環境を作って有効にする</span>
+        <div class="term"><pre><span class="prompt">$ </span>python -m venv .venv
+<span class="c prompt"># Mac / Linux</span>
+<span class="prompt">$ </span>source .venv/bin/activate
+<span class="c prompt"># Windows</span>
+<span class="prompt">&gt; </span>.venv\Scripts\activate</pre></div>
+        <p class="small">先頭に <code class="i">(.venv)</code> と出れば OK。</p>
+      </div>
+      <div class="cell flex pink reveal d3">
+        <span class="label">STEP 3 ／ ライブラリを入れる</span>
+        <div class="term"><pre><span class="prompt">$ </span>pip install fastapi uvicorn
+<span class="prompt">$ </span>pip list
+<span class="ok">fastapi    0.x.x</span>
+<span class="ok">pydantic   2.x.x</span>
+<span class="ok">uvicorn    0.x.x</span></pre></div>
+        <p class="small">一覧に3つ出れば準備完了。</p>
+      </div>
+      <div class="cell gray reveal d4" style="grid-column: 1 / 3;">
+        <h4>仮想環境（venv）ってなに？</h4>
+        <p class="small">プロジェクト専用の<strong>道具箱</strong>。ここに入れたライブラリはこのフォルダの中でだけ使われるので、ほかのプロジェクトとバージョンがぶつからない。新しくターミナルを開いたら、もう一度 activate する。</p>
+      </div>
+      <div class="cell reveal d5">
+        <h4>Python のバージョン</h4>
+        <p class="small"><code class="i">python --version</code> で <strong>3.9 以上</strong>なら OK。Mac では <code class="i">python3</code> の場合あり。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.03</b><span>準備</span></div><h2>インポート文を読んでみる</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 370px 1fr;">
+      <div class="cell black center reveal d1">
+        <pre class="code" style="font-size: 29px; line-height: 1.8;"><span class="k">from</span> fastapi <span class="k">import</span> FastAPI, HTTPException
+<span class="k">from</span> pydantic <span class="k">import</span> BaseModel
+<span class="k">import</span> sqlite3</pre>
+      </div>
+      <div class="cell flex green reveal d2">
+        <span class="label">読み方</span>
+        <p><code class="i">from fastapi</code> 「fastapi という箱から」<br><code class="i">import FastAPI</code> 「FastAPI という部品を取り出して使えるようにする」</p>
+        <p class="small muted">箱（パッケージ）の名前は小文字、部品（クラス）は大文字始まりが多い。</p>
+      </div>
+      <div class="cell" style="grid-column: 1 / 3;">
+        <table class="t reveal d3">
+          <thead><tr><th style="width: 300px;">名前</th><th style="width: 220px;">何者？</th><th>何に使う？</th><th style="width: 170px;">登場</th></tr></thead>
+          <tbody>
+            <tr><td><code>FastAPI</code></td><td>クラス</td><td>アプリ本体を作る。<code>app = FastAPI()</code></td><td>4章</td></tr>
+            <tr><td><code>HTTPException</code></td><td>クラス</td><td>「見つからない（404）」などのエラーを返す</td><td>6章</td></tr>
+            <tr><td><code>BaseModel</code></td><td>クラス</td><td>受け取るデータの形（型）を決める</td><td>6章</td></tr>
+            <tr><td><code>sqlite3</code></td><td>モジュール</td><td>SQLite データベースを読み書きする</td><td>7章</td></tr>
+            <tr><td><code>uvicorn</code></td><td>コマンド</td><td><strong>コードでは import しない！</strong> ターミナルから起動に使う</td><td>4章</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     CH.04 — 書いてみる
+     ===================================================== -->
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.04</b><span>書いてみる</span></div><h2>いちばん小さな API：<code>main.py</code></h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr;">
+      <div class="cell black flex">
+        <span class="label">main.py（たった6行）</span>
+        <pre class="code reveal d1" style="font-size: 30px; line-height: 1.85; margin-top: 20px;"><span class="k">from</span> fastapi <span class="k">import</span> FastAPI<span class="n">1</span>
+
+app = FastAPI()<span class="n">2</span>
+
+<span class="d">@app.get</span>(<span class="s">"/"</span>)<span class="n">3</span>
+<span class="k">def</span> <span class="f">hello</span>():
+    <span class="k">return</span> {<span class="s">"message"</span>: <span class="s">"Hello, FastAPI!"</span>}<span class="n">4</span></pre>
+        <p class="xs reveal d2" style="margin-top: auto; color: var(--code-comment);">サンプル: examples/01_hello/main.py</p>
+      </div>
+      <div class="cell notes" style="justify-content: center; gap: 30px;">
+        <div class="note reveal d2"><span class="n">1</span><div><h4>道具を読み込む</h4><p>fastapi から FastAPI クラスを取り出す。</p></div></div>
+        <div class="note reveal d3"><span class="n">2</span><div><h4>アプリ本体を作る</h4><p>変数 <code class="i">app</code> がこの API そのもの。名前は起動のときに使うので覚えておく。</p></div></div>
+        <div class="note reveal d4"><span class="n">3</span><div><h4>「どの URL で動くか」の目印</h4><p><code class="i">@</code> で始まる行は<strong>デコレータ</strong>。「GET で <code class="i">/</code> に来たら、すぐ下の関数を呼んでね」という登録。</p></div></div>
+        <div class="note reveal d5"><span class="n">4</span><div><h4>返事を返す</h4><p>辞書を return すると、FastAPI が自動で JSON にしてレスポンスにしてくれる。</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.04</b><span>書いてみる</span></div><h2>起動する：<code>uvicorn main:app --reload</code></h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-rows: 300px 1fr;">
+      <div class="cell center">
+        <div style="display: grid; grid-template-columns: 1.1fr 0.9fr 0.9fr 1.3fr; gap: 24px;">
+          <div class="box reveal d1"><p class="mono" style="font-weight: 800; font-size: 36px;">uvicorn</p><p class="small">サーバーを起動する<br>コマンド</p></div>
+          <div class="box green reveal d2"><p class="mono" style="font-weight: 800; font-size: 36px;">main</p><p class="small"><strong>main</strong>.py の<br>ファイル名</p></div>
+          <div class="box pink reveal d3"><p class="mono" style="font-weight: 800; font-size: 36px;">:app</p><p class="small">その中の<br>変数 <strong>app</strong></p></div>
+          <div class="box reveal d4"><p class="mono" style="font-weight: 800; font-size: 36px;">--reload</p><p class="small">保存すると自動で再起動<br>（開発中だけ使う）</p></div>
+        </div>
+      </div>
+      <div class="body" style="grid-template-columns: 1.45fr 1fr; gap: 3px;">
+        <div class="cell gray flex">
+          <span class="label">実行すると…</span>
+          <div class="term reveal d3" style="--tfs: 19px;"><div class="bar">main.py があるフォルダで実行</div><pre><span class="prompt">$ </span>uvicorn main:app --reload
+INFO:     Will watch for changes in these directories: [...]
+INFO:     <span class="ok">Uvicorn running on http://127.0.0.1:8000</span> (Press CTRL+C to quit)
+INFO:     Started reloader process [12345]
+INFO:     Started server process [12347]
+INFO:     Waiting for application startup.
+INFO:     <span class="ok">Application startup complete.</span></pre></div>
+        </div>
+        <div class="cell flex">
+          <span class="label">ポイント</span>
+          <ul class="arrow reveal d4">
+            <li class="small"><code class="i">Uvicorn running on …</code> が出たら成功</li>
+            <li class="small">サーバーは<strong>動きっぱなし</strong>。ターミナルは占有されるので、ほかの作業は別のターミナルで</li>
+            <li class="small">止めるときは <code class="i">Ctrl + C</code></li>
+            <li class="small">ファイル名が <code class="i">app.py</code> なら <code class="i">uvicorn app:app</code> になる</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.04</b><span>書いてみる</span></div><h2>ブラウザで確かめる</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 240px;">
+      <div class="cell green flex">
+        <span class="label">① API を直接開く</span>
+        <div class="browser reveal d1" style="flex: 1;">
+          <div class="bar"><i></i><i></i><div class="url">http://127.0.0.1:8000/</div></div>
+          <div class="view"><pre class="mono" style="font: 700 30px var(--mono);">{"message":"Hello, FastAPI!"}</pre></div>
+        </div>
+        <p class="small reveal d2">return した辞書が JSON で表示される。<br>ブラウザの URL 欄に打つ＝ <strong>GET リクエスト</strong>を送っている。</p>
+      </div>
+      <div class="cell pink flex">
+        <span class="label">② 自動ドキュメントを開く</span>
+        <div class="browser reveal d3" style="flex: 1;">
+          <div class="bar"><i></i><i></i><div class="url">http://127.0.0.1:8000/docs</div></div>
+          <div class="view" style="display: flex; flex-direction: column; gap: 14px;">
+            <p style="font-weight: 900; font-size: 30px;">FastAPI <span class="xs mono" style="border: 2px solid; padding: 0 6px;">0.1.0</span></p>
+            <div class="box" style="box-shadow: none; padding: 12px 16px; display: flex; gap: 18px; align-items: center; background: var(--green);"><span class="m get">GET</span><span class="mono" style="font: 700 24px var(--mono);">/</span><span class="xs">Hello</span></div>
+            <p class="xs muted">クリック → Try it out → Execute で、その場で試せる</p>
+          </div>
+        </div>
+        <p class="small reveal d4">コードを書いただけで、この画面が<strong>自動で</strong>できる。</p>
+      </div>
+      <div class="cell reveal d5" style="grid-column: 1 / 3; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; align-items: center;">
+        <div><h4><code class="i">127.0.0.1</code></h4><p class="small">「自分のパソコン」を指す特別な住所。<code class="i">localhost</code> も同じ意味。</p></div>
+        <div><h4><code class="i">:8000</code></h4><p class="small">ポート番号。同じパソコン内の「部屋番号」のようなもの。</p></div>
+        <div><h4>変更を試す</h4><p class="small">"Hello" を書き換えて保存 → ブラウザを再読み込みすると反映される。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.04</b><span>書いてみる</span></div><h2>URL から値を受け取る：2つの方法</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 405px;">
+      <div class="cell black flex">
+        <span class="label">パスパラメータ：URL の「途中」を変数に</span>
+        <pre class="code reveal d1" style="font-size: 28px;"><span class="d">@app.get</span>(<span class="s">"/hello/<span class="hl" style="width: auto;">{name}</span>"</span>)
+<span class="k">def</span> <span class="f">hello</span>(name: <span class="t">str</span>):
+    <span class="k">return</span> {<span class="s">"message"</span>: <span class="k">f</span><span class="s">"こんにちは、{name}さん"</span>}</pre>
+        <p class="small reveal d2" style="color: var(--white);"><code class="i" style="color: var(--black);">{name}</code> の部分に入った文字が、関数の引数 <code class="i" style="color: var(--black);">name</code> に入る。</p>
+      </div>
+      <div class="cell black flex">
+        <span class="label">クエリパラメータ：URL の「? 以降」を変数に</span>
+        <pre class="code reveal d3" style="font-size: 28px;"><span class="d">@app.get</span>(<span class="s">"/add"</span>)
+<span class="k">def</span> <span class="f">add</span>(a: <span class="t">int</span>, b: <span class="t">int</span>):
+    <span class="k">return</span> {<span class="s">"result"</span>: a + b}</pre>
+        <p class="small reveal d4" style="color: var(--white);">URL に書いていない引数は、自動で <code class="i" style="color: var(--black);">?a=1&amp;b=2</code> から受け取る。</p>
+      </div>
+      <div class="cell green flex">
+        <span class="label">試してみる</span>
+        <table class="t reveal d3" style="background: var(--white);">
+          <thead><tr><th>URL</th><th>結果</th></tr></thead>
+          <tbody>
+            <tr><td><code>/hello/たろう</code></td><td><code>{"message":"こんにちは、たろうさん"}</code></td></tr>
+            <tr><td><code>/hello/Alice</code></td><td><code>{"message":"こんにちは、Aliceさん"}</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cell pink flex">
+        <span class="label">試してみる</span>
+        <table class="t reveal d4" style="background: var(--white);">
+          <thead><tr><th>URL</th><th>結果</th></tr></thead>
+          <tbody>
+            <tr><td><code>/add?a=1&amp;b=2</code></td><td><code>{"result":3}</code></td></tr>
+            <tr><td><code>/add?a=x&amp;b=2</code></td><td><strong>422 エラー</strong>：「a は整数じゃない」<br><span class="xs">← <code>a: int</code> と書いたおかげで自動チェック</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.04</b><span>書いてみる</span></div><h2>うまく動かないときのチェック表</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-rows: 1fr 160px;">
+      <div class="cell center">
+        <table class="t reveal d1">
+          <thead><tr><th style="width: 640px;">こんなメッセージが出たら</th><th style="width: 470px;">よくある原因</th><th>こうする</th></tr></thead>
+          <tbody>
+            <tr><td><code>command not found: uvicorn</code></td><td>仮想環境が有効になっていない</td><td>activate してから、もう一度 pip install</td></tr>
+            <tr><td><code>Could not import module "main"</code></td><td>別のフォルダで実行している</td><td><code>cd</code> で main.py のあるフォルダへ移動</td></tr>
+            <tr><td><code>Attribute "app" not found</code></td><td>コードの変数名とコマンドがずれている</td><td><code>uvicorn ファイル名:変数名</code> を合わせる</td></tr>
+            <tr><td><code>address already in use</code></td><td>前に起動したサーバーが動いたまま</td><td>そのターミナルで Ctrl+C／<code>--port 8001</code></td></tr>
+            <tr><td>ブラウザに <code>{"detail":"Not Found"}</code></td><td>URL のパスのつづりが違う</td><td><code>/docs</code> で登録済みの URL を確認</td></tr>
+            <tr><td><code>Internal Server Error</code></td><td>関数の中でエラーが起きている</td><td>ターミナルに出た赤いエラー文を読む</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cell pink center reveal d2">
+        <p style="font-size: 30px;"><strong>困ったら、まずターミナルを見る。</strong> サーバー側で何が起きたかは、すべてそこに表示されます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     CH.05 — HTTP メソッド
+     ===================================================== -->
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.05</b><span>メソッド</span></div><h2>HTTP メソッド：「どうしてほしいか」を表す動詞</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr 170px;">
+      <div class="cell flex green reveal d1">
+        <span class="m get">GET</span>
+        <h3>読む・見る</h3>
+        <p class="small">データを取り出す。中身は<strong>変わらない</strong>。</p>
+        <table class="t" style="background: var(--white);"><tr><td style="width: 40%; white-space: nowrap;" class="xs"><b>ボディ</b></td><td class="xs">なし</td></tr><tr><td class="xs" style="white-space: nowrap;"><b>成功時</b></td><td class="xs mono">200 OK</td></tr></table>
+        <div class="box" style="margin-top: auto;"><p class="xs"><strong>お店なら</strong>：メニューを見せてもらう</p><p class="xs mono" style="margin-top: 8px;">GET /todos</p></div>
+      </div>
+      <div class="cell flex pink reveal d2">
+        <span class="m post">POST</span>
+        <h3>作る・追加する</h3>
+        <p class="small">新しいデータを送って登録する。データが<strong>増える</strong>。</p>
+        <table class="t" style="background: var(--white);"><tr><td style="width: 40%; white-space: nowrap;" class="xs"><b>ボディ</b></td><td class="xs">あり（作る中身）</td></tr><tr><td class="xs" style="white-space: nowrap;"><b>成功時</b></td><td class="xs mono">201 Created</td></tr></table>
+        <div class="box" style="margin-top: auto;"><p class="xs"><strong>お店なら</strong>：注文する</p><p class="xs mono" style="margin-top: 8px;">POST /todos</p></div>
+      </div>
+      <div class="cell flex gray reveal d3">
+        <span class="m put">PUT</span>
+        <h3>更新する</h3>
+        <p class="small">すでにあるデータを、送った内容で<strong>置き換える</strong>。</p>
+        <table class="t" style="background: var(--white);"><tr><td style="width: 40%; white-space: nowrap;" class="xs"><b>ボディ</b></td><td class="xs">あり（新しい中身）</td></tr><tr><td class="xs" style="white-space: nowrap;"><b>成功時</b></td><td class="xs mono">200 OK</td></tr></table>
+        <div class="box" style="margin-top: auto;"><p class="xs"><strong>お店なら</strong>：注文を変更する</p><p class="xs mono" style="margin-top: 8px;">PUT /todos/1</p></div>
+      </div>
+      <div class="cell flex reveal d4">
+        <span class="m del">DELETE</span>
+        <h3>消す</h3>
+        <p class="small">指定したデータを削除する。データが<strong>減る</strong>。</p>
+        <table class="t" style="background: var(--white);"><tr><td style="width: 40%; white-space: nowrap;" class="xs"><b>ボディ</b></td><td class="xs">なし</td></tr><tr><td class="xs" style="white-space: nowrap;"><b>成功時</b></td><td class="xs mono">200 OK</td></tr></table>
+        <div class="box" style="margin-top: auto;"><p class="xs"><strong>お店なら</strong>：注文をキャンセルする</p><p class="xs mono" style="margin-top: 8px;">DELETE /todos/1</p></div>
+      </div>
+      <div class="cell black center reveal d5" style="grid-column: 1 / 5;">
+        <p style="font-size: 32px;"><strong>URL は「何を」（名詞）、メソッドは「どうする」（動詞）。</strong><span class="small" style="color: var(--code-comment);">　この4つで、作る・読む・更新・削除（CRUD）が全部できる。</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.05</b><span>メソッド</span></div><h2>ToDo アプリの操作を、メソッドに置き換えると</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-rows: 1fr 170px;">
+      <div class="cell center">
+        <table class="t reveal d1">
+          <thead><tr><th style="width: 330px;">画面での操作</th><th style="width: 200px;">メソッド</th><th style="width: 230px;">URL</th><th style="width: 560px;">送るデータ（ボディ）</th><th>返ってくるもの</th></tr></thead>
+          <tbody>
+            <tr><td>一覧を開く</td><td><span class="m get">GET</span></td><td><code>/todos</code></td><td class="muted">なし</td><td>ToDo のリスト</td></tr>
+            <tr><td>1件の詳細を見る</td><td><span class="m get">GET</span></td><td><code>/todos/1</code></td><td class="muted">なし</td><td>id が 1 の ToDo</td></tr>
+            <tr><td>「追加」ボタン</td><td><span class="m post">POST</span></td><td><code>/todos</code></td><td><code>{"title": "牛乳を買う"}</code></td><td>作られた ToDo <b>(201)</b></td></tr>
+            <tr><td>チェックを付ける</td><td><span class="m put">PUT</span></td><td><code>/todos/1</code></td><td><code>{"title": "牛乳を買う", "done": true}</code></td><td>更新後の ToDo</td></tr>
+            <tr><td>「削除」ボタン</td><td><span class="m del">DELETE</span></td><td><code>/todos/1</code></td><td class="muted">なし</td><td><code>{"ok": true}</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="body" style="grid-template-columns: 1fr 1fr; gap: 3px;">
+        <div class="cell green center reveal d2"><p class="small"><strong>同じ <code class="i">/todos/1</code> でも、</strong>メソッドが GET・PUT・DELETE で別々の処理になる。</p></div>
+        <div class="cell pink center reveal d3"><p class="small"><strong>GET と DELETE はボディなし。</strong>何をするかは URL だけで伝わる。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.05</b><span>メソッド</span></div><h2><code>GET</code> と <code>POST</code>：読むと作る</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr;">
+      <div class="cell flex green">
+        <span class="m get">GET</span>
+        <div class="term reveal d1"><div class="bar">REQUEST</div><pre><span class="ok">GET</span> /todos HTTP/1.1</pre></div>
+        <div class="term reveal d2"><div class="bar">RESPONSE</div><pre><span class="ok">200 OK</span>
+[
+  {"id": 1, "title": "牛乳を買う", "done": false},
+  {"id": 2, "title": "レポート提出", "done": true}
+]</pre></div>
+        <ul class="arrow reveal d3">
+          <li class="small">データは<strong>変わらない</strong>。何回呼んでも同じ結果</li>
+          <li class="small">ブラウザの URL 欄からそのまま試せる</li>
+          <li class="small">条件はクエリで：<code class="i">/todos?done=false</code></li>
+        </ul>
+      </div>
+      <div class="cell flex pink">
+        <span class="m post">POST</span>
+        <div class="term reveal d4"><div class="bar">REQUEST</div><pre><span class="ok">POST</span> /todos HTTP/1.1
+Content-Type: application/json
+
+{"title": "歯医者を予約"}</pre></div>
+        <div class="term reveal d5"><div class="bar">RESPONSE</div><pre><span class="ok">201 Created</span>
+{"id": 3, "title": "歯医者を予約", "done": false}</pre></div>
+        <ul class="arrow reveal d6">
+          <li class="small">データが<strong>増える</strong>。2回送れば2件できる</li>
+          <li class="small">中身は URL ではなく<strong>ボディ</strong>に JSON で入れる</li>
+          <li class="small">URL 欄では送れない → <code class="i">/docs</code> か JavaScript で</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.05</b><span>メソッド</span></div><h2><code>PUT</code> と <code>DELETE</code>：変えると消す</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 220px;">
+      <div class="cell flex gray">
+        <span class="m put">PUT</span>
+        <div class="term reveal d1"><div class="bar">REQUEST</div><pre><span class="ok">PUT</span> /todos/1 HTTP/1.1
+Content-Type: application/json
+
+{"title": "牛乳を買う", "done": true}</pre></div>
+        <div class="term reveal d2"><div class="bar">RESPONSE</div><pre><span class="ok">200 OK</span>
+{"id": 1, "title": "牛乳を買う", "done": true}</pre></div>
+        <p class="small reveal d3">URL で「どれを」、ボディで「どう変えるか」を伝える。</p>
+      </div>
+      <div class="cell flex">
+        <span class="m del">DELETE</span>
+        <div class="term reveal d4"><div class="bar">REQUEST</div><pre><span class="ok">DELETE</span> /todos/1 HTTP/1.1</pre></div>
+        <div class="term reveal d5"><div class="bar">RESPONSE</div><pre><span class="ok">200 OK</span>
+{"ok": true}</pre></div>
+        <div class="term reveal d6"><div class="bar">もう一度同じ DELETE を送ると</div><pre>404 Not Found
+{"detail": "Todo not found"}</pre></div>
+      </div>
+      <div class="cell pink reveal d5">
+        <h4>コラム：PATCH というメソッドもある</h4>
+        <p class="small">PUT は「まるごと置き換え」、PATCH は「一部だけ変更」。今回は分かりやすさ優先で PUT だけ使います。</p>
+      </div>
+      <div class="cell green reveal d6">
+        <h4>存在しないものを指定したら？</h4>
+        <p class="small">PUT も DELETE も、相手が見つからなければ <strong>404</strong> を返すのがお作法（6章で実装）。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     CH.06 — データを受け取る
+     ===================================================== -->
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.06</b><span>データ</span></div><h2>Pydantic：受け取るデータの「形」を決める</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 780px 1fr; grid-template-rows: 1fr 410px;">
+      <div class="cell black flex">
+        <span class="label">モデルを定義する</span>
+        <pre class="code reveal d1" style="font-size: 28px; line-height: 1.65;"><span class="k">from</span> pydantic <span class="k">import</span> BaseModel
+
+<span class="k">class</span> <span class="f">TodoIn</span>(BaseModel):
+    title: <span class="t">str</span><span class="n">1</span>
+    done: <span class="t">bool</span> = <span class="k">False</span><span class="n">2</span></pre>
+      </div>
+      <div class="cell notes" style="justify-content: center;">
+        <div class="note reveal d2"><span class="n">1</span><div><h4>title は文字列で、必ず必要</h4><p>なければ自動で 422 エラー。</p></div></div>
+        <div class="note reveal d3"><span class="n">2</span><div><h4>done は true / false。省略したら False</h4><p><code class="i">= 初期値</code> を書くと「省略してもいい項目」になる。</p></div></div>
+        <div class="note reveal d4"><span class="n">→</span><div><h4>使い方：関数の引数に型として書くだけ</h4><p><code class="i">def create_todo(todo: TodoIn):</code> と書くと、ボディの JSON がチェックされて <code class="i">todo</code> に入る。</p></div></div>
+      </div>
+      <div class="cell green tight" style="grid-column: 1 / 3;">
+        <table class="t reveal d4" style="background: var(--white);">
+          <thead><tr><th style="width: 560px;">送った JSON</th><th style="width: 200px;">結果</th><th>関数が受け取る値 ／ エラーの理由</th></tr></thead>
+          <tbody>
+            <tr><td><code>{"title": "牛乳"}</code></td><td><b>OK</b></td><td><code>title='牛乳' done=False</code>（初期値が入る）</td></tr>
+            <tr><td><code>{"title": "牛乳", "done": true}</code></td><td><b>OK</b></td><td><code>title='牛乳' done=True</code></td></tr>
+            <tr><td><code>{"done": true}</code></td><td><b>422</b></td><td>Field required（title がない）</td></tr>
+            <tr><td><code>{"title": "牛乳", "done": "はい"}</code></td><td><b>422</b></td><td>Input should be a valid boolean（真偽値じゃない）</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.06</b><span>データ</span></div><h2>メモリ版 ToDo API（1/2）：準備と GET</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1.4fr 1fr;">
+      <div class="cell black">
+        <pre class="code sm reveal d1"><span class="k">from</span> fastapi <span class="k">import</span> FastAPI, HTTPException
+<span class="k">from</span> pydantic <span class="k">import</span> BaseModel
+
+app = FastAPI()
+
+<span class="k">class</span> <span class="f">TodoIn</span>(BaseModel):
+    title: <span class="t">str</span>
+    done: <span class="t">bool</span> = <span class="k">False</span>
+
+<span class="c"># データ置き場 {id: {"id": 1, "title": ..., "done": ...}}</span>
+todos = {}<span class="n">1</span>
+
+<span class="d">@app.get</span>(<span class="s">"/todos"</span>)
+<span class="k">def</span> <span class="f">list_todos</span>():
+    <span class="k">return</span> <span class="t">list</span>(todos.values())<span class="n">2</span>
+
+<span class="d">@app.get</span>(<span class="s">"/todos/{todo_id}"</span>)
+<span class="k">def</span> <span class="f">get_todo</span>(todo_id: <span class="t">int</span>):
+    <span class="k">if</span> todo_id <span class="k">not in</span> todos:
+        <span class="k">raise</span> HTTPException(status_code=<span class="s">404</span>, detail=<span class="s">"Todo not found"</span>)<span class="n">3</span>
+    <span class="k">return</span> todos[todo_id]</pre>
+      </div>
+      <div class="cell notes" style="justify-content: center;">
+        <span class="label">examples/03_todo_memory/main.py</span>
+        <div class="note reveal d2"><span class="n">1</span><div><h4>データはただの辞書に入れる</h4><p>キーが id、値が ToDo の辞書。まずは DB なしで動きを理解する。</p></div></div>
+        <div class="note reveal d3"><span class="n">2</span><div><h4>一覧は「値」をリストにして返す</h4><p>リストを return すれば JSON の配列 <code class="i">[...]</code> になる。</p></div></div>
+        <div class="note reveal d4"><span class="n">3</span><div><h4>見つからなければ 404</h4><p><code class="i">raise HTTPException(...)</code> でその場で処理を止めて、エラーのレスポンスを返す。</p></div></div>
+        <div class="box green reveal d5"><p class="small"><code class="i">todo_id: int</code> なので、<code class="i">/todos/abc</code> は自動で 422 になる。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.06</b><span>データ</span></div><h2>メモリ版 ToDo API（2/2）：POST / PUT / DELETE</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1.4fr 1fr;">
+      <div class="cell black">
+        <pre class="code sm reveal d1"><span class="d">@app.post</span>(<span class="s">"/todos"</span>, status_code=<span class="s">201</span>)<span class="n">1</span>
+<span class="k">def</span> <span class="f">create_todo</span>(todo: TodoIn):
+    new_id = <span class="t">max</span>(todos, default=<span class="s">0</span>) + <span class="s">1</span>
+    todos[new_id] = {<span class="s">"id"</span>: new_id, **todo.model_dump()}<span class="n">2</span>
+    <span class="k">return</span> todos[new_id]
+
+<span class="d">@app.put</span>(<span class="s">"/todos/{todo_id}"</span>)
+<span class="k">def</span> <span class="f">update_todo</span>(todo_id: <span class="t">int</span>, todo: TodoIn):<span class="n">3</span>
+    <span class="k">if</span> todo_id <span class="k">not in</span> todos:
+        <span class="k">raise</span> HTTPException(status_code=<span class="s">404</span>, detail=<span class="s">"Todo not found"</span>)
+    todos[todo_id] = {<span class="s">"id"</span>: todo_id, **todo.model_dump()}
+    <span class="k">return</span> todos[todo_id]
+
+<span class="d">@app.delete</span>(<span class="s">"/todos/{todo_id}"</span>)
+<span class="k">def</span> <span class="f">delete_todo</span>(todo_id: <span class="t">int</span>):
+    <span class="k">if</span> todo_id <span class="k">not in</span> todos:
+        <span class="k">raise</span> HTTPException(status_code=<span class="s">404</span>, detail=<span class="s">"Todo not found"</span>)
+    <span class="k">del</span> todos[todo_id]
+    <span class="k">return</span> {<span class="s">"ok"</span>: <span class="k">True</span>}</pre>
+      </div>
+      <div class="cell notes" style="justify-content: center;">
+        <div class="note reveal d2"><span class="n">1</span><div><h4>メソッドごとにデコレータを変える</h4><p><code class="i">@app.post</code> <code class="i">@app.put</code> <code class="i">@app.delete</code>。<code class="i">status_code=201</code> で「作れた」を返す。</p></div></div>
+        <div class="note reveal d3"><span class="n">2</span><div><h4>モデル → 辞書に変換</h4><p><code class="i">todo.model_dump()</code> は <code class="i">{"title": ..., "done": ...}</code> を返す。<code class="i">**</code> で中身を展開して id とくっつける。</p></div></div>
+        <div class="note reveal d4"><span class="n">3</span><div><h4>引数は2種類が混ざってもOK</h4><p><code class="i">todo_id</code> は URL から、<code class="i">todo</code> はボディから。FastAPI が<strong>型を見て</strong>自動で振り分ける。</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.06</b><span>データ</span></div><h2><code>/docs</code> で全部のメソッドを試す</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1.1fr 1fr; grid-template-rows: 1fr 180px;">
+      <div class="cell gray center tight">
+        <div class="browser reveal d1">
+          <div class="bar"><i></i><i></i><div class="url">http://127.0.0.1:8000/docs</div></div>
+          <div class="view" style="display: flex; flex-direction: column; gap: 9px; padding: 16px 22px;">
+            <div class="box" style="box-shadow: none; padding: 10px 16px; display: flex; gap: 18px; align-items: center;"><span class="m get">GET</span><span class="mono" style="font: 700 24px var(--mono);">/todos</span><span class="xs muted">List Todos</span></div>
+            <div class="box pink" style="padding: 14px 16px;">
+              <div style="display: flex; gap: 18px; align-items: center;"><span class="m post">POST</span><span class="mono" style="font: 700 24px var(--mono);">/todos</span><span class="xs">Create Todo</span><span class="label" style="margin-left: auto;">Try it out</span></div>
+              <div class="term" style="margin-top: 12px; box-shadow: none;"><div class="bar">Request body</div><pre>{"title": "牛乳を買う"}</pre></div>
+              <div style="display: flex; gap: 14px; align-items: center; margin-top: 12px;"><span class="label">Execute</span><span class="xs mono">→ <b>201</b> {"id": 1, "title": "牛乳を買う", "done": false}</span></div>
+            </div>
+                        <div class="box" style="box-shadow: none; padding: 10px 16px; display: flex; gap: 18px; align-items: center;"><span class="m put">PUT</span><span class="mono" style="font: 700 24px var(--mono);">/todos/{todo_id}</span></div>
+            <div class="box" style="box-shadow: none; padding: 10px 16px; display: flex; gap: 18px; align-items: center;"><span class="m del">DELETE</span><span class="mono" style="font: 700 24px var(--mono);">/todos/{todo_id}</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="cell notes" style="justify-content: center;">
+        <span class="label">やってみよう</span>
+        <div class="note reveal d2"><span class="n">1</span><div><h4>POST /todos を開いて「Try it out」</h4><p>Request body に JSON を書いて Execute。2〜3件作る。</p></div></div>
+        <div class="note reveal d3"><span class="n">2</span><div><h4>GET /todos で一覧を確認</h4><p>作った ToDo が並んでいれば成功。</p></div></div>
+        <div class="note reveal d4"><span class="n">3</span><div><h4>PUT で done を true に、DELETE で削除</h4><p>存在しない id で試すと 404 が返る。</p></div></div>
+        <div class="note reveal d5"><span class="n">4</span><div><h4>わざと間違える</h4><p>title を消して POST → 422 と理由が返ってくる。</p></div></div>
+      </div>
+      <div class="cell pink center tight reveal d6" style="grid-column: 1 / 3;">
+        <p style="font-size: 30px;"><strong>でも…サーバーを Ctrl+C で止めて起動し直すと、ToDo が全部消える。</strong><br><span class="small">データが Python の変数（メモリ）にしかないから。→ 次の章でデータベースに保存する。</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     CH.07 — SQLite につなぐ
+     ===================================================== -->
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.07</b><span>DB</span></div><h2>なぜデータベース？ そして SQLite とは</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr;">
+      <div class="cell flex">
+        <span class="label">メモリ（変数）の弱点</span>
+        <div class="flow reveal d1">
+          <div class="box green"><h4>起動中</h4><p class="xs mono">todos = {1: ..., 2: ...}</p></div>
+          <div class="conn" style="width: 120px;"><small>再起動</small><i>→</i></div>
+          <div class="box pink"><h4>再起動後</h4><p class="xs mono">todos = {}　← 空っぽ</p></div>
+        </div>
+        <p class="small reveal d2">プログラムが終わると変数は消える。<br>だから<strong>ファイルに書き残す</strong>仕組み＝データベースが必要。</p>
+        <span class="label" style="margin-top: 14px;">データベースは「表（テーブル）」でしまう</span>
+        <table class="t reveal d3">
+          <thead><tr><th style="width: 140px;">id</th><th>title</th><th style="width: 150px;">done</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">1</td><td>牛乳を買う</td><td class="mono">0</td></tr>
+            <tr><td class="mono">2</td><td>レポート提出</td><td class="mono">1</td></tr>
+          </tbody>
+        </table>
+        <p class="xs muted reveal d3">1行 ＝ ToDo 1件。列（id・title・done）は Pydantic モデルの項目と対応。</p>
+      </div>
+      <div class="cell flex green">
+        <span class="label">SQLite（エスキューライト）</span>
+        <div class="box reveal d4" style="display: flex; gap: 28px; align-items: center;">
+          <div style="width: 120px; height: 140px; border: 3px solid var(--black); background: var(--white); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 14px; box-shadow: var(--shadow-sm); flex: none;"><span class="mono" style="font: 800 22px var(--mono);">todo.db</span></div>
+          <p class="small"><strong>データベースがファイル1つ。</strong><br>サーバーを別に立てる必要がなく、コピーすれば持ち運べる。</p>
+        </div>
+        <ul class="check reveal d5">
+          <li class="small">Python に最初から入っている（<code class="i">import sqlite3</code>）</li>
+          <li class="small">インストールも設定もいらない</li>
+          <li class="small">スマホアプリやブラウザの中でも使われている実績</li>
+          <li class="small">練習〜小さなアプリなら十分な性能</li>
+        </ul>
+        <p class="xs muted reveal d6">本格的なサービスでは PostgreSQL や MySQL を使うことが多いが、SQL の書き方はほぼ同じ。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.07</b><span>DB</span></div><h2>SQL の4つの命令は、HTTP メソッドと対応する</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-rows: 1fr 230px;">
+      <div class="cell center">
+        <table class="t reveal d1">
+          <thead><tr><th style="width: 200px;">HTTP</th><th style="width: 190px;">SQL</th><th style="width: 190px;">意味</th><th>SQL の例</th></tr></thead>
+          <tbody>
+            <tr><td><span class="m get">GET</span></td><td class="mono"><b>SELECT</b></td><td>取り出す</td><td><code>SELECT * FROM todos</code></td></tr>
+            <tr><td><span class="m post">POST</span></td><td class="mono"><b>INSERT</b></td><td>追加する</td><td><code>INSERT INTO todos (title, done) VALUES (?, ?)</code></td></tr>
+            <tr><td><span class="m put">PUT</span></td><td class="mono"><b>UPDATE</b></td><td>書き換える</td><td><code>UPDATE todos SET title = ?, done = ? WHERE id = ?</code></td></tr>
+            <tr><td><span class="m del">DELETE</span></td><td class="mono"><b>DELETE</b></td><td>削除する</td><td><code>DELETE FROM todos WHERE id = ?</code></td></tr>
+          </tbody>
+        </table>
+        <p class="small reveal d2" style="margin-top: 22px;"><code class="i">*</code> は「全部の列」、<code class="i">WHERE id = ?</code> は「id が〇〇の行だけ」という条件。WHERE を忘れると<strong>全行</strong>が対象になるので注意。</p>
+      </div>
+      <div class="body" style="grid-template-columns: 1fr 1fr; gap: 3px;">
+        <div class="cell pink reveal d3">
+          <h4><code class="i">?</code> はプレースホルダ（値の差し込み口）</h4>
+          <p class="small">値は <code class="i">?</code> の位置に、あとからタプルで渡す。<code class="i">execute(sql, (title, done))</code></p>
+        </div>
+        <div class="cell black reveal d4">
+          <h4>文字列をつなげて SQL を作らない！</h4>
+          <p class="small"><code class="i" style="color: var(--black);">f"... WHERE id = {todo_id}"</code> は SQL インジェクション（乗っ取り）の原因。必ず <code class="i" style="color: var(--black);">?</code> を使う。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.07</b><span>DB</span></div><h2>DB 版（1/3）：データベースの準備</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1.45fr 1fr;">
+      <div class="cell black">
+        <pre class="code reveal d1" style="font-size: 20px; line-height: 1.42;"><span class="k">import</span> sqlite3
+<span class="k">from</span> fastapi <span class="k">import</span> FastAPI, HTTPException
+<span class="k">from</span> fastapi.staticfiles <span class="k">import</span> StaticFiles
+<span class="k">from</span> pydantic <span class="k">import</span> BaseModel
+
+DB_PATH = <span class="s">"todo.db"</span>
+app = FastAPI()
+
+<span class="k">def</span> <span class="f">get_conn</span>():<span class="n">1</span>
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    <span class="k">return</span> conn
+
+<span class="k">with</span> get_conn() <span class="k">as</span> conn:<span class="n">2</span>
+    conn.execute(<span class="s">"""
+        CREATE TABLE IF NOT EXISTS todos (
+            id    INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT    NOT NULL,
+            done  INTEGER NOT NULL DEFAULT 0
+        )"""</span>)
+
+<span class="k">def</span> <span class="f">to_dict</span>(row):<span class="n">3</span>
+    <span class="k">return</span> {
+        <span class="s">"id"</span>: row[<span class="s">"id"</span>],
+        <span class="s">"title"</span>: row[<span class="s">"title"</span>],
+        <span class="s">"done"</span>: <span class="t">bool</span>(row[<span class="s">"done"</span>]),
+    }</pre>
+      </div>
+      <div class="cell notes" style="justify-content: center;">
+        <span class="label">examples/04_todo_sqlite/main.py</span>
+        <div class="note reveal d2"><span class="n">1</span><div><h4>DB につなぐ関数</h4><p>ファイルがなければ自動で作られる。<code class="i">row_factory</code> を設定すると <code class="i">row["title"]</code> のように列名で取り出せる。</p></div></div>
+        <div class="note reveal d3"><span class="n">2</span><div><h4>起動時にテーブルを作る</h4><p><code class="i">IF NOT EXISTS</code> で「なければ作る」。id は自動で 1, 2, 3… と振られる。<code class="i">with</code> を抜けると変更が保存（commit）される。</p></div></div>
+        <div class="note reveal d4"><span class="n">3</span><div><h4>行 → 辞書 に変換</h4><p>SQLite には真偽値の型がないので done は 0/1 で保存。返すときに <code class="i">bool()</code> で true/false に戻す。</p></div></div>
+        <div class="box green reveal d5"><p class="small">モデル <code class="i">TodoIn</code> はメモリ版と同じものを使う。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.07</b><span>DB</span></div><h2>DB 版（2/3）：GET と POST を SQL で書く</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1.45fr 1fr;">
+      <div class="cell black">
+        <pre class="code reveal d1" style="font-size: 25px;"><span class="d">@app.get</span>(<span class="s">"/todos"</span>)
+<span class="k">def</span> <span class="f">list_todos</span>():
+    <span class="k">with</span> get_conn() <span class="k">as</span> conn:
+        rows = conn.execute(<span class="s">"SELECT * FROM todos"</span>).fetchall()<span class="n">1</span>
+    <span class="k">return</span> [to_dict(r) <span class="k">for</span> r <span class="k">in</span> rows]<span class="n">2</span>
+
+<span class="d">@app.post</span>(<span class="s">"/todos"</span>, status_code=<span class="s">201</span>)
+<span class="k">def</span> <span class="f">create_todo</span>(todo: TodoIn):
+    <span class="k">with</span> get_conn() <span class="k">as</span> conn:
+        cur = conn.execute(
+            <span class="s">"INSERT INTO todos (title, done) VALUES (?, ?)"</span>,
+            (todo.title, todo.done),<span class="n">3</span>
+        )
+    <span class="k">return</span> {<span class="s">"id"</span>: cur.lastrowid, **todo.model_dump()}<span class="n">4</span></pre>
+      </div>
+      <div class="cell notes" style="justify-content: center;">
+        <div class="note reveal d2"><span class="n">1</span><div><h4>SELECT して全行を取る</h4><p><code class="i">fetchall()</code> で結果をリストで受け取る。</p></div></div>
+        <div class="note reveal d3"><span class="n">2</span><div><h4>1行ずつ辞書に変換して返す</h4><p>リスト内包表記。<code class="i">for</code> ループで append するのと同じ意味。</p></div></div>
+        <div class="note reveal d4"><span class="n">3</span><div><h4>値は ? にタプルで渡す</h4><p>Pydantic でチェック済みの <code class="i">todo.title</code> などをそのまま使える。</p></div></div>
+        <div class="note reveal d5"><span class="n">4</span><div><h4>振られた id を返す</h4><p><code class="i">cur.lastrowid</code> に、いま INSERT した行の id が入っている。</p></div></div>
+        <div class="box pink reveal d6"><p class="small">関数の「形」（デコレータ・引数・return）はメモリ版と同じ。<strong>中身だけ SQL に変わった。</strong></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.07</b><span>DB</span></div><h2>DB 版（3/3）：PUT・DELETE と再起動テスト</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1.45fr 1fr;">
+      <div class="cell black">
+        <pre class="code reveal d1" style="font-size: 22px; line-height: 1.5;"><span class="d">@app.put</span>(<span class="s">"/todos/{todo_id}"</span>)
+<span class="k">def</span> <span class="f">update_todo</span>(todo_id: <span class="t">int</span>, todo: TodoIn):
+    <span class="k">with</span> get_conn() <span class="k">as</span> conn:
+        cur = conn.execute(
+            <span class="s">"UPDATE todos SET title = ?, done = ? WHERE id = ?"</span>,
+            (todo.title, todo.done, todo_id),
+        )
+    <span class="k">if</span> cur.rowcount == <span class="s">0</span>:<span class="n">1</span>
+        <span class="k">raise</span> HTTPException(status_code=<span class="s">404</span>, detail=<span class="s">"Todo not found"</span>)
+    <span class="k">return</span> {<span class="s">"id"</span>: todo_id, **todo.model_dump()}
+
+<span class="d">@app.delete</span>(<span class="s">"/todos/{todo_id}"</span>)
+<span class="k">def</span> <span class="f">delete_todo</span>(todo_id: <span class="t">int</span>):
+    <span class="k">with</span> get_conn() <span class="k">as</span> conn:
+        cur = conn.execute(
+            <span class="s">"DELETE FROM todos WHERE id = ?"</span>, (todo_id,)<span class="n">2</span>
+        )
+    <span class="k">if</span> cur.rowcount == <span class="s">0</span>:
+        <span class="k">raise</span> HTTPException(status_code=<span class="s">404</span>, detail=<span class="s">"Todo not found"</span>)
+    <span class="k">return</span> {<span class="s">"ok"</span>: <span class="k">True</span>}</pre>
+      </div>
+      <div class="cell flex">
+        <div class="notes">
+          <div class="note reveal d2"><span class="n">1</span><div><h4>何行変わった？ で 404 判定</h4><p><code class="i">rowcount</code> が 0 ＝ その id の行がなかった。</p></div></div>
+          <div class="note reveal d3"><span class="n">2</span><div><h4>値が1つでもタプルにする</h4><p><code class="i">(todo_id,)</code> のカンマを忘れずに。</p></div></div>
+        </div>
+        <div class="box green reveal d4" style="margin-top: 10px;">
+          <h4>再起動テスト</h4>
+          <ul class="arrow" style="margin-top: 8px;">
+            <li class="small">/docs で ToDo を2件 POST</li>
+            <li class="small">Ctrl+C で止めて、もう一度起動</li>
+            <li class="small">GET /todos → <strong>消えずに残っている！</strong></li>
+            <li class="small">フォルダに <code class="i">todo.db</code> ができている</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     CH.08 — 画面をつなぐ
+     ===================================================== -->
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.08</b><span>画面</span></div><h2>画面から API を呼ぶ：JavaScript の <code>fetch</code></h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 320px;">
+      <div class="cell black flex">
+        <span class="label">GET：一覧をもらう</span>
+        <pre class="code reveal d1" style="font-size: 22px;"><span class="k">const</span> res = <span class="k">await</span> <span class="f">fetch</span>(<span class="s">"/todos"</span>);
+<span class="k">const</span> todos = <span class="k">await</span> res.<span class="f">json</span>();
+<span class="c">// todos は [{id: 1, title: "...", done: false}, ...]</span></pre>
+        <span class="label" style="margin-top: 16px;">POST：新しく作る</span>
+        <pre class="code reveal d2" style="font-size: 22px;"><span class="k">await</span> <span class="f">fetch</span>(<span class="s">"/todos"</span>, {
+  method: <span class="s">"POST"</span>,
+  headers: { <span class="s">"Content-Type"</span>: <span class="s">"application/json"</span> },
+  body: JSON.<span class="f">stringify</span>({ title: <span class="s">"牛乳を買う"</span> }),
+});</pre>
+      </div>
+      <div class="cell flex">
+        <span class="label">fetch ＝ ブラウザから HTTP リクエストを送る関数</span>
+        <ul class="arrow reveal d3">
+          <li class="small">これまで <code class="i">/docs</code> でやっていたことを、JavaScript から行う</li>
+          <li class="small"><code class="i">method</code> にメソッド、<code class="i">body</code> に JSON の文字列を入れる</li>
+          <li class="small"><code class="i">JSON.stringify</code> は JS のオブジェクト → JSON 文字列</li>
+          <li class="small"><code class="i">res.json()</code> は JSON 文字列 → JS のオブジェクト</li>
+          <li class="small"><code class="i">await</code> は「返事が来るまで待つ」</li>
+        </ul>
+      </div>
+      <div class="cell green flex tight">
+        <span class="label">画面ファイルも FastAPI から配る</span>
+        <pre class="mono reveal d4" style="font: 700 21px/1.5 var(--mono); background: var(--white); border: 3px solid var(--black); padding: 12px 16px;"><span style="color: var(--darkgray);"># main.py のいちばん最後に</span>
+app.mount("/", StaticFiles(directory="static", html=True))</pre>
+        <p class="xs reveal d5"><code class="i">static/index.html</code> が <code class="i">http://127.0.0.1:8000/</code> で開ける。API の定義より<strong>後ろ</strong>に書くこと。</p>
+      </div>
+      <div class="cell pink flex tight">
+        <span class="label">コラム：CORS（コース）</span>
+        <p class="xs reveal d5">画面と API が<strong>別のサーバー</strong>（例：React の開発サーバー <code class="i">localhost:5173</code>）だと、ブラウザが安全のためにブロックする。そのときは FastAPI に <code class="i">CORSMiddleware</code> を追加する。今回は同じサーバーから配るので不要。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.08</b><span>画面</span></div><h2>画面のコード：<code>static/index.html</code></h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1.08fr;">
+      <div class="cell black tight">
+        <pre class="code xs reveal d1"><span class="c">&lt;!-- 入力フォームと、一覧を入れる場所 --&gt;</span>
+&lt;h1&gt;ToDo&lt;/h1&gt;
+&lt;form id=<span class="s">"form"</span>&gt;
+  &lt;input id=<span class="s">"title"</span> placeholder=<span class="s">"やること"</span> required&gt;
+  &lt;button&gt;追加&lt;/button&gt;
+&lt;/form&gt;
+&lt;ul id=<span class="s">"list"</span>&gt;&lt;/ul&gt;
+
+&lt;script&gt;
+<span class="c">// GET: 一覧を取ってきて表示する</span>
+<span class="k">async function</span> <span class="f">load</span>() {<span class="n">1</span>
+  <span class="k">const</span> res = <span class="k">await</span> fetch(<span class="s">"/todos"</span>);
+  <span class="k">const</span> todos = <span class="k">await</span> res.json();
+  list.innerHTML = <span class="s">""</span>;
+  <span class="k">for</span> (<span class="k">const</span> t <span class="k">of</span> todos) {
+    <span class="k">const</span> li = document.createElement(<span class="s">"li"</span>);
+    li.innerHTML = <span class="s">`&lt;input type="checkbox" ${t.done ? "checked" : ""}&gt;
+      ${t.title} &lt;button&gt;削除&lt;/button&gt;`</span>;
+    <span class="c">// (右につづく: PUT と DELETE をここに書く)</span>
+    list.appendChild(li);
+  }
+}</pre>
+      </div>
+      <div class="cell black tight">
+        <pre class="code xs reveal d2">    <span class="c">// PUT: チェックで完了/未完了を切り替える</span>
+    li.querySelector(<span class="s">"input"</span>).onchange = <span class="k">async</span> (e) =&gt; {<span class="n">2</span>
+      <span class="k">await</span> fetch(<span class="s">`/todos/${t.id}`</span>, {
+        method: <span class="s">"PUT"</span>,
+        headers: { <span class="s">"Content-Type"</span>: <span class="s">"application/json"</span> },
+        body: JSON.stringify({ title: t.title, done: e.target.checked }),
+      });
+    };
+    <span class="c">// DELETE: 削除ボタン</span>
+    li.querySelector(<span class="s">"button"</span>).onclick = <span class="k">async</span> () =&gt; {<span class="n">3</span>
+      <span class="k">await</span> fetch(<span class="s">`/todos/${t.id}`</span>, { method: <span class="s">"DELETE"</span> });
+      load();
+    };
+
+<span class="c">// POST: フォーム送信で新しい ToDo を作る</span>
+form.onsubmit = <span class="k">async</span> (e) =&gt; {<span class="n">4</span>
+  e.preventDefault();   <span class="c">// ページの再読み込みを止める</span>
+  <span class="k">await</span> fetch(<span class="s">"/todos"</span>, {
+    method: <span class="s">"POST"</span>,
+    headers: { <span class="s">"Content-Type"</span>: <span class="s">"application/json"</span> },
+    body: JSON.stringify({ title: title.value }),
+  });
+  title.value = <span class="s">""</span>;
+  load();
+};
+load();
+&lt;/script&gt;</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>CH.08</b><span>画面</span></div><h2>完成！「追加」を押したとき、裏で起きていること</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 560px; grid-template-rows: 1fr 260px;">
+      <div class="cell center">
+        <div class="flow reveal d1" style="gap: 0;">
+          <div class="box"><span class="n">1</span><h4 style="margin-top: 10px;">ブラウザ</h4><p class="xs">「追加」クリック<br>→ fetch で POST</p></div>
+          <div class="conn" style="width: 150px;"><small>POST /todos</small><i>→</i></div>
+          <div class="box pink"><span class="n">2</span><h4 style="margin-top: 10px;">uvicorn → FastAPI</h4><p class="xs">Pydantic でチェック<br>→ create_todo() 実行</p></div>
+          <div class="conn" style="width: 130px;"><small>INSERT</small><i>→</i></div>
+          <div class="box green"><span class="n">3</span><h4 style="margin-top: 10px;">SQLite</h4><p class="xs">todo.db に<br>1行追加</p></div>
+        </div>
+        <div class="flow reveal d2" style="gap: 0; margin-top: 30px; flex-direction: row-reverse;">
+          <div class="box green" style="visibility: hidden;"><h4>.</h4></div>
+          <div class="conn" style="width: 130px;"><small>lastrowid</small><i>←</i></div>
+          <div class="box pink"><span class="n">4</span><h4 style="margin-top: 10px;">FastAPI</h4><p class="xs">201 Created と<br>作った ToDo の JSON</p></div>
+          <div class="conn" style="width: 150px;"><small>201 + JSON</small><i>←</i></div>
+          <div class="box black"><span class="n">5</span><h4 style="margin-top: 10px;">ブラウザ</h4><p class="xs">load() で GET /todos<br>→ 一覧を描き直す</p></div>
+        </div>
+      </div>
+      <div class="cell gray flex tight">
+        <span class="label">フォルダ構成</span>
+        <pre class="mono reveal d3" style="font: 700 22px/1.6 var(--mono);">04_todo_sqlite/
+├── main.py
+├── static/
+│   └── index.html
+└── todo.db  <span style="color: var(--darkgray); font-weight: 500;">← 自動で作られる</span></pre>
+        <div class="browser reveal d4" style="margin-top: auto;">
+          <div class="bar"><i></i><i></i><div class="url">127.0.0.1:8000</div></div>
+          <div class="view"><p style="font-weight: 900; font-size: 28px;">ToDo</p><p class="xs"><span style="border: 2px solid; padding: 0 8px;">やること</span> <span style="border: 2px solid; padding: 0 8px; background: var(--pink);">追加</span></p><p class="xs">☐ 牛乳を買う ［削除］<br>☑ レポート提出 ［削除］</p></div>
+        </div>
+      </div>
+      <div class="cell black center reveal d5" style="grid-column: 1 / 3;">
+        <div class="term" style="border-color: #444; box-shadow: none;"><pre><span class="prompt">$ </span>cd examples/04_todo_sqlite
+<span class="prompt">$ </span>uvicorn main:app --reload        <span class="c" style="color: var(--code-comment);"># → ブラウザで http://127.0.0.1:8000/ を開く</span></pre></div>
+        <p class="small" style="margin-top: 14px; color: var(--white);">1章の全体図（クライアント → Web API → データベース）が、<strong>自分のコードで</strong>全部つながりました。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     SUMMARY
+     ===================================================== -->
+<section class="slide">
+  <div class="frame">
+    <div class="head"><div class="chap"><b>FIN.</b><span>まとめ</span></div><h2>まとめと、次の一歩</h2><div class="pg"></div></div>
+    <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 150px;">
+      <div class="cell flex">
+        <span class="label">今日できるようになったこと</span>
+        <ul class="check reveal d1" style="gap: 22px; margin-top: 10px;">
+          <li>クライアント・Web API・DB の役割を説明できる</li>
+          <li>HTTP の往復（JSON・ステータスコード）が読める</li>
+          <li><code class="i">uvicorn main:app --reload</code> で API を起動できる</li>
+          <li>GET・POST・PUT・DELETE を使い分けられる</li>
+          <li>Pydantic で受け取るデータをチェックできる</li>
+          <li>SQLite に保存し、画面から fetch で呼び出せる</li>
+        </ul>
+      </div>
+      <div class="cell flex green">
+        <span class="label">次に学ぶと良いこと</span>
+        <table class="t reveal d2" style="background: var(--white);">
+          <tbody>
+            <tr><td style="width: 300px;"><b>SQLModel / SQLAlchemy</b></td><td>SQL を書かずに Python のクラスで DB を扱う（ORM）</td></tr>
+            <tr><td><b>レスポンスモデル</b></td><td><code>response_model=</code> で返す形も決める</td></tr>
+            <tr><td><b>テスト</b></td><td><code>TestClient</code> で API を自動テスト</td></tr>
+            <tr><td><b>認証</b></td><td>ログインして自分の ToDo だけ見る</td></tr>
+            <tr><td><b>async / await</b></td><td>待ち時間の多い処理を効率よくさばく</td></tr>
+            <tr><td><b>デプロイ</b></td><td>インターネットに公開して誰でも使えるように</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cell pink center reveal d3" style="grid-column: 1 / 3;">
+        <p style="font-size: 30px;"><strong>公式チュートリアル（日本語あり）：</strong><span class="mono" style="font-weight: 800;">fastapi.tiangolo.com/ja/</span>　<span class="small">サンプルコードは <code class="i">examples/</code> フォルダに全部あります。</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<!-- Presentation chrome (outside the stage) -->
+<div class="progress" id="progress"></div>
+<div class="edit-hotzone" id="editHotzone"></div>
+<button class="edit-toggle" id="editToggle" title="編集モード (E)">✎ 編集</button>
+
+<script>
+/* ===========================================
+   SLIDE PRESENTATION CONTROLLER
+   - 1920×1080 のステージを画面に合わせて丸ごと拡大縮小
+   - ← → / Space / PageUp・PageDown / Home・End / ホイール / スワイプ
+   - URL の #番号 で直接そのスライドへ
+   =========================================== */
+class SlidePresentation {
+    constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.stage = document.getElementById('deckStage');
+        this.progress = document.getElementById('progress');
+        this.current = 0;
+        this.wheelLock = false;
+
+        // ヘッダーのページ番号を自動で埋める
+        const total = String(this.slides.length).padStart(2, '0');
+        this.slides.forEach((s, i) => {
+            const pg = s.querySelector('.pg');
+            if (pg) pg.textContent = `${String(i + 1).padStart(2, '0')}/${total}`;
+        });
+
+        this.setupStageScale();
+        this.setupKeyboardNav();
+        this.setupWheelNav();
+        this.setupTouchNav();
+
+        const fromHash = parseInt(location.hash.slice(1), 10);
+        this.show(Number.isFinite(fromHash) ? fromHash - 1 : 0);
+        window.addEventListener('hashchange', () => {
+            const n = parseInt(location.hash.slice(1), 10);
+            if (Number.isFinite(n) && n - 1 !== this.current) this.show(n - 1);
+        });
+    }
+
+    setupStageScale() {
+        const scale = () => {
+            const f = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+            const x = (window.innerWidth - 1920 * f) / 2;
+            const y = (window.innerHeight - 1080 * f) / 2;
+            this.stage.style.transform = `translate(${x}px, ${y}px) scale(${f})`;
+        };
+        scale();
+        window.addEventListener('resize', scale);
+    }
+
+    setupKeyboardNav() {
+        document.addEventListener('keydown', (e) => {
+            if (document.body.classList.contains('editing')) return;
+            if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); this.next(); }
+            else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); this.prev(); }
+            else if (e.key === 'Home') this.show(0);
+            else if (e.key === 'End') this.show(this.slides.length - 1);
+        });
+    }
+
+    setupWheelNav() {
+        window.addEventListener('wheel', (e) => {
+            if (document.body.classList.contains('editing') || this.wheelLock || Math.abs(e.deltaY) < 30) return;
+            this.wheelLock = true;
+            e.deltaY > 0 ? this.next() : this.prev();
+            setTimeout(() => { this.wheelLock = false; }, 700);
+        }, { passive: true });
+    }
+
+    setupTouchNav() {
+        let sx = 0, sy = 0;
+        window.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+        window.addEventListener('touchend', (e) => {
+            if (document.body.classList.contains('editing')) return;
+            const dx = e.changedTouches[0].clientX - sx;
+            const dy = e.changedTouches[0].clientY - sy;
+            if (Math.max(Math.abs(dx), Math.abs(dy)) < 50) return;
+            (Math.abs(dx) > Math.abs(dy) ? dx < 0 : dy < 0) ? this.next() : this.prev();
+        });
+    }
+
+    next() { this.show(this.current + 1); }
+    prev() { this.show(this.current - 1); }
+
+    show(i) {
+        this.current = Math.max(0, Math.min(i, this.slides.length - 1));
+        this.slides.forEach((s, idx) => {
+            const on = idx === this.current;
+            s.classList.toggle('active', on);
+            s.classList.toggle('visible', false);
+        });
+        // 次のフレームで .visible を付けてアニメーションを毎回再生
+        requestAnimationFrame(() => requestAnimationFrame(() => this.slides[this.current].classList.add('visible')));
+        this.progress.style.width = `${((this.current + 1) / this.slides.length) * 100}%`;
+        history.replaceState(null, '', `#${this.current + 1}`);
+    }
+}
+
+/* ===========================================
+   INLINE EDITOR
+   左上にマウスを乗せる or E キーで編集モード。
+   テキストをクリックして直接書き換え、Ctrl/Cmd + S で HTML を保存。
+   編集内容はこのブラウザの localStorage にも自動保存。
+   =========================================== */
+class InlineEditor {
+    constructor() {
+        this.isActive = false;
+        this.key = 'fastapi-deck-edits-v1';
+        this.targets = () => document.querySelectorAll('.slide h1, .slide h2, .slide h3, .slide h4, .slide p, .slide li, .slide td, .slide th, .slide pre, .slide .label');
+        this.restore();
+        this.bind();
+    }
+    toggleEditMode() {
+        this.isActive = !this.isActive;
+        document.body.classList.toggle('editing', this.isActive);
+        document.getElementById('editToggle').classList.toggle('active', this.isActive);
+        this.targets().forEach((el) => el.setAttribute('contenteditable', this.isActive ? 'true' : 'false'));
+        if (!this.isActive) this.save();
+    }
+    save() {
+        try {
+            const data = Array.from(document.querySelectorAll('.slide')).map((s) => s.innerHTML);
+            localStorage.setItem(this.key, JSON.stringify(data));
+        } catch (e) { /* storage unavailable */ }
+    }
+    restore() {
+        try {
+            const data = JSON.parse(localStorage.getItem(this.key) || 'null');
+            const slides = document.querySelectorAll('.slide');
+            if (Array.isArray(data) && data.length === slides.length) slides.forEach((s, i) => { s.innerHTML = data[i]; });
+        } catch (e) { /* ignore */ }
+    }
+    download() {
+        this.targets().forEach((el) => el.removeAttribute('contenteditable'));
+        const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+        a.download = 'fastapi-intro.html';
+        a.click();
+        if (this.isActive) this.targets().forEach((el) => el.setAttribute('contenteditable', 'true'));
+    }
+    bind() {
+        const toggle = document.getElementById('editToggle');
+        const hot = document.getElementById('editHotzone');
+        let hideTimeout = null;
+        toggle.addEventListener('click', () => this.toggleEditMode());
+        hot.addEventListener('click', () => this.toggleEditMode());
+        hot.addEventListener('mouseenter', () => { clearTimeout(hideTimeout); toggle.classList.add('show'); });
+        hot.addEventListener('mouseleave', () => { hideTimeout = setTimeout(() => { if (!this.isActive) toggle.classList.remove('show'); }, 400); });
+        toggle.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+        toggle.addEventListener('mouseleave', () => { hideTimeout = setTimeout(() => { if (!this.isActive) toggle.classList.remove('show'); }, 400); });
+        document.addEventListener('input', () => this.save());
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); this.download(); return; }
+            if ((e.key === 'e' || e.key === 'E') && !e.target.isContentEditable && !e.ctrlKey && !e.metaKey) this.toggleEditMode();
+            if (e.key === 'Escape' && this.isActive) this.toggleEditMode();
+        });
+    }
+}
+
+const editor = new InlineEditor();
+new SlidePresentation();
+</script>
+</body>
+</html>
