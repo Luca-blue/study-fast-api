@@ -148,7 +148,7 @@ body { font-family: var(--font); color: var(--black); }
 }
 .head > * { background: var(--white); display: flex; align-items: center; }
 .head .chap {
-    background: var(--black); color: var(--white);
+    background: var(--pink); color: var(--black);  /* 黒いコード面と接しても区切りが見えるようにピンク */
     flex-direction: column; justify-content: center; align-items: flex-start;
     padding: 0 34px; gap: 6px;
 }
@@ -176,6 +176,8 @@ body { font-family: var(--font); color: var(--black); }
 .cell.green { background: var(--green); }
 .cell.gray  { background: var(--gray); }
 .cell.black { background: var(--black); color: var(--white); }
+/* 黒いセル同士が隣り合うと黒い罫線が見えなくなるので、白い線で区切る */
+.cell.black + .cell.black { box-shadow: inset 3px 0 0 var(--white); }
 .cell.tight { padding: 28px 36px; }
 .cell.flex  { display: flex; flex-direction: column; gap: 22px; }
 .cell.center { display: flex; flex-direction: column; justify-content: center; }
