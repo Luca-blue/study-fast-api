@@ -680,11 +680,11 @@ content-type: application/json
 │   ├── 01_hello/
 │   │   └── main.py
 │   ├── 02_todo/
-│   │   ├── main.py
-│   │   └── static/index.html
-│   └── 03_todo_sqlite/
-│       ├── main.py
-│       └── static/index.html
+│   │   └── main.py
+│   ├── 03_todo_sqlite/
+│   │   └── main.py
+│   └── frontend/
+│       └── index.html   <span style="color: var(--darkgray); font-weight: 500;">← 02・03 共通の画面</span>
 └── answer/   <span style="color: var(--darkgray); font-weight: 500;">← 答え合わせ用</span></pre>
       </div>
       <div class="cell center">
@@ -693,7 +693,7 @@ content-type: application/json
           <tbody>
             <tr><td><code>01_hello/main.py</code></td><td>空</td><td class="hl">すべて自分で書く</td><td>3章</td></tr>
             <tr><td><code>02_todo/main.py</code></td><td>import〜todos 辞書まで用意済み</td><td class="hl">API の関数だけ書く</td><td>5章</td></tr>
-            <tr><td><code>02_todo/static/index.html</code></td><td>完成品</td><td>動かして、重要なところを読む</td><td>6章</td></tr>
+            <tr><td><code>frontend/index.html</code></td><td>完成品</td><td>動かして、重要なところを読む</td><td>6章</td></tr>
             <tr><td><code>03_todo_sqlite/</code></td><td>完成品</td><td>動かして、5章との違いを読む</td><td>7章</td></tr>
           </tbody>
         </table>
@@ -1052,7 +1052,7 @@ todos = {}<span class="n">1</span>
 
 
 <span class="c"># ===== この行より上に書く =====</span>
-app.mount(<span class="s">"/"</span>, StaticFiles(directory=<span class="s">"static"</span>, html=<span class="k">True</span>), ...)<span class="n">3</span></pre>
+app.mount(<span class="s">"/"</span>, StaticFiles(directory=<span class="s">"../frontend"</span>, html=<span class="k">True</span>), ...)<span class="n">3</span></pre>
       </div>
       <div class="cell flex" style="gap: 26px;">
         <div class="task reveal d1">
@@ -1066,7 +1066,7 @@ app.mount(<span class="s">"/"</span>, StaticFiles(directory=<span class="s">"sta
         <div class="notes" style="gap: 16px;">
           <div class="note reveal d2"><span class="n">1</span><div><h4>todos：ToDo を入れる辞書</h4><p>キーが id、値が ToDo 1件。<br><code class="i">{1: {"id": 1, "title": "牛乳を買う", "done": False}}</code></p></div></div>
           <div class="note reveal d3"><span class="n">2</span><div><h4>new_id()：次に使う id を返す</h4><p>中身は気にせず、呼ぶだけで OK。</p></div></div>
-          <div class="note reveal d4"><span class="n">3</span><div><h4>app.mount：画面ファイルを配信する</h4><p><code class="i">static/index.html</code> を <code class="i">http://127.0.0.1:8000/</code> で開けるようにする（6章で使う）。</p></div></div>
+          <div class="note reveal d4"><span class="n">3</span><div><h4>app.mount：画面ファイルを配信する</h4><p>隣の <code class="i">frontend/index.html</code> を <code class="i">http://127.0.0.1:8000/</code> で開けるようにする（6章で使う）。</p></div></div>
         </div>
       </div>
     </div>
@@ -1152,7 +1152,7 @@ app.mount(<span class="s">"/"</span>, StaticFiles(directory=<span class="s">"sta
         </div>
       </div>
       <div class="cell pink center tight reveal d3" style="grid-column: 1 / 3;">
-        <p style="font-size: 30px;"><strong>/docs ですべて動作したら、次は画面から API を使う。</strong><br><span class="small">→ 6章：用意済みの画面 <code class="i">static/index.html</code> を開いて操作する。</span></p>
+        <p style="font-size: 30px;"><strong>/docs ですべて動作したら、次は画面から API を使う。</strong><br><span class="small">→ 6章：用意済みの画面 <code class="i">frontend/index.html</code> を開いて操作する。</span></p>
       </div>
     </div>
   </div>
@@ -1171,7 +1171,7 @@ app.mount(<span class="s">"/"</span>, StaticFiles(directory=<span class="s">"sta
     <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 160px;">
       <div class="cell gray flex" style="gap: 20px;">
         <div class="task reveal d1">
-          <div class="th">作業：sample/02_todo/static/index.html（完成品）</div>
+          <div class="th">作業：sample/frontend/index.html（完成品）</div>
           <ol>
             <li><span class="n">A</span><span>5章のサーバーを起動したまま <code class="i">http://127.0.0.1:8000/</code> を開く</span></li>
             <li><span class="n">B</span><span>ToDo を追加 → チェック → 削除 してみる</span></li>
