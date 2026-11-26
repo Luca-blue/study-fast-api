@@ -1,6 +1,6 @@
 # FastAPI 本体
 from fastapi import FastAPI
-# static フォルダの HTML などを、そのままブラウザに配るための部品
+# フォルダの HTML などを、そのままブラウザに配るための部品
 from fastapi.staticfiles import StaticFiles
 # 受け取る JSON の形（項目名と型）を決めるための部品
 from pydantic import BaseModel
@@ -45,7 +45,9 @@ def new_id():
 
 
 
-# ===== この行より上に書く（下の行は画面 static/index.html を配信する） =====
-# "/" 以下へのアクセスで static フォルダのファイルを返す。html=True で / に来たら index.html を返す。
+# ===== この行より上に書く（下の行は画面 ../frontend/index.html を配信する） =====
+# "/" 以下へのアクセスで、隣の frontend フォルダ（../frontend）のファイルを返す。02_todo と 03_todo_sqlite で同じ画面を使う。
+# ../frontend は「起動したフォルダ」から見た場所なので、main.py のあるフォルダで uvicorn を起動する。
+# html=True で / に来たら index.html を返す。
 # この行は最後に置く。先に置くと "/" がすべてのアクセスを受け取ってしまい、上の /todos に届かなくなる。
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+app.mount("/", StaticFiles(directory="../frontend", html=True), name="static")
