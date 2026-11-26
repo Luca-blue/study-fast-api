@@ -39,6 +39,7 @@ pip install fastapi uvicorn
 | `sample/02_todo/main.py` | import〜todos 辞書まで用意済み | API の関数だけ書く | 5章 |
 | `sample/frontend/index.html` | 完成品（02・03 共通の画面） | 動かして、重要なところを読む | 6章 |
 | `sample/frontend/notebook/index.html` | 完成品（手帳風の画面） | `main.py` 末尾のコメントを付け替えると切り替わる（`/notebook/` でも開ける） | 6章 |
+| `sample/frontend/hum/index.html` | 完成品（Hum 版の画面） | 同上（`/hum/` でも開ける） | 6章 |
 | `sample/03_todo_sqlite/` | 完成品 | 動かして、5章との違いを読む | 7章 |
 
 各フォルダで `uvicorn main:app --reload` を実行し、http://127.0.0.1:8000/ （API は `/docs`）を開きます。

@@ -53,3 +53,4 @@ def new_id():
 # 画面を選ぶ: 使う方の行の先頭の # を外し、もう一方の行に # を付ける
 app.mount("/", StaticFiles(directory="../frontend", html=True), name="static")  # シンプル版
 # app.mount("/", StaticFiles(directory="../frontend/notebook", html=True), name="static")  # 手帳風
+# app.mount("/", StaticFiles(directory="../frontend/hum", html=True), name="static")  # Hum 版
