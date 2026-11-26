@@ -4,12 +4,9 @@ FastAPI 入門のハンズオン教材です。スライドを見ながら、`sa
 
 ## スライド
 
-`slides/fastapi-intro.html` をブラウザで開いてください（28枚・1ファイル完結）。PowerPoint 版は `slides/fastapi-intro.pptx`（内容は同じ、すべて編集可能）。
+`slides/fastapi-intro.pptx` を PowerPoint で開いてください（29枚）。同じ内容の PDF 版は `slides/fastapi-intro.pdf`。
 
-- `←` `→` / `Space` / マウスホイール / スワイプでページ送り、`Home` `End` で最初・最後へ
-- URL の `#13` のように番号を付けると、そのスライドから開く
-- `E` キー（または画面左上にマウスを乗せる）で編集モード。`Ctrl/Cmd + S` で HTML を保存
-- 印刷（PDF 保存）すると 1 スライド 1 ページで出力
+以前の版（ブラウザで開く HTML 版・その PowerPoint 版・生成スクリプト）は `slides/legacy/` に残しています。
 
 | 章 | 内容 |
 |---|---|

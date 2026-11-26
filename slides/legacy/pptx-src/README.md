@@ -1,6 +1,6 @@
 # PowerPoint 版の生成スクリプト
 
-`slides/fastapi-intro.pptx` はこのスクリプトから生成しています（pptxgenjs）。
+`slides/legacy/fastapi-intro.pptx`（以前の版）はこのスクリプトから生成しています（pptxgenjs）。
 
 ```bash
 npm install pptxgenjs react react-dom react-icons sharp
