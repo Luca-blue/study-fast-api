@@ -107,9 +107,11 @@ def delete_todo(todo_id: int):
     return {"ok": True}
 
 
-# ===== この行より上に書く（下の行は画面 ../frontend/index.html を配信する） =====
+# ===== この行より上に書く（下の行は画面を配信する） =====
 # "/" 以下へのアクセスで、隣の frontend フォルダ（../frontend）のファイルを返す（answer/frontend は sample/frontend と同じ内容のコピー）。
 # ../frontend は「起動したフォルダ」から見た場所なので、main.py のあるフォルダで uvicorn を起動する。
 # html=True で / に来たら index.html を返す。
-# この行は最後に置く。先に置くと "/" がすべてのアクセスを受け取ってしまい、上の /todos に届かなくなる。
-app.mount("/", StaticFiles(directory="../frontend", html=True), name="static")
+# app.mount は最後に置く。先に置くと "/" がすべてのアクセスを受け取ってしまい、上の /todos に届かなくなる。
+# 画面を選ぶ: 使う方の行の先頭の # を外し、もう一方の行に # を付ける
+app.mount("/", StaticFiles(directory="../frontend", html=True), name="static")  # シンプル版
+# app.mount("/", StaticFiles(directory="../frontend/notebook", html=True), name="static")  # 手帳風

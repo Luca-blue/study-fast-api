@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>やること帳</title>
+  <!-- フォント（Google Fonts）。つながらないときは下の font-family の続きにある標準フォントで表示される -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Hallmark · genre: editorial · macrostructure: Index-First · theme: Almanac (tokens built per color.md) · enrichment: none · nav: N9 · footer: Ft2
+     * tone: editorial · anchor hue: 35 (朱) · audience: ハンズオン受講者が自分の ToDo を管理する
+     * pre-emit critique: P4 H5 E4 S4 R5 V4
+     */
+
+    /* ===== デザインの決まり（色・文字・余白）。下のスタイルはすべてこの名前で値を使う ===== */
+    :root {
+      /* 色: 生成りの紙 + 墨 + 朱1色 */
+      --color-paper:      oklch(97%  0.010 75);
+      --color-paper-2:    oklch(93.5% 0.014 75);
+      --color-rule:       oklch(84%  0.012 70);
+      --color-neutral:    oklch(50%  0.012 60);
+      --color-muted:      oklch(40%  0.012 55);
+      --color-ink:        oklch(21%  0.012 50);
+      --color-accent:     oklch(54%  0.180 35);
+      --color-accent-ink: oklch(98%  0.008 75);
+      --color-focus:      oklch(50%  0.180 35);
+      --color-error:      oklch(48%  0.170 25);
+      --color-error-bg:   oklch(95%  0.025 25);
+      --color-toast:      oklch(24%  0.012 50);
+      --color-toast-ink:  oklch(96%  0.008 75);
+
+      /* 文字: 見出しは明朝、本文はゴシック */
+      --font-display: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
+      --font-body:    "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", sans-serif;
+
+      --text-xs:      0.8rem;
+      --text-sm:      0.875rem;
+      --text-base:    1rem;
+      --text-md:      1.125rem;
+      --text-lg:      1.5rem;
+      --text-display: clamp(2.75rem, 7vw + 1rem, 4.5rem);
+
+      /* 余白: 4px 刻み */
+      --space-2xs: 0.25rem;
+      --space-xs:  0.5rem;
+      --space-sm:  0.75rem;
+      --space-md:  1rem;
+      --space-lg:  1.5rem;
+      --space-xl:  2rem;
+      --space-2xl: 3rem;
+      --space-3xl: 4.5rem;
+
+      --rule:       1px solid var(--color-rule);
+      --rule-heavy: 2px solid var(--color-ink);
+      --radius-sm:  2px;
+      --radius-pill: 999px;
+
+      /* 動き */
+      --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in:     cubic-bezier(0.7, 0, 0.84, 0);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-minor: 220ms;
+    }
+
+    /* 暗い画面設定の端末では、同じ色相のまま明暗だけ入れ替える */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-paper:      oklch(17%  0.010 55);
+        --color-paper-2:    oklch(21%  0.012 55);
+        --color-rule:       oklch(33%  0.010 55);
+        --color-neutral:    oklch(66%  0.010 65);
+        --color-muted:      oklch(76%  0.010 70);
+        --color-ink:        oklch(93%  0.008 75);
+        --color-accent:     oklch(66%  0.160 38);
+        --color-accent-ink: oklch(17%  0.010 55);
+        --color-focus:      oklch(72%  0.150 38);
+        --color-error:      oklch(72%  0.150 25);
+        --color-error-bg:   oklch(25%  0.040 25);
+        --color-toast:      oklch(90%  0.010 75);
+        --color-toast-ink:  oklch(18%  0.010 55);
+      }
+    }
+
+    /* ===== 土台 ===== */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { overflow-x: clip; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      background: var(--color-paper);
+      color: var(--color-ink);
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.65;
+      padding-inline: max(var(--space-md), env(safe-area-inset-left));
+      padding-bottom: max(var(--space-2xl), env(safe-area-inset-bottom));
+    }
+    :focus { outline: none; }
+    :focus-visible {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+    button, input { font: inherit; color: inherit; }
+
+    .page {
+      max-width: 38rem;
+      margin-inline: auto;
+      padding-top: var(--space-2xl);
+    }
+
+    /* ===== 見出し（日付・題・件数） ===== */
+    .masthead {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--space-md);
+      font-size: var(--text-sm);
+      color: var(--color-neutral);
+      border-bottom: var(--rule);
+      padding-bottom: var(--space-xs);
+    }
+    .masthead__name { font-family: var(--font-display); font-weight: 600; color: var(--color-ink); white-space: nowrap; }
+    .masthead__date { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+    .title {
+      margin: var(--space-xl) 0 0;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-style: normal;
+      font-size: var(--text-display);
+      line-height: 1.1;
+      letter-spacing: 0.02em;
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+    .tally {
+      margin: var(--space-sm) 0 0;
+      color: var(--color-muted);
+      font-size: var(--text-md);
+    }
+    .tally__num {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: var(--text-lg);
+      font-variant-numeric: tabular-nums;
+      color: var(--color-accent);
+      margin-inline: 0.1em;
+    }
+
+    /* ===== 追加フォーム ===== */
+    .add {
+      margin-top: var(--space-2xl);
+    }
+    .add__label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--color-muted);
+      margin-bottom: var(--space-xs);
+    }
+    .add__row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      border-bottom: var(--rule-heavy);
+    }
+    .add__input {
+      min-width: 0;
+      min-height: 48px;
+      border: 0;
+      background: transparent;
+      font-size: var(--text-md);
+      padding: var(--space-xs) var(--space-2xs);
+    }
+    .add__input::placeholder { color: var(--color-neutral); }
+    .add__input:focus-visible { outline-offset: -2px; }
+    .add__input[aria-invalid="true"] { background: var(--color-error-bg); }
+
+    .btn {
+      min-height: 44px;
+      padding: 0 var(--space-lg);
+      border: 0;
+      border-radius: var(--radius-sm);
+      background: var(--color-ink);
+      color: var(--color-paper);
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+      margin-block: var(--space-2xs);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .btn:hover { background: var(--color-accent); color: var(--color-accent-ink); }
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled, .btn[aria-busy="true"] { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .add__msg {
+      min-height: 1.65em;               /* エラーが出ても下がずれないよう高さを確保 */
+      margin: var(--space-xs) 0 0;
+      font-size: var(--text-sm);
+      color: var(--color-error);
+    }
+    .add__msg:not(:empty)::before { content: "⚠ "; }
+
+    /* ===== 一覧 ===== */
+    .group { margin-top: var(--space-2xl); }
+    .group__head {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-xs);
+      margin: 0 0 var(--space-xs);
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: var(--text-md);
+    }
+    .group__count {
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      color: var(--color-neutral);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .list { list-style: none; margin: 0; padding: 0; border-top: var(--rule); }
+    .item {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--space-sm);
+      min-height: 56px;
+      border-bottom: var(--rule);
+    }
+
+    /* チェックボックス: 本物の <input type="checkbox"> を見た目だけ作り替える */
+    .check {
+      appearance: none;
+      position: relative;
+      width: 22px;
+      height: 22px;
+      margin: 0 0 0 var(--space-2xs);
+      border: 1.5px solid var(--color-muted);
+      border-radius: var(--radius-pill);
+      background: transparent;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+    }
+    .check::before {              /* 押しやすいよう、見た目より広く反応させる */
+      content: "";
+      position: absolute;
+      inset: -11px;
+    }
+    .check::after {               /* チェックの印（✓） */
+      content: "";
+      width: 6px;
+      height: 11px;
+      border: solid var(--color-accent-ink);
+      border-width: 0 2px 2px 0;
+      transform: translateY(-1px) rotate(45deg) scale(0.6);
+      opacity: 0;
+      transition: opacity var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+    }
+    .check:checked { background: var(--color-accent); border-color: var(--color-accent); }
+    .check:checked::after { opacity: 1; transform: translateY(-1px) rotate(45deg) scale(1); }
+    @media (hover: hover) and (pointer: fine) {
+      .check:not(:checked):hover { border-color: var(--color-accent); }
+    }
+    .check:active { transform: scale(0.94); }
+    .check:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .item__title {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      padding-block: var(--space-sm);
+      cursor: pointer;
+    }
+    .item.is-done .item__title {
+      color: var(--color-neutral);
+      text-decoration: line-through;
+      text-decoration-color: var(--color-accent);
+      text-decoration-thickness: 1.5px;
+    }
+    .item.is-error .item__title::after {
+      content: "　⚠ 保存できませんでした";
+      color: var(--color-error);
+      font-size: var(--text-sm);
+    }
+
+    /* 削除: 文字だけのボタン。マウスでもタッチでも常に見える */
+    .del {
+      min-height: 44px;
+      min-width: 44px;
+      padding: 0 var(--space-xs);
+      border: 0;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--color-neutral);
+      font-size: var(--text-sm);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: color var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .del:hover { color: var(--color-error); background: var(--color-paper-2); }
+    }
+    .del:active { transform: translateY(1px); }
+
+    /* 空のとき・読み込み中・失敗したとき */
+    .note {
+      margin: 0;
+      padding: var(--space-lg) 0;
+      color: var(--color-muted);
+      border-bottom: var(--rule);
+    }
+    .note--error { color: var(--color-error); }
+    .note--error::before { content: "⚠ "; }
+    .linkish {
+      border: 0;
+      background: none;
+      padding: 0;
+      min-height: 44px;
+      color: var(--color-ink);
+      text-decoration: underline;
+      text-decoration-color: var(--color-accent);
+      text-underline-offset: 0.25em;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .skeleton {
+      height: 56px;
+      border-bottom: var(--rule);
+      background: linear-gradient(var(--color-paper-2), var(--color-paper-2)) no-repeat 2.25rem center / 55% 0.9em;
+    }
+    .skeleton:nth-child(2) { background-size: 40% 0.9em; }
+    .skeleton:nth-child(3) { background-size: 62% 0.9em; }
+
+    /* ===== 下の一行 ===== */
+    .foot {
+      margin-top: var(--space-3xl);
+      padding-top: var(--space-xs);
+      border-top: var(--rule);
+      font-size: var(--text-xs);
+      color: var(--color-neutral);
+    }
+    .foot code { font-family: inherit; color: var(--color-muted); }
+
+    /* ===== 取り消しの通知（下に重ねて出す。ページはずらさない） ===== */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: max(var(--space-lg), env(safe-area-inset-bottom));
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      max-width: calc(100% - 2 * var(--space-md));
+      padding: var(--space-2xs) var(--space-2xs) var(--space-2xs) var(--space-md);
+      border-radius: var(--radius-sm);
+      background: var(--color-toast);
+      color: var(--color-toast-ink);
+      font-size: var(--text-sm);
+      transform: translate(-50%, 0);
+      opacity: 1;
+      transition: opacity var(--dur-minor) var(--ease-out), transform var(--dur-minor) var(--ease-out);
+    }
+    .toast[hidden] { display: flex; visibility: hidden; opacity: 0; transform: translate(-50%, 8px); }
+    .toast__msg { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .toast__btn {
+      min-height: 40px;
+      padding: 0 var(--space-md);
+      border: 0;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--color-toast-ink);
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 0.25em;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .toast__btn:focus-visible { outline-color: var(--color-toast-ink); }
+
+    @media (min-width: 40rem) {
+      .page { padding-top: var(--space-3xl); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 1ms !important;
+      }
+      .toast[hidden] { transform: translate(-50%, 0); }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="masthead">
+      <span class="masthead__name">やること帳</span>
+      <span class="masthead__date" id="today"></span>
+    </header>
+
+    <h1 class="title">やること</h1>
+    <!-- 残りの件数。中身は render() が入れる -->
+    <p class="tally" id="tally" aria-live="polite">&nbsp;</p>
+
+    <!-- 追加フォーム。送信すると form.onsubmit が呼ばれる -->
+    <form class="add" id="form" novalidate>
+      <label class="add__label" for="title">新しいやること</label>
+      <div class="add__row">
+        <input class="add__input" id="title" name="title" placeholder="例: 牛乳を買う" autocomplete="off" maxlength="200" aria-describedby="add-msg">
+        <button class="btn" id="add-btn" type="submit">追加</button>
+      </div>
+      <p class="add__msg" id="add-msg" role="status"></p>
+    </form>
+
+    <!-- 一覧。中身は render() が作る -->
+    <section id="board" aria-label="ToDo の一覧">
+      <ul class="list" aria-hidden="true">
+        <li class="skeleton"></li><li class="skeleton"></li><li class="skeleton"></li>
+      </ul>
+    </section>
+
+    <footer class="foot">
+      この画面は <code>sample/frontend/notebook/index.html</code>。シンプル版と同じ API（/todos）を使っています。
+    </footer>
+  </main>
+
+  <!-- 削除したときの「元に戻す」通知 -->
+  <div class="toast" id="toast" role="status" hidden>
+    <span class="toast__msg" id="toast-msg"></span>
+    <button class="toast__btn" id="toast-btn" type="button">元に戻す</button>
+  </div>
+
+  <script>
+    // ===== 画面が持っているデータ =====
+    // サーバーから受け取った ToDo の配列。例: [{ id: 1, title: "牛乳を買う", done: false }]
+    let todos = [];
+    // 一覧の状態: "loading"（読み込み中）・"ready"（表示できる）・"error"（読み込み失敗）
+    let status = "loading";
+
+    const $ = (id) => document.getElementById(id);
+
+    // 見出しの日付（例: 11月27日（金））
+    $("today").textContent = new Date().toLocaleDateString("ja-JP", { month: "long", day: "numeric", weekday: "short" });
+
+    // ===== サーバーとのやり取り（シンプル版と同じ4つの API） =====
+    // JSON を送るときの共通部分。失敗（200 番台以外）なら例外を投げる
+    async function request(path, options = {}) {
+      const res = await fetch(path, {
+        ...options,
+        headers: options.body ? { "Content-Type": "application/json" } : undefined,
+      });
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      return res.json();
+    }
+    const api = {
+      list:   ()         => request("/todos"),                                                        // GET
+      create: (todo)     => request("/todos", { method: "POST", body: JSON.stringify(todo) }),        // POST
+      update: (id, todo) => request(`/todos/${id}`, { method: "PUT", body: JSON.stringify(todo) }),   // PUT
+      remove: (id)       => request(`/todos/${id}`, { method: "DELETE" }),                            // DELETE
+    };
+
+    // ===== 表示 =====
+    // 要素を作る小さな関数。文字は textContent で入れるので、< などが入っていても崩れない
+    function el(tag, props = {}, children = []) {
+      const node = Object.assign(document.createElement(tag), props);
+      for (const c of [].concat(children)) node.append(c);
+      return node;
+    }
+
+    // todos と status から、一覧と件数を作り直す
+    function render() {
+      const board = $("board");
+      board.replaceChildren();
+
+      if (status === "loading") return;
+
+      if (status === "error") {
+        $("tally").textContent = " ";
+        board.append(el("p", { className: "note note--error" }, [
+          "サーバーから一覧を取得できませんでした。uvicorn が起動しているか確かめてから ",
+          el("button", { className: "linkish", type: "button", textContent: "もう一度読み込む", onclick: load }),
+        ]));
+        return;
+      }
+
+      const open = todos.filter((t) => !t.done);
+      const done = todos.filter((t) => t.done);
+
+      // 件数
+      const tally = $("tally");
+      tally.replaceChildren();
+      if (todos.length === 0) {
+        tally.textContent = "まだ何もありません。";
+      } else if (open.length === 0) {
+        tally.textContent = "全部すみました。";
+      } else {
+        tally.append("残り", el("span", { className: "tally__num", textContent: open.length }), "件");
+      }
+
+      if (todos.length === 0) {
+        board.append(el("p", { className: "note" }, [
+          "上の欄に書いて「追加」を押すと、ここに並びます。 ",
+          el("button", { className: "linkish", type: "button", textContent: "入力欄へ", onclick: () => $("title").focus() }),
+        ]));
+        return;
+      }
+
+      board.append(group("まだ", open), group("済み", done));
+    }
+
+    // 「まだ」「済み」の1グループを作る（0件のグループは出さない）
+    function group(label, items) {
+      if (items.length === 0) return "";
+      return el("div", { className: "group" }, [
+        el("h2", { className: "group__head" }, [label, el("span", { className: "group__count", textContent: `${items.length}件` })]),
+        el("ul", { className: "list" }, items.map(row)),
+      ]);
+    }
+
+    // ToDo 1件分の行を作る
+    function row(t) {
+      const checkId = `todo-${t.id}`;
+      const li = el("li", { className: "item" + (t.done ? " is-done" : "") + (t.isError ? " is-error" : "") });
+      li.append(
+        el("input", { className: "check", type: "checkbox", id: checkId, checked: t.done, onchange: () => toggle(t) }),
+        el("label", { className: "item__title", htmlFor: checkId, textContent: t.title }),
+        el("button", { className: "del", type: "button", textContent: "削除", ariaLabel: `「${t.title}」を削除`, onclick: () => remove(t) }),
+      );
+      return li;
+    }
+
+    // ===== 操作 =====
+    // 一覧を読み込む（GET）
+    async function load() {
+      status = "loading";
+      render();
+      try {
+        todos = await api.list();
+        status = "ready";
+      } catch {
+        status = "error";
+      }
+      render();
+    }
+
+    // 追加（POST）。成功したら、サーバーが返した ToDo（id 付き）を一覧に足す
+    $("form").onsubmit = async (e) => {
+      e.preventDefault();                       // ページの再読み込みを止める
+      const input = $("title");
+      const btn = $("add-btn");
+      const title = input.value.trim();
+      if (!title) {
+        input.setAttribute("aria-invalid", "true");
+        $("add-msg").textContent = "やることを入力してください。";
+        input.focus();
+        return;
+      }
+      input.removeAttribute("aria-invalid");
+      $("add-msg").textContent = "";
+      btn.setAttribute("aria-busy", "true");
+      btn.disabled = true;
+      try {
+        const created = await api.create({ title });
+        todos.push(created);
+        input.value = "";
+        status = "ready";
+        render();
+      } catch {
+        $("add-msg").textContent = "追加できませんでした。サーバーが起動しているか確かめてください。";
+      } finally {
+        btn.removeAttribute("aria-busy");
+        btn.disabled = false;
+        input.focus();
+      }
+    };
+    // 入力し直したらエラー表示を消す
+    $("title").oninput = () => {
+      $("title").removeAttribute("aria-invalid");
+      $("add-msg").textContent = "";
+    };
+
+    // 完了/未完了の切り替え（PUT）。先に画面を変えて、失敗したら元に戻す
+    async function toggle(t) {
+      const prev = t.done;
+      t.done = !prev;
+      t.isError = false;
+      render();
+      try {
+        await api.update(t.id, { title: t.title, done: t.done });
+      } catch {
+        t.done = prev;
+        t.isError = true;
+        render();
+      }
+    }
+
+    // 削除（DELETE）。確認は出さずにすぐ消し、数秒間「元に戻す」を出す
+    let toastTimer;
+    async function remove(t) {
+      const index = todos.indexOf(t);
+      todos = todos.filter((x) => x !== t);
+      render();
+      try {
+        await api.remove(t.id);
+        showToast(`「${t.title}」を削除しました`, () => restore(t, index));
+      } catch {
+        todos.splice(index, 0, t);              // 失敗したら元の位置に戻す
+        t.isError = true;
+        render();
+      }
+    }
+
+    // 「元に戻す」: 同じ内容で作り直す（POST）。id は新しく振られる
+    async function restore(t, index) {
+      hideToast();
+      try {
+        const created = await api.create({ title: t.title, done: t.done });
+        todos.splice(Math.min(index, todos.length), 0, created);
+        render();
+      } catch {
+        showToast("元に戻せませんでした");
+      }
+    }
+
+    function showToast(message, onUndo) {
+      clearTimeout(toastTimer);
+      $("toast-msg").textContent = message;
+      $("toast-btn").hidden = !onUndo;
+      $("toast-btn").onclick = onUndo || null;
+      $("toast").hidden = false;
+      toastTimer = setTimeout(hideToast, 6000);
+    }
+    function hideToast() {
+      clearTimeout(toastTimer);
+      $("toast").hidden = true;
+    }
+
+    // ページを開いたら、最初の一覧を読み込む
+    load();
+  </script>
+</body>
+</html>
