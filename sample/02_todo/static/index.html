@@ -6,32 +6,46 @@
 </head>
 <body>
   <h1>ToDo</h1>
+  <!-- 入力欄と追加ボタン。ボタンを押すとフォームの「送信」が起き、下の form.onsubmit が呼ばれる -->
   <form id="form">
+    <!-- required: 空のままでは送信できない -->
     <input id="title" placeholder="やること" required>
     <button>追加</button>
   </form>
+  <!-- ToDo の一覧を入れる場所。中身は load() が作る -->
   <ul id="list"></ul>
 
   <script>
+    // メモ: id を付けた要素は、その id 名の変数（list・form・title）でそのまま使える（ブラウザの機能）
+
     // GET: 一覧を取ってきて表示する
+    // async を付けた関数の中では、await で「通信が終わるまで待つ」が書ける
     async function load() {
+      // fetch でサーバーの GET /todos を呼ぶ。method を書かないと GET になる
       const res = await fetch("/todos");
+      // 返ってきた JSON を JavaScript の配列に変換する
       const todos = await res.json();
+      // いったん一覧を空にしてから、1件ずつ作り直す
       list.innerHTML = "";
       for (const t of todos) {
+        // <li> を1つ作り、チェックボックス・タイトル・削除ボタンを入れる
         const li = document.createElement("li");
+        // `...${式}...` はテンプレート文字列。done が true ならチェック済みで表示する
         li.innerHTML = `<input type="checkbox" ${t.done ? "checked" : ""}> ${t.title} <button>削除</button>`;
         // PUT: チェックで完了/未完了を切り替える
         li.querySelector("input").onchange = async (e) => {
           await fetch(`/todos/${t.id}`, {
             method: "PUT",
+            // 本文が JSON だとサーバーに伝える
             headers: { "Content-Type": "application/json" },
+            // JSON.stringify でオブジェクトを JSON の文字列にする。e.target.checked は今のチェック状態
             body: JSON.stringify({ title: t.title, done: e.target.checked }),
           });
         };
         // DELETE: 削除ボタン
         li.querySelector("button").onclick = async () => {
           await fetch(`/todos/${t.id}`, { method: "DELETE" });
+          // 消えた後の一覧を取り直して表示する
           load();
         };
         list.appendChild(li);
@@ -40,16 +54,20 @@
 
     // POST: フォーム送信で新しい ToDo を作る
     form.onsubmit = async (e) => {
+      // フォームの本来の動き（ページの再読み込み）を止め、fetch で送る
       e.preventDefault();
       await fetch("/todos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        // done は送らない → サーバー側の TodoIn で False（未完了）になる
         body: JSON.stringify({ title: title.value }),
       });
+      // 入力欄を空にして、一覧を取り直す
       title.value = "";
       load();
     };
 
+    // ページを開いたときに、最初の一覧を表示する
     load();
   </script>
 </body>
