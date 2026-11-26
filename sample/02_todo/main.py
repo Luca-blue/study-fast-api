@@ -13,15 +13,8 @@ app = FastAPI()
 # POST や PUT で送られてきた JSON がこの形に合っているかを、FastAPI が自動で確かめる。
 # 合わない（例: title が無い）と、関数を呼ぶ前に 422 エラーを返す。
 class TodoIn(BaseModel):
-    """画面から送られてくる ToDo 1件分のデータ。
-
-    Attributes:
-        title: やることの内容。必須。
-        done: 完了したかどうか。送られてこなければ False（未完了）になる。
-    """
-
-    title: str
-    done: bool = False
+    title: str           # やることの内容（必須）
+    done: bool = False   # 完了したか。送られてこなければ False（未完了）
 
 
 # ToDo の置き場所  例: {1: {"id": 1, "title": "牛乳を買う", "done": False}}
@@ -30,14 +23,9 @@ class TodoIn(BaseModel):
 todos = {}
 
 
-# 次に使う id を返す
+# 次に使う id を返す（今ある id のいちばん大きい数 + 1。todos が空なら 1）
 def new_id():
-    """まだ使われていない id を返す。
-
-    Returns:
-        int: 今ある id のいちばん大きい数 + 1。todos が空なら 1。
-            max(todos) は辞書のキー（id）の最大値。default=0 は空のときの値。
-    """
+    # max(todos) は辞書のキー（id）の最大値。default=0 は todos が空のときに使う値
     return max(todos, default=0) + 1
 
 

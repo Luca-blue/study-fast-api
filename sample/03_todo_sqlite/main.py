@@ -14,24 +14,13 @@ app = FastAPI()
 
 # 受け取るデータの形（02_todo と同じ）
 class TodoIn(BaseModel):
-    """画面から送られてくる ToDo 1件分のデータ。
-
-    Attributes:
-        title: やることの内容。必須。
-        done: 完了したかどうか。送られてこなければ False（未完了）になる。
-    """
-
-    title: str
-    done: bool = False
+    title: str           # やることの内容（必須）
+    done: bool = False   # 完了したか。送られてこなければ False（未完了）
 
 
 # ===== データベースの準備 =====
+# todo.db につなぐ。ファイルが無ければ、つないだときに自動で作られる
 def get_conn():
-    """データベースにつなぐ。
-
-    Returns:
-        sqlite3.Connection: todo.db への接続。ファイルが無ければ、つないだときに自動で作られる。
-    """
     conn = sqlite3.connect("todo.db")
     conn.row_factory = sqlite3.Row  # row["title"] のように列名で取り出せる
     return conn
@@ -55,14 +44,10 @@ with get_conn() as conn:
 # GET /todos : 一覧を返す
 @app.get("/todos")
 def list_todos():
-    """ToDo を全部返す。
-
-    Returns:
-        list[dict]: ToDo の一覧。データベースの行を、画面が受け取れる辞書の形に直して返す。
-    """
     with get_conn() as conn:
         # fetchall() で、結果の行を全部リストとして受け取る
         rows = conn.execute("SELECT id, title, done FROM todos").fetchall()
+    # データベースの行を、画面が受け取れる辞書のリストに直す
     todo_list = []
     for row in rows:
         # done は 0 / 1 で入っているので、bool() で False / True に戻す
@@ -73,14 +58,6 @@ def list_todos():
 # POST /todos : 新しく作る
 @app.post("/todos")
 def create_todo(todo: TodoIn):
-    """ToDo を1件追加する。
-
-    Args:
-        todo: 画面から送られてきた ToDo（title と done）。
-
-    Returns:
-        dict: 追加した ToDo（データベースが振った id 付き）。
-    """
     with get_conn() as conn:
         # ? の所に、後ろのタプルの値が順番に入る。
         # 値を SQL の文字列に直接つなげず ? を使うと、入力に記号が含まれていても安全に扱える
@@ -93,17 +70,9 @@ def create_todo(todo: TodoIn):
 
 
 # PUT /todos/{todo_id} : 書き換える
+# todo_id は URL から、todo（新しい title と done）はリクエストの本文から受け取る
 @app.put("/todos/{todo_id}")
 def update_todo(todo_id: int, todo: TodoIn):
-    """指定した id の ToDo を、送られてきた内容で置き換える。
-
-    Args:
-        todo_id: 書き換える ToDo の id（URL から受け取る）。
-        todo: 新しい内容（title と done。リクエストの本文から受け取る）。
-
-    Returns:
-        dict: 書き換えた後の ToDo。
-    """
     with get_conn() as conn:
         # WHERE id = ? で、書き換える行を1つに絞る（付け忘れると全部の行が書き換わる）
         # 無い id を指定した場合は、どの行も変わらず、エラーにもならない
@@ -117,17 +86,10 @@ def update_todo(todo_id: int, todo: TodoIn):
 # DELETE /todos/{todo_id} : 消す
 @app.delete("/todos/{todo_id}")
 def delete_todo(todo_id: int):
-    """指定した id の ToDo を削除する。
-
-    Args:
-        todo_id: 削除する ToDo の id。
-
-    Returns:
-        dict: {"ok": True}。無い id を指定しても、何も消さずに同じ値を返す。
-    """
     with get_conn() as conn:
         # (todo_id,) の最後のカンマは「要素が1つのタプル」を作るために必要
         conn.execute("DELETE FROM todos WHERE id = ?", (todo_id,))
+    # 無い id を指定しても、何も消さずに同じ値を返す（エラーにはならない）
     return {"ok": True}
 
 
